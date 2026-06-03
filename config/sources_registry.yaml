@@ -1,0 +1,159 @@
+# Registry of regulatory sources for the AIFMD scope.
+# Used by linking/citation_extractor.py to resolve `cited_references` strings
+# captured by LangExtract into a target source_id without any regex: the
+# resolver simply checks whether one of the `aliases` appears (case-insensitive)
+# as a substring of the citation.
+#
+# `level` and `issuer` are used by linking/graph_builder.py to derive the
+# relation_type (clarifies / strengthens / operationalizes / interprets / references).
+
+- source_id: AIFMD_L1
+  celex: "32011L0061"
+  title: "Directive 2011/61/EU on AIFMs"
+  level: 1
+  issuer: EU_Parliament_Council
+  language: EN
+  url: "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32011L0061"
+  aliases:
+    - "Directive 2011/61/EU"
+    - "Directive 2011/61/UE"
+    - "Directive 2011/61"
+    - "2011/61/EU"
+    - "2011/61/UE"
+    - "AIFMD"
+    - "AIFM Directive"
+    - "32011L0061"
+
+- source_id: AIFMD_L2
+  celex: "32013R0231"
+  title: "Commission Delegated Regulation (EU) No 231/2013"
+  level: 2
+  issuer: EU_Commission
+  language: EN
+  url: "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32013R0231"
+  aliases:
+    - "Regulation (EU) No 231/2013"
+    - "Regulation 231/2013"
+    - "Règlement 231/2013"
+    - "Règlement (UE) 231/2013"
+    - "Reg 231/2013"
+    - "231/2013"
+    - "Delegated Regulation 231/2013"
+    - "32013R0231"
+
+- source_id: ESMA_GL_REPORTING_2014_869
+  celex: null
+  title: "ESMA Guidelines on Reporting Obligations under AIFMD (ESMA/2014/869)"
+  level: 3
+  issuer: ESMA
+  language: EN
+  url: "https://www.esma.europa.eu/document/guidelines-aifmd-reporting-obligations"
+  aliases:
+    - "ESMA/2014/869"
+    - "ESMA Guidelines on Reporting"
+    - "Guidelines on Reporting Obligations"
+
+- source_id: ESMA_GL_REMUNERATION_2013_232
+  celex: null
+  title: "ESMA Guidelines on Sound Remuneration Policies under AIFMD (ESMA/2013/232)"
+  level: 3
+  issuer: ESMA
+  language: EN
+  url: "https://www.esma.europa.eu/document/guidelines-sound-remuneration-policies-under-aifmd"
+  aliases:
+    - "ESMA/2013/232"
+    - "ESMA Guidelines on Sound Remuneration"
+
+- source_id: ESMA_GL_KEY_CONCEPTS_2013_611
+  celex: null
+  title: "ESMA Guidelines on Key Concepts of the AIFMD (ESMA/2013/611)"
+  level: 3
+  issuer: ESMA
+  language: EN
+  url: "https://www.esma.europa.eu/document/guidelines-key-concepts-aifmd"
+  aliases:
+    - "ESMA/2013/611"
+    - "Guidelines on Key Concepts of the AIFMD"
+
+- source_id: ESMA_GL_LST_2020
+  celex: null
+  title: "ESMA Guidelines on Liquidity Stress Testing in UCITS and AIFs (ESMA34-39-897)"
+  level: 3
+  issuer: ESMA
+  language: EN
+  url: "https://www.esma.europa.eu/document/guidelines-liquidity-stress-testing-in-ucits-and-aifs"
+  aliases:
+    - "ESMA34-39-897"
+    - "Guidelines on Liquidity Stress Testing"
+
+- source_id: ESMA_QA_AIFMD
+  celex: null
+  title: "ESMA Q&A on AIFMD (ESMA34-32-352)"
+  level: 3
+  issuer: ESMA
+  language: EN
+  url: "https://www.esma.europa.eu/document/questions-and-answers-application-aifmd"
+  aliases:
+    - "ESMA34-32-352"
+    - "ESMA Q&A on AIFMD"
+    - "Q&A on the AIFMD"
+    - "Q&R AIFMD"
+
+- source_id: AMF_DOC_2014_06
+  celex: null
+  title: "Position-recommandation AMF DOC-2014-06 — Guide AIFM"
+  level: national
+  issuer: AMF
+  language: FR
+  url: "https://www.amf-france.org/fr/reglementation/doctrine/doc-2014-06"
+  aliases:
+    - "DOC-2014-06"
+    - "AMF DOC-2014-06"
+    - "Position-recommandation AMF DOC-2014-06"
+
+- source_id: AMF_RG_LIVRE_IV
+  celex: null
+  title: "Règlement Général AMF — Livre IV (Produits d'épargne collective)"
+  level: national
+  issuer: AMF
+  language: FR
+  url: "https://www.amf-france.org/fr/reglementation/reglement-general/livre-iv"
+  aliases:
+    - "RG AMF Livre IV"
+    - "Règlement Général AMF Livre IV"
+    - "RG AMF"
+
+- source_id: AMF_DOC_2014_03
+  celex: null
+  title: "Instruction AMF DOC-2014-03 — Procédures d'agrément AIFM"
+  level: national
+  issuer: AMF
+  language: FR
+  url: "https://www.amf-france.org/fr/reglementation/doctrine/doc-2014-03"
+  aliases:
+    - "DOC-2014-03"
+    - "Instruction AMF DOC-2014-03"
+
+- source_id: AMF_DOC_2017_05
+  celex: null
+  title: "Position AMF DOC-2017-05 — Guide gestion liquidité"
+  level: national
+  issuer: AMF
+  language: FR
+  url: "https://www.amf-france.org/fr/reglementation/doctrine/doc-2017-05"
+  aliases:
+    - "DOC-2017-05"
+    - "Position AMF DOC-2017-05"
+
+- source_id: CMF_FR
+  celex: null
+  title: "Code monétaire et financier (France)"
+  level: national
+  issuer: AMF
+  language: FR
+  url: "https://www.legifrance.gouv.fr/codes/texte_lc/LEGITEXT000006072026"
+  aliases:
+    - "code monétaire et financier"
+    - "Code monétaire et financier"
+    - "CMF"
+    - "article L. 214"

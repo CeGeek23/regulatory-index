@@ -1,0 +1,224 @@
+# Controlled vocabulary of regulatory objects (what the action operates on).
+# `theme_id` links each object to its primary theme in themes.yaml.
+
+- id: risk_management_framework
+  canonical_en: risk management framework
+  canonical_fr: dispositif de gestion des risques
+  aliases: ["risk management system", "RMS", "système de gestion des risques"]
+  theme_id: risk_management
+
+- id: liquidity_management_process
+  canonical_en: liquidity management process
+  canonical_fr: processus de gestion de la liquidité
+  aliases: ["LMP", "dispositif de gestion de la liquidité"]
+  theme_id: liquidity
+
+- id: conflicts_of_interest_register
+  canonical_en: conflicts of interest register
+  canonical_fr: registre des conflits d'intérêts
+  aliases: ["COI register"]
+  theme_id: conflicts_of_interest
+
+- id: stress_testing_program
+  canonical_en: stress testing programme
+  canonical_fr: programme de stress tests
+  aliases: ["stress test framework"]
+  theme_id: risk_management
+
+- id: nav_calculation
+  canonical_en: NAV calculation
+  canonical_fr: calcul de la valeur liquidative
+  aliases: ["net asset value calculation", "calcul de la VL"]
+  theme_id: valuation
+
+- id: valuation_policy
+  canonical_en: valuation policy
+  canonical_fr: politique de valorisation
+  aliases: ["valuation methodology"]
+  theme_id: valuation
+
+- id: leverage_exposure
+  canonical_en: leverage exposure
+  canonical_fr: exposition au levier
+  aliases: ["leverage calculation"]
+  theme_id: risk_management
+
+- id: due_diligence_process
+  canonical_en: due diligence process
+  canonical_fr: processus de diligence
+  aliases: ["DD process"]
+  theme_id: governance
+
+- id: aml_controls
+  canonical_en: AML controls
+  canonical_fr: contrôles LCB-FT
+  aliases: ["anti-money laundering controls"]
+  theme_id: aml
+
+- id: reporting_data
+  canonical_en: regulatory reporting data
+  canonical_fr: données de reporting réglementaire
+  aliases: ["Annex IV reporting", "données reporting"]
+  theme_id: reporting
+
+- id: delegation_arrangement
+  canonical_en: delegation arrangement
+  canonical_fr: convention de délégation
+  aliases: ["outsourcing arrangement", "accord de délégation"]
+  theme_id: delegation
+
+- id: investor_information
+  canonical_en: investor information
+  canonical_fr: information aux investisseurs
+  aliases: ["pre-investment disclosure", "information précontractuelle"]
+  theme_id: investor_disclosure
+
+- id: suspicious_transaction
+  canonical_en: suspicious transaction
+  canonical_fr: opération suspecte
+  aliases: ["STR", "déclaration de soupçon"]
+  theme_id: aml
+
+- id: remediation_plan
+  canonical_en: remediation plan
+  canonical_fr: plan de remédiation
+  aliases: ["corrective action plan"]
+  theme_id: governance
+
+- id: committee_minutes
+  canonical_en: committee minutes
+  canonical_fr: procès-verbaux de comité
+  aliases: ["meeting minutes", "PV de comité"]
+  theme_id: governance
+
+- id: side_pocket_mechanism
+  canonical_en: side pocket mechanism
+  canonical_fr: mécanisme de side pocket
+  aliases: ["side pocket"]
+  theme_id: liquidity
+
+- id: personal_transaction
+  canonical_en: personal transaction
+  canonical_fr: transaction personnelle
+  aliases: ["staff personal account dealing", "PAD"]
+  theme_id: conflicts_of_interest
+
+- id: collateral_eligibility
+  canonical_en: collateral eligibility
+  canonical_fr: éligibilité du collatéral
+  aliases: ["eligible collateral"]
+  theme_id: risk_management
+
+- id: operational_risk
+  canonical_en: operational risk
+  canonical_fr: risque opérationnel
+  aliases: ["op risk"]
+  theme_id: risk_management
+
+- id: cybersecurity_framework
+  canonical_en: cybersecurity framework
+  canonical_fr: dispositif de cybersécurité
+  aliases: ["ICT risk framework", "DORA framework"]
+  theme_id: risk_management
+
+- id: cash_positions
+  canonical_en: cash positions
+  canonical_fr: positions de trésorerie
+  aliases: ["cash flows monitoring"]
+  theme_id: valuation
+
+- id: incident_severity
+  canonical_en: incident severity
+  canonical_fr: gravité d'incident
+  aliases: ["incident classification"]
+  theme_id: risk_management
+
+- id: governance_framework
+  canonical_en: governance framework
+  canonical_fr: dispositif de gouvernance
+  aliases: ["governance arrangements"]
+  theme_id: governance
+
+- id: kiid_priips_kid
+  canonical_en: KIID / PRIIPs KID
+  canonical_fr: DICI / KID PRIIPs
+  aliases: ["Key Investor Information Document", "Document d'Informations Clés"]
+  theme_id: investor_disclosure
+
+- id: breach
+  canonical_en: regulatory breach
+  canonical_fr: manquement réglementaire
+  aliases: ["non-compliance event"]
+  theme_id: governance
+
+- id: business_continuity_plan
+  canonical_en: business continuity plan
+  canonical_fr: plan de continuité d'activité
+  aliases: ["BCP", "PCA"]
+  theme_id: risk_management
+
+- id: trade_execution_data
+  canonical_en: trade execution data
+  canonical_fr: données d'exécution de trades
+  aliases: ["execution records"]
+  theme_id: best_execution
+
+- id: compliance_monitoring
+  canonical_en: compliance monitoring
+  canonical_fr: contrôle de conformité
+  aliases: ["compliance monitoring plan", "plan de contrôle conformité"]
+  theme_id: governance
+
+- id: risk_model
+  canonical_en: risk model
+  canonical_fr: modèle de risque
+  aliases: ["VaR model"]
+  theme_id: risk_management
+
+- id: esg_methodology
+  canonical_en: ESG methodology
+  canonical_fr: méthodologie ESG
+  aliases: ["SFDR methodology"]
+  theme_id: esg
+
+- id: sanctions_screening
+  canonical_en: sanctions screening
+  canonical_fr: filtrage des sanctions
+  aliases: ["sanctions list screening"]
+  theme_id: aml
+
+- id: redemption_gate
+  canonical_en: redemption gate
+  canonical_fr: gate de rachat
+  aliases: ["gating mechanism"]
+  theme_id: liquidity
+
+- id: material_change
+  canonical_en: material change
+  canonical_fr: changement substantiel
+  aliases: ["material modification"]
+  theme_id: governance
+
+- id: regulatory_evidence
+  canonical_en: regulatory evidence
+  canonical_fr: preuve réglementaire
+  aliases: ["audit trail", "piste d'audit"]
+  theme_id: governance
+
+- id: outsourcing_register
+  canonical_en: outsourcing register
+  canonical_fr: registre des externalisations
+  aliases: ["register of delegations"]
+  theme_id: delegation
+
+- id: transaction_monitoring_alerts
+  canonical_en: transaction monitoring alerts
+  canonical_fr: alertes de surveillance des transactions
+  aliases: ["TM alerts"]
+  theme_id: aml
+
+- id: regulatory_reporting
+  canonical_en: regulatory reporting
+  canonical_fr: reporting réglementaire
+  aliases: ["regulatory submission"]
+  theme_id: reporting

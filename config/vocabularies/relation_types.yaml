@@ -1,0 +1,38 @@
+# Cross-level relation types between obligations.
+# Used to type edges in the regulatory graph (NetworkX/GraphML).
+
+- id: clarifies
+  canonical_en: clarifies
+  canonical_fr: clarifie
+  typical_direction: "L3 -> L1/L2"
+  notes: "ESMA Guideline clarifying a Level 1 or Level 2 obligation."
+
+- id: strengthens
+  canonical_en: strengthens
+  canonical_fr: renforce
+  typical_direction: "national -> EU"
+  notes: "AMF doctrine adding requirements above ESMA or EU minima."
+
+- id: operationalizes
+  canonical_en: operationalizes
+  canonical_fr: opérationnalise
+  typical_direction: "L2 -> L1"
+  notes: "Delegated Regulation / RTS operationalising a Level 1 principle."
+
+- id: interprets
+  canonical_en: interprets
+  canonical_fr: interprète
+  typical_direction: "Q&A -> any"
+  notes: "ESMA Q&A interpreting an article of a Directive, Regulation or RTS."
+
+- id: derogates
+  canonical_en: derogates
+  canonical_fr: déroge
+  typical_direction: "any"
+  notes: "Establishes an exemption or derogation from a baseline obligation."
+
+- id: references
+  canonical_en: references
+  canonical_fr: référence
+  typical_direction: "any"
+  notes: "Neutral citation without a stronger semantic relation detected."

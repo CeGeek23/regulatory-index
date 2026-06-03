@@ -1,0 +1,188 @@
+# Controlled vocabulary of regulatory actors for AIFMD scope.
+# Each entry must have a unique `id` (snake_case). The `canonical_*` fields are
+# what the LangExtract schema will accept as canonical values. `aliases` are
+# surface forms that should be recognised and mapped to canonical at extraction.
+#
+# Coverage: minimal v0 derived from AIFMD L1 + L2 + ESMA + AMF terminology.
+# Expand iteratively; flag missing actors via `data/normalized/unmapped.csv`.
+
+- id: aifm
+  canonical_en: AIFM
+  canonical_fr: Gestionnaire de FIA
+  aliases: ["Alternative Investment Fund Manager", "AIF Manager", "Gestionnaire d'AIF", "Société de gestion AIFM"]
+  legal_basis: "Directive 2011/61/EU Art. 4(1)(b)"
+
+- id: ucits_manco
+  canonical_en: UCITS ManCo
+  canonical_fr: Société de gestion d'OPCVM
+  aliases: ["UCITS Management Company", "ManCo", "société de gestion UCITS"]
+  legal_basis: "Directive 2009/65/EC Art. 2(1)(b)"
+
+- id: depositary
+  canonical_en: Depositary
+  canonical_fr: Dépositaire
+  aliases: ["Custodian (AIFMD context)", "dépositaire d'AIF", "depositary bank"]
+  legal_basis: "Directive 2011/61/EU Art. 21"
+
+- id: depositary_oversight_function
+  canonical_en: Depositary Oversight Function
+  canonical_fr: Fonction de contrôle dépositaire
+  aliases: ["fonction de surveillance dépositaire"]
+
+- id: compliance_function
+  canonical_en: Compliance Function
+  canonical_fr: Fonction Conformité
+  aliases: ["compliance officer team", "fonction de conformité"]
+
+- id: rcci
+  canonical_en: RCCI
+  canonical_fr: RCCI
+  aliases: ["Responsable de la Conformité et du Contrôle Interne", "Responsible Compliance and Internal Control Officer"]
+  legal_basis: "RG AMF Art. 313-2 et s."
+
+- id: risk_function
+  canonical_en: Risk Management Function
+  canonical_fr: Fonction Gestion des Risques
+  aliases: ["risk function", "fonction de gestion des risques"]
+  legal_basis: "Directive 2011/61/EU Art. 15"
+
+- id: internal_audit
+  canonical_en: Internal Audit
+  canonical_fr: Audit Interne
+  aliases: ["audit interne", "internal audit function"]
+
+- id: board_of_directors
+  canonical_en: Board of Directors
+  canonical_fr: Conseil d'Administration
+  aliases: ["Management Board", "Board", "Conseil de Surveillance"]
+
+- id: senior_management
+  canonical_en: Senior Management
+  canonical_fr: Direction Générale
+  aliases: ["executive management", "dirigeants effectifs", "dirigeants"]
+  legal_basis: "Directive 2011/61/EU Art. 4(1)(s)"
+
+- id: portfolio_manager
+  canonical_en: Portfolio Manager
+  canonical_fr: Gérant de Portefeuille
+  aliases: ["investment manager", "gérant"]
+
+- id: distributor
+  canonical_en: Distributor
+  canonical_fr: Distributeur
+  aliases: ["placement agent", "distributeur de parts"]
+
+- id: transfer_agent
+  canonical_en: Transfer Agent
+  canonical_fr: Teneur de Compte Conservateur
+  aliases: ["TA", "teneur de compte"]
+
+- id: administrator
+  canonical_en: Fund Administrator
+  canonical_fr: Administrateur de Fonds
+  aliases: ["fund admin"]
+
+- id: valuation_function
+  canonical_en: Valuation Function
+  canonical_fr: Fonction Valorisation
+  aliases: ["valuer", "external valuer", "valorisateur"]
+  legal_basis: "Directive 2011/61/EU Art. 19"
+
+- id: aml_function
+  canonical_en: AML Function
+  canonical_fr: Fonction LCB-FT
+  aliases: ["anti-money laundering function", "Lutte contre le Blanchiment et le Financement du Terrorisme"]
+
+- id: investor
+  canonical_en: Investor
+  canonical_fr: Investisseur
+  aliases: ["unitholder", "porteur de parts", "souscripteur"]
+
+- id: professional_investor
+  canonical_en: Professional Investor
+  canonical_fr: Investisseur Professionnel
+  aliases: ["client professionnel"]
+  legal_basis: "MiFID II Annex II"
+
+- id: retail_investor
+  canonical_en: Retail Investor
+  canonical_fr: Investisseur de Détail
+  aliases: ["non-professional investor", "client non-professionnel"]
+
+- id: competent_authority
+  canonical_en: Competent Authority
+  canonical_fr: Autorité Compétente
+  aliases: ["national competent authority", "NCA"]
+
+- id: esma
+  canonical_en: ESMA
+  canonical_fr: ESMA
+  aliases: ["European Securities and Markets Authority", "Autorité Européenne des Marchés Financiers"]
+
+- id: amf
+  canonical_en: AMF
+  canonical_fr: AMF
+  aliases: ["Autorité des Marchés Financiers", "French Financial Markets Authority"]
+
+- id: acpr
+  canonical_en: ACPR
+  canonical_fr: ACPR
+  aliases: ["Autorité de Contrôle Prudentiel et de Résolution"]
+
+- id: external_auditor
+  canonical_en: External Auditor
+  canonical_fr: Commissaire aux Comptes
+  aliases: ["statutory auditor", "CAC"]
+
+- id: delegate
+  canonical_en: Delegate
+  canonical_fr: Délégataire
+  aliases: ["third-party delegate", "délégataire externe"]
+  legal_basis: "Directive 2011/61/EU Art. 20"
+
+- id: prime_broker
+  canonical_en: Prime Broker
+  canonical_fr: Courtier Principal
+  aliases: ["PB"]
+  legal_basis: "Directive 2011/61/EU Art. 14"
+
+- id: investment_committee
+  canonical_en: Investment Committee
+  canonical_fr: Comité d'Investissement
+  aliases: []
+
+- id: risk_committee
+  canonical_en: Risk Committee
+  canonical_fr: Comité des Risques
+  aliases: []
+
+- id: aif
+  canonical_en: AIF
+  canonical_fr: FIA
+  aliases: ["Alternative Investment Fund", "Fonds d'Investissement Alternatif", "fonds"]
+  legal_basis: "Directive 2011/61/EU Art. 4(1)(a)"
+
+- id: service_provider
+  canonical_en: Service Provider
+  canonical_fr: Prestataire de Services
+  aliases: ["third-party service provider", "prestataire"]
+
+- id: counterparty
+  canonical_en: Counterparty
+  canonical_fr: Contrepartie
+  aliases: ["trading counterparty", "contrepartie de marché"]
+
+- id: legal_function
+  canonical_en: Legal Function
+  canonical_fr: Fonction Juridique
+  aliases: ["legal department"]
+
+- id: oversight_committee
+  canonical_en: Oversight Committee
+  canonical_fr: Comité de Surveillance
+  aliases: []
+
+- id: operations_team
+  canonical_en: Operations Team
+  canonical_fr: Équipe Opérations
+  aliases: ["middle office", "back office"]

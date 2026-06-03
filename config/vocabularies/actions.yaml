@@ -1,0 +1,232 @@
+# Controlled vocabulary of regulatory actions (verbs).
+# `canonical` is the lemma form. `semantic_group` clusters verbs by intent
+# (governance, monitoring, reporting, control, escalation, etc.) to enable
+# thematic aggregations in the final table.
+
+- id: establish
+  canonical_en: establish
+  canonical_fr: établir
+  aliases: ["set up", "put in place", "mettre en place", "instaurer"]
+  semantic_group: governance
+
+- id: maintain
+  canonical_en: maintain
+  canonical_fr: maintenir
+  aliases: ["sustain", "keep", "préserver"]
+  semantic_group: governance
+
+- id: implement
+  canonical_en: implement
+  canonical_fr: mettre en œuvre
+  aliases: ["deploy", "appliquer"]
+  semantic_group: governance
+
+- id: document
+  canonical_en: document
+  canonical_fr: documenter
+  aliases: ["record in writing", "consigner"]
+  semantic_group: recordkeeping
+
+- id: archive
+  canonical_en: archive
+  canonical_fr: archiver
+  aliases: ["retain records", "conserver"]
+  semantic_group: recordkeeping
+
+- id: record
+  canonical_en: record
+  canonical_fr: enregistrer
+  aliases: ["log"]
+  semantic_group: recordkeeping
+
+- id: retain
+  canonical_en: retain
+  canonical_fr: conserver
+  aliases: ["keep records", "stocker"]
+  semantic_group: recordkeeping
+
+- id: monitor
+  canonical_en: monitor
+  canonical_fr: surveiller
+  aliases: ["track", "supervise on ongoing basis"]
+  semantic_group: monitoring
+
+- id: review
+  canonical_en: review
+  canonical_fr: réviser
+  aliases: ["examine periodically", "passer en revue"]
+  semantic_group: monitoring
+
+- id: assess
+  canonical_en: assess
+  canonical_fr: évaluer
+  aliases: ["evaluate", "apprécier"]
+  semantic_group: monitoring
+
+- id: test
+  canonical_en: test
+  canonical_fr: tester
+  aliases: ["stress-test", "éprouver"]
+  semantic_group: monitoring
+
+- id: control
+  canonical_en: control
+  canonical_fr: contrôler
+  aliases: ["verify control", "exercer un contrôle"]
+  semantic_group: control
+
+- id: verify
+  canonical_en: verify
+  canonical_fr: vérifier
+  aliases: ["check", "valider"]
+  semantic_group: control
+
+- id: validate
+  canonical_en: validate
+  canonical_fr: valider
+  aliases: ["approve", "homologuer"]
+  semantic_group: control
+
+- id: reconcile
+  canonical_en: reconcile
+  canonical_fr: réconcilier
+  aliases: ["match", "rapprocher"]
+  semantic_group: control
+
+- id: identify
+  canonical_en: identify
+  canonical_fr: identifier
+  aliases: ["detect", "repérer"]
+  semantic_group: detection
+
+- id: investigate
+  canonical_en: investigate
+  canonical_fr: enquêter
+  aliases: ["inquire", "diligenter"]
+  semantic_group: detection
+
+- id: analyze
+  canonical_en: analyse
+  canonical_fr: analyser
+  aliases: ["analyze"]
+  semantic_group: detection
+
+- id: classify
+  canonical_en: classify
+  canonical_fr: classifier
+  aliases: ["categorise", "qualifier"]
+  semantic_group: detection
+
+- id: report
+  canonical_en: report
+  canonical_fr: déclarer
+  aliases: ["submit report", "transmettre", "reporter"]
+  semantic_group: reporting
+
+- id: disclose
+  canonical_en: disclose
+  canonical_fr: communiquer
+  aliases: ["publish disclosure", "publier"]
+  semantic_group: reporting
+
+- id: notify
+  canonical_en: notify
+  canonical_fr: notifier
+  aliases: ["inform formally", "aviser"]
+  semantic_group: reporting
+
+- id: communicate
+  canonical_en: communicate
+  canonical_fr: informer
+  aliases: ["share information", "transmettre une information"]
+  semantic_group: reporting
+
+- id: produce
+  canonical_en: produce
+  canonical_fr: produire
+  aliases: ["generate report", "élaborer"]
+  semantic_group: reporting
+
+- id: calculate
+  canonical_en: calculate
+  canonical_fr: calculer
+  aliases: ["compute", "déterminer"]
+  semantic_group: computation
+
+- id: escalate
+  canonical_en: escalate
+  canonical_fr: escalader
+  aliases: ["raise to senior management", "remonter"]
+  semantic_group: escalation
+
+- id: approve
+  canonical_en: approve
+  canonical_fr: approuver
+  aliases: ["authorise", "agréer"]
+  semantic_group: authorisation
+
+- id: authorize
+  canonical_en: authorise
+  canonical_fr: autoriser
+  aliases: ["authorize", "permettre"]
+  semantic_group: authorisation
+
+- id: prohibit
+  canonical_en: prohibit
+  canonical_fr: interdire
+  aliases: ["forbid", "proscrire"]
+  semantic_group: authorisation
+
+- id: delegate
+  canonical_en: delegate
+  canonical_fr: déléguer
+  aliases: ["outsource", "confier"]
+  semantic_group: delegation
+
+- id: supervise
+  canonical_en: supervise
+  canonical_fr: superviser
+  aliases: ["oversee delegate", "contrôler la délégation"]
+  semantic_group: delegation
+
+- id: oversee
+  canonical_en: oversee
+  canonical_fr: assurer la surveillance de
+  aliases: ["have oversight over"]
+  semantic_group: monitoring
+
+- id: ensure
+  canonical_en: ensure
+  canonical_fr: s'assurer
+  aliases: ["guarantee", "garantir"]
+  semantic_group: governance
+
+- id: mitigate
+  canonical_en: mitigate
+  canonical_fr: atténuer
+  aliases: ["reduce risk", "réduire"]
+  semantic_group: risk_management
+
+- id: challenge
+  canonical_en: challenge
+  canonical_fr: challenger
+  aliases: ["question critically", "remettre en question"]
+  semantic_group: governance
+
+- id: perform
+  canonical_en: perform
+  canonical_fr: effectuer
+  aliases: ["carry out", "réaliser"]
+  semantic_group: execution
+
+- id: execute
+  canonical_en: execute
+  canonical_fr: exécuter
+  aliases: ["carry out instruction"]
+  semantic_group: execution
+
+- id: update
+  canonical_en: update
+  canonical_fr: mettre à jour
+  aliases: ["refresh", "actualiser"]
+  semantic_group: maintenance

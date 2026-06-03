@@ -1,0 +1,212 @@
+# Controlled vocabulary of conditions / temporal modalities.
+# `category` distinguishes timing, materiality, scope conditions, etc.
+
+- id: continuously
+  canonical_en: continuously
+  canonical_fr: en continu
+  category: timing
+
+- id: periodically
+  canonical_en: periodically
+  canonical_fr: périodiquement
+  category: timing
+
+- id: annually
+  canonical_en: annually
+  canonical_fr: annuellement
+  category: timing
+
+- id: at_least_annually
+  canonical_en: at least annually
+  canonical_fr: au moins annuellement
+  category: timing
+
+- id: monthly
+  canonical_en: monthly
+  canonical_fr: mensuellement
+  category: timing
+
+- id: quarterly
+  canonical_en: quarterly
+  canonical_fr: trimestriellement
+  category: timing
+
+- id: without_undue_delay
+  canonical_en: without undue delay
+  canonical_fr: sans retard injustifié
+  category: timing
+
+- id: immediately
+  canonical_en: immediately
+  canonical_fr: immédiatement
+  category: timing
+
+- id: prior_to_investment
+  canonical_en: prior to investment
+  canonical_fr: préalablement à l'investissement
+  category: timing
+
+- id: pre_trade
+  canonical_en: pre-trade
+  canonical_fr: pré-négociation
+  category: timing
+
+- id: post_trade
+  canonical_en: post-trade
+  canonical_fr: post-négociation
+  category: timing
+
+- id: during_onboarding
+  canonical_en: during onboarding
+  canonical_fr: lors de l'entrée en relation
+  category: timing
+
+- id: before_marketing
+  canonical_en: before marketing
+  canonical_fr: avant commercialisation
+  category: timing
+
+- id: before_implementation
+  canonical_en: before implementation
+  canonical_fr: avant mise en œuvre
+  category: timing
+
+- id: upon_request
+  canonical_en: upon request
+  canonical_fr: sur demande
+  category: trigger
+
+- id: in_case_of_anomaly
+  canonical_en: in case of anomaly
+  canonical_fr: en cas d'anomalie
+  category: trigger
+
+- id: where_appropriate
+  canonical_en: where appropriate
+  canonical_fr: lorsque cela est approprié
+  category: modality
+
+- id: if_material
+  canonical_en: if material
+  canonical_fr: si significatif
+  category: materiality
+
+- id: proportionately
+  canonical_en: proportionately
+  canonical_fr: de manière proportionnée
+  category: modality
+
+- id: for_each_compartment
+  canonical_en: for each compartment
+  canonical_fr: pour chaque compartiment
+  category: scope
+
+- id: in_stressed_market_conditions
+  canonical_en: in stressed market conditions
+  canonical_fr: en conditions de marché tendues
+  category: trigger
+
+- id: where_leverage_is_used
+  canonical_en: where leverage is used
+  canonical_fr: en cas de recours au levier
+  category: scope
+
+- id: if_retail_investors_involved
+  canonical_en: if retail investors involved
+  canonical_fr: si investisseurs de détail concernés
+  category: scope
+
+- id: subject_to_board_approval
+  canonical_en: subject to board approval
+  canonical_fr: sous réserve d'approbation du conseil
+  category: governance
+
+- id: within_regulatory_limits
+  canonical_en: within regulatory limits
+  canonical_fr: dans les limites réglementaires
+  category: scope
+
+- id: when_outsourcing_exists
+  canonical_en: when outsourcing exists
+  canonical_fr: en cas d'externalisation
+  category: trigger
+
+- id: if_liquidity_risk_identified
+  canonical_en: if liquidity risk identified
+  canonical_fr: si risque de liquidité identifié
+  category: trigger
+
+- id: for_significant_exposures
+  canonical_en: for significant exposures
+  canonical_fr: pour les expositions significatives
+  category: scope
+
+- id: during_valuation_cycle
+  canonical_en: during valuation cycle
+  canonical_fr: pendant le cycle de valorisation
+  category: timing
+
+- id: where_delegation_applies
+  canonical_en: where delegation applies
+  canonical_fr: en cas de délégation
+  category: scope
+
+- id: according_to_control_plan
+  canonical_en: according to control plan
+  canonical_fr: conformément au plan de contrôle
+  category: modality
+
+- id: where_required_by_law
+  canonical_en: where required by law
+  canonical_fr: lorsque la loi l'exige
+  category: scope
+
+- id: cross_border_distribution
+  canonical_en: cross-border distribution
+  canonical_fr: distribution transfrontalière
+  category: scope
+
+- id: where_derivatives_are_used
+  canonical_en: where derivatives are used
+  canonical_fr: en cas d'utilisation de dérivés
+  category: scope
+
+- id: during_periodic_review
+  canonical_en: during periodic review
+  canonical_fr: lors de la revue périodique
+  category: timing
+
+- id: if_esg_labelled_fund
+  canonical_en: if ESG-labelled fund
+  canonical_fr: si fonds labellisé ESG
+  category: scope
+
+- id: where_aml_risk_is_high
+  canonical_en: where AML risk is high
+  canonical_fr: en cas de risque LCB-FT élevé
+  category: scope
+
+- id: in_exceptional_circumstances
+  canonical_en: in exceptional circumstances
+  canonical_fr: en circonstances exceptionnelles
+  category: trigger
+
+- id: during_liquidity_crisis
+  canonical_en: during liquidity crisis
+  canonical_fr: en cas de crise de liquidité
+  category: trigger
+
+- id: during_retention_period
+  canonical_en: during retention period
+  canonical_fr: pendant la période de conservation
+  category: timing
+
+- id: if_critical_function_outsourced
+  canonical_en: if critical function outsourced
+  canonical_fr: si fonction critique externalisée
+  category: scope
+
+- id: where_suspicious_activity_detected
+  canonical_en: where suspicious activity detected
+  canonical_fr: en cas de détection d'activité suspecte
+  category: trigger

@@ -1,0 +1,122 @@
+# High-level regulatory themes used to aggregate obligations.
+# `code` is a short 3-5 letter mnemonic used in the obligation_id pattern
+# AIFMD-{code}-{NNNN}. Codes are stable identifiers, do not rename.
+
+- id: governance
+  canonical_en: Governance
+  canonical_fr: Gouvernance
+  code: GOV
+  sub_themes:
+    - Organisational requirements
+    - Internal control framework
+    - Senior management responsibility
+
+- id: risk_management
+  canonical_en: Risk Management
+  canonical_fr: Gestion des Risques
+  code: RISK
+  sub_themes:
+    - Risk framework
+    - Market risk
+    - Counterparty risk
+    - Operational risk
+    - Leverage
+    - Stress testing
+
+- id: liquidity
+  canonical_en: Liquidity Management
+  canonical_fr: Gestion de la Liquidité
+  code: LIQ
+  sub_themes:
+    - Liquidity stress testing
+    - Liquidity management tools
+    - Redemption arrangements
+
+- id: valuation
+  canonical_en: Valuation
+  canonical_fr: Valorisation
+  code: VAL
+  sub_themes:
+    - NAV computation
+    - External valuer
+    - Pricing policy
+
+- id: depositary
+  canonical_en: Depositary
+  canonical_fr: Dépositaire
+  code: DEP
+  sub_themes:
+    - Safekeeping
+    - Oversight duties
+    - Cash flow monitoring
+
+- id: delegation
+  canonical_en: Delegation
+  canonical_fr: Délégation
+  code: DELG
+  sub_themes:
+    - Due diligence on delegates
+    - Ongoing oversight
+    - Sub-delegation
+
+- id: conflicts_of_interest
+  canonical_en: Conflicts of Interest
+  canonical_fr: Conflits d'Intérêts
+  code: CONF
+  sub_themes:
+    - Identification
+    - Mitigation
+    - Disclosure
+
+- id: investor_disclosure
+  canonical_en: Investor Disclosure
+  canonical_fr: Information des Investisseurs
+  code: INFO
+  sub_themes:
+    - Pre-investment information
+    - Periodic reporting
+    - Material change notification
+
+- id: reporting
+  canonical_en: Regulatory Reporting
+  canonical_fr: Reporting Réglementaire
+  code: RPT
+  sub_themes:
+    - Annex IV reporting
+    - Periodic supervisory reporting
+    - Ad hoc reporting
+
+- id: aml
+  canonical_en: AML/CFT
+  canonical_fr: LCB-FT
+  code: AML
+  sub_themes:
+    - Customer due diligence
+    - Transaction monitoring
+    - Suspicious activity reporting
+
+- id: remuneration
+  canonical_en: Remuneration
+  canonical_fr: Rémunération
+  code: REM
+  sub_themes:
+    - Identified staff
+    - Variable remuneration
+    - Disclosure
+
+- id: best_execution
+  canonical_en: Best Execution
+  canonical_fr: Meilleure Exécution
+  code: EXEC
+  sub_themes:
+    - Execution policy
+    - Order handling
+
+- id: esg
+  canonical_en: ESG / Sustainability
+  canonical_fr: ESG / Durabilité
+  code: ESG
+  sub_themes:
+    - SFDR classification
+    - Taxonomy alignment
+    - Sustainability risk

@@ -1,0 +1,25 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Test/tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Project data
+.env
+data/raw/
+data/units/
+data/obligations/
+data/relations/
+data/exports/
+data/index.duckdb
+data/index.duckdb.wal

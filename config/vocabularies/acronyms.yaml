@@ -1,0 +1,122 @@
+# Acronym glossary injected into LangExtract prompt_description.
+# Helps the LLM correctly resolve domain-specific abbreviations.
+
+- short: AIFM
+  long_en: Alternative Investment Fund Manager
+  long_fr: Gestionnaire de Fonds d'Investissement Alternatif
+
+- short: AIF
+  long_en: Alternative Investment Fund
+  long_fr: Fonds d'Investissement Alternatif (FIA)
+
+- short: FIA
+  long_en: Alternative Investment Fund
+  long_fr: Fonds d'Investissement Alternatif
+
+- short: AIFMD
+  long_en: Alternative Investment Fund Managers Directive (2011/61/EU)
+  long_fr: Directive sur les gestionnaires de fonds d'investissement alternatifs
+
+- short: UCITS
+  long_en: Undertakings for Collective Investment in Transferable Securities
+  long_fr: OPCVM - Organismes de Placement Collectif en Valeurs Mobilières
+
+- short: OPCVM
+  long_en: UCITS
+  long_fr: Organismes de Placement Collectif en Valeurs Mobilières
+
+- short: ManCo
+  long_en: Management Company (UCITS or AIFM)
+  long_fr: Société de gestion
+
+- short: NAV
+  long_en: Net Asset Value
+  long_fr: Valeur Liquidative (VL)
+
+- short: VL
+  long_en: Net Asset Value
+  long_fr: Valeur Liquidative
+
+- short: RTS
+  long_en: Regulatory Technical Standard
+  long_fr: Norme Technique Réglementaire
+
+- short: ITS
+  long_en: Implementing Technical Standard
+  long_fr: Norme Technique d'Exécution
+
+- short: ESMA
+  long_en: European Securities and Markets Authority
+  long_fr: Autorité Européenne des Marchés Financiers
+
+- short: AMF
+  long_en: Autorité des Marchés Financiers (French regulator)
+  long_fr: Autorité des Marchés Financiers
+
+- short: ACPR
+  long_en: Autorité de Contrôle Prudentiel et de Résolution
+  long_fr: Autorité de Contrôle Prudentiel et de Résolution
+
+- short: RCCI
+  long_en: Responsible Compliance and Internal Control Officer
+  long_fr: Responsable de la Conformité et du Contrôle Interne
+
+- short: RG AMF
+  long_en: AMF General Regulation
+  long_fr: Règlement Général de l'AMF
+
+- short: KIID
+  long_en: Key Investor Information Document
+  long_fr: Document d'Informations Clés pour l'Investisseur (DICI)
+
+- short: DICI
+  long_en: Key Investor Information Document
+  long_fr: Document d'Informations Clés pour l'Investisseur
+
+- short: KID
+  long_en: Key Information Document (PRIIPs)
+  long_fr: Document d'Informations Clés (PRIIPs)
+
+- short: PRIIPs
+  long_en: Packaged Retail and Insurance-based Investment Products
+  long_fr: Produits d'Investissement Packagés de Détail et fondés sur l'Assurance
+
+- short: SFDR
+  long_en: Sustainable Finance Disclosure Regulation
+  long_fr: Règlement sur la Publication d'Informations en Matière de Durabilité
+
+- short: MiFID II
+  long_en: Markets in Financial Instruments Directive II
+  long_fr: Directive sur les Marchés d'Instruments Financiers II
+
+- short: LCB-FT
+  long_en: Anti-Money Laundering and Combating the Financing of Terrorism
+  long_fr: Lutte Contre le Blanchiment et le Financement du Terrorisme
+
+- short: AML
+  long_en: Anti-Money Laundering
+  long_fr: Lutte Contre le Blanchiment
+
+- short: STR
+  long_en: Suspicious Transaction Report
+  long_fr: Déclaration de Soupçon
+
+- short: VaR
+  long_en: Value at Risk
+  long_fr: Valeur en Risque
+
+- short: BCP
+  long_en: Business Continuity Plan
+  long_fr: Plan de Continuité d'Activité (PCA)
+
+- short: PCA
+  long_en: Business Continuity Plan
+  long_fr: Plan de Continuité d'Activité
+
+- short: CAC
+  long_en: Statutory Auditor
+  long_fr: Commissaire aux Comptes
+
+- short: NCA
+  long_en: National Competent Authority
+  long_fr: Autorité Nationale Compétente

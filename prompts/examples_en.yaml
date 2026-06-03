@@ -1,0 +1,84 @@
+# Few-shot examples for English regulatory text extraction.
+# Each example: a short passage + a list of gold obligations with verbatim quotes
+# that MUST appear literally inside the passage. char_interval is computed at
+# load time from the verbatim string.
+
+- text: |
+    AIFMs shall establish an independent risk management function which shall be functionally and hierarchically separated from the operating units. The risk management function shall review the risk policy at least annually.
+  extractions:
+    - verbatim: "AIFMs shall establish an independent risk management function"
+      actor: AIFM
+      action: establish
+      object: independent risk management function
+      theme: Risk Management
+      condition: null
+      scope: null
+      exception: null
+      cited_references: []
+    - verbatim: "The risk management function shall review the risk policy at least annually"
+      actor: Risk Management Function
+      action: review
+      object: risk policy
+      theme: Risk Management
+      condition: at least annually
+      cited_references: []
+
+- text: |
+    For each AIF that it manages, the AIFM shall employ an appropriate liquidity management system and adopt procedures which enable it to monitor the liquidity risk of the AIF and to ensure that the liquidity profile of the investments of the AIF complies with its underlying obligations.
+  extractions:
+    - verbatim: "the AIFM shall employ an appropriate liquidity management system"
+      actor: AIFM
+      action: implement
+      object: liquidity management process
+      theme: Liquidity Management
+      condition: for each compartment
+      scope: per AIF
+      cited_references: []
+    - verbatim: "adopt procedures which enable it to monitor the liquidity risk of the AIF"
+      actor: AIFM
+      action: monitor
+      object: liquidity risk of the AIF
+      theme: Liquidity Management
+      condition: continuously
+      cited_references: []
+
+- text: |
+    The depositary shall, in accordance with Article 21(7) of Directive 2011/61/EU, ensure that the AIF's cash flows are properly monitored, and in particular that all payments made by or on behalf of investors upon the subscription of units or shares of an AIF have been received.
+  extractions:
+    - verbatim: "ensure that the AIF's cash flows are properly monitored"
+      actor: Depositary
+      action: ensure
+      object: cash positions
+      theme: Depositary
+      condition: continuously
+      cited_references:
+        - "Article 21(7) of Directive 2011/61/EU"
+
+- text: |
+    AIFMs delegating one or more of their functions to third parties shall remain responsible for proper performance and shall set up effective methods and procedures to monitor the activities of the delegate on an ongoing basis.
+  extractions:
+    - verbatim: "AIFMs delegating one or more of their functions to third parties shall remain responsible for proper performance"
+      actor: AIFM
+      action: ensure
+      object: delegation arrangement
+      theme: Delegation
+      condition: where delegation applies
+      cited_references: []
+    - verbatim: "shall set up effective methods and procedures to monitor the activities of the delegate on an ongoing basis"
+      actor: AIFM
+      action: monitor
+      object: third-party delegate
+      theme: Delegation
+      condition: continuously
+      cited_references: []
+
+- text: |
+    Where leverage is employed by the AIF, the AIFM shall report to the competent authorities the overall level of leverage, a break-down between leverage arising from borrowing of cash or securities and leverage embedded in financial derivatives, and the extent to which the AIF's assets have been reused under leveraging arrangements.
+  extractions:
+    - verbatim: "the AIFM shall report to the competent authorities the overall level of leverage"
+      actor: AIFM
+      action: report
+      object: leverage exposure
+      theme: Regulatory Reporting
+      condition: where leverage is used
+      cited_references: []

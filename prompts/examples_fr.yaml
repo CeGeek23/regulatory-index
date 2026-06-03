@@ -1,0 +1,74 @@
+# Exemples few-shot pour l'extraction sur texte réglementaire français (AMF, transposition AIFMD).
+# Chaque exemple : un passage court + une liste d'obligations gold avec citations
+# verbatim qui DOIVENT apparaître littéralement dans le passage. char_interval
+# est calculé au chargement à partir de la chaîne verbatim.
+
+- text: |
+    La société de gestion établit une fonction permanente de gestion des risques, hiérarchiquement et fonctionnellement indépendante des unités opérationnelles. La fonction de gestion des risques réexamine la politique de gestion des risques au moins une fois par an.
+  extractions:
+    - verbatim: "La société de gestion établit une fonction permanente de gestion des risques, hiérarchiquement et fonctionnellement indépendante des unités opérationnelles"
+      actor: Gestionnaire de FIA
+      action: établir
+      object: dispositif de gestion des risques
+      theme: Gestion des Risques
+      condition: null
+      cited_references: []
+    - verbatim: "La fonction de gestion des risques réexamine la politique de gestion des risques au moins une fois par an"
+      actor: Fonction Gestion des Risques
+      action: réviser
+      object: politique de gestion des risques
+      theme: Gestion des Risques
+      condition: au moins annuellement
+      cited_references: []
+
+- text: |
+    Le RCCI veille à ce que les transactions personnelles des collaborateurs concernés soient identifiées, enregistrées et que les conflits d'intérêts potentiels soient traités sans retard injustifié.
+  extractions:
+    - verbatim: "Le RCCI veille à ce que les transactions personnelles des collaborateurs concernés soient identifiées, enregistrées"
+      actor: RCCI
+      action: surveiller
+      object: transaction personnelle
+      theme: Conflits d'Intérêts
+      condition: en continu
+      cited_references: []
+    - verbatim: "les conflits d'intérêts potentiels soient traités sans retard injustifié"
+      actor: RCCI
+      action: identifier
+      object: registre des conflits d'intérêts
+      theme: Conflits d'Intérêts
+      condition: sans retard injustifié
+      cited_references: []
+
+- text: |
+    Le dépositaire, conformément à l'article L. 214-24-8 du code monétaire et financier, s'assure du suivi adéquat des flux de liquidités du FIA et veille à ce que tous les paiements effectués par les investisseurs lors de la souscription aient été reçus.
+  extractions:
+    - verbatim: "Le dépositaire, conformément à l'article L. 214-24-8 du code monétaire et financier, s'assure du suivi adéquat des flux de liquidités du FIA"
+      actor: Dépositaire
+      action: s'assurer
+      object: positions de trésorerie
+      theme: Dépositaire
+      condition: en continu
+      cited_references:
+        - "article L. 214-24-8 du code monétaire et financier"
+
+- text: |
+    Avant tout investissement, la société de gestion procède à une analyse de diligence appropriée et documentée, en cohérence avec la stratégie d'investissement et le profil de risque du FIA.
+  extractions:
+    - verbatim: "la société de gestion procède à une analyse de diligence appropriée et documentée"
+      actor: Gestionnaire de FIA
+      action: effectuer
+      object: processus de diligence
+      theme: Gouvernance
+      condition: préalablement à l'investissement
+      cited_references: []
+
+- text: |
+    Lorsqu'elle a recours au levier, la société de gestion communique aux autorités compétentes le niveau global de levier ainsi que la ventilation entre le levier provenant d'emprunts et celui résultant d'instruments financiers à terme.
+  extractions:
+    - verbatim: "la société de gestion communique aux autorités compétentes le niveau global de levier"
+      actor: Gestionnaire de FIA
+      action: déclarer
+      object: exposition au levier
+      theme: Reporting Réglementaire
+      condition: en cas de recours au levier
+      cited_references: []
