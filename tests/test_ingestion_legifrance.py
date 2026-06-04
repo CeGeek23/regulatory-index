@@ -30,6 +30,8 @@ def test_parse_article_extracts_body_paragraphs() -> None:
         article_id="LEGIARTI000027780446",
         article_number="L. 214-24-8",
         title="Code monétaire et financier (France)",
+        level="national",
+        issuer="FR_Legislator",
         url="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027780446",
     )
     assert len(units) == 1
@@ -55,6 +57,8 @@ def test_parse_article_falls_back_to_body_when_no_content_div() -> None:
         article_id="LEGIARTI",
         article_number="L. 1-1",
         title="t",
+        level="national",
+        issuer="FR_Legislator",
         url="https://example.org",
     )
     assert len(units) == 1

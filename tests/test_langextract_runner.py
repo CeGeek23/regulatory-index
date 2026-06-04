@@ -13,7 +13,7 @@ from typing import Any
 import langextract as lx
 import pytest
 
-from regulatory_index.extraction.langextract_runner import RunnerConfig, output_paths, run
+from regulatory_index.extraction.langextract_runner import RunnerConfig, output_path, run
 from regulatory_index.ingestion.unit_loader import NormativeUnit
 
 
@@ -80,7 +80,7 @@ def test_extract_one_unit_persists_json(
     counts = run([en_unit], out_dir=tmp_path, config=RunnerConfig(model_id="mock"))
     assert counts == {"processed": 1, "skipped": 0, "failed": 0}
 
-    json_path, _ = output_paths(tmp_path, en_unit)
+    json_path = output_path(tmp_path, en_unit)
     assert json_path.exists()
     payload = json.loads(json_path.read_text(encoding="utf-8"))
     assert payload["unit"]["unit_id"] == en_unit.unit_id
@@ -92,7 +92,7 @@ def test_extract_one_unit_persists_json(
 def test_idempotent_skip_when_json_exists(
     tmp_path: Path, en_unit: NormativeUnit, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    json_path, _ = output_paths(tmp_path, en_unit)
+    json_path = output_path(tmp_path, en_unit)
     json_path.parent.mkdir(parents=True, exist_ok=True)
     json_path.write_text("{}", encoding="utf-8")  # pretend already-extracted
 
@@ -111,7 +111,7 @@ def test_failure_is_logged_and_does_not_abort(
 
     def fake_extract(*, text_or_documents: str, **_: Any) -> lx.data.AnnotatedDocument:
         # First unit explodes, second succeeds.
-        if "Article 15 test text" in text_or_documents or text_or_documents.startswith("AIFMs"):
+        if text_or_documents.startswith("AIFMs"):
             raise RuntimeError("ollama unreachable")
         return _fake_annotated_doc(
             text_or_documents,

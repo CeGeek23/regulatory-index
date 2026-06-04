@@ -2,19 +2,25 @@ from datetime import UTC, datetime
 
 import networkx as nx
 
-from regulatory_index.linking.citation_extractor import resolve_all, resolve_citation
+from regulatory_index.linking.citation_extractor import (
+    parse_article_locator,
+    resolve_all,
+    resolve_citation,
+)
 from regulatory_index.linking.graph_builder import build_graph, build_relations
 from regulatory_index.schemas.obligation import Obligation
 from regulatory_index.schemas.relation import CrossLevelRelationType
-from regulatory_index.schemas.source import Source
+from regulatory_index.schemas.source import Issuer, Level, Source
 
 
 def _obligation(
     oid: str,
-    level: int | str = 1,
-    issuer: str = "EU_Parliament_Council",
+    level: Level = 1,
+    issuer: Issuer = "EU_Parliament_Council",
     cited: list[str] | None = None,
     title: str = "Directive 2011/61/EU on AIFMs",
+    source_id_base: str = "SRC",
+    article: str | None = None,
 ) -> Obligation:
     return Obligation(
         obligation_id=oid,
@@ -22,11 +28,12 @@ def _obligation(
         action="establish",
         object="risk management framework",
         source=Source(
-            source_id=f"SRC#{oid}",
+            source_id=f"{source_id_base}#{oid}",
             title=title,
             celex="32011L0061",
-            level=level,  # type: ignore[arg-type]
-            issuer=issuer,  # type: ignore[arg-type]
+            level=level,
+            issuer=issuer,
+            article=article,
             url="https://example.org",
             language="EN",
         ),
@@ -130,3 +137,79 @@ def test_build_graph_produces_nodes_and_edges() -> None:
     assert stats.source_nodes >= 5  # several known sources in the registry
     assert stats.edges == 1
     assert stats.edges_by_type.get("clarifies") == 1
+
+
+def test_parse_article_locator_handles_en_fr_and_parentheses() -> None:
+    assert parse_article_locator("Article 15(3) of Directive 2011/61/EU") == "15"
+    assert parse_article_locator("Article 38 of Regulation 231/2013") == "38"
+    assert parse_article_locator("article 44, paragraphe 2") == "44"
+    assert parse_article_locator("Art. 47") == "47"
+    assert parse_article_locator("Articles 38 to 40 of Regulation 231/2013") == "38"
+    assert parse_article_locator("Directive 2011/61/EU") is None
+    assert parse_article_locator("DOC-2014-06") is None
+
+
+def test_article_level_link_targets_specific_obligation() -> None:
+    target = _obligation(
+        "AIFMD-RISK-0050",
+        level=1,
+        issuer="EU_Parliament_Council",
+        title="Directive 2011/61/EU on AIFMs",
+        source_id_base="AIFMD_L1",
+        article="15",
+    )
+    source = _obligation(
+        "AIFMD-RISK-0060",
+        level=2,
+        issuer="EU_Commission",
+        title="Commission Delegated Regulation (EU) 231/2013",
+        cited=["Article 15(3) of Directive 2011/61/EU"],
+        source_id_base="AIFMD_L2",
+        article="38",
+    )
+    resolved, _ = resolve_all([source, target])
+    relations = build_relations([source, target], resolved)
+    assert len(relations) == 1
+    # Links to the specific target obligation at Article 15, not the document node.
+    assert relations[0].target_obligation_id == "AIFMD-RISK-0050"
+    assert relations[0].relation_type is CrossLevelRelationType.OPERATIONALIZES
+
+
+def test_no_article_falls_back_to_source_node() -> None:
+    target = _obligation(
+        "AIFMD-RISK-0050",
+        level=1,
+        source_id_base="AIFMD_L1",
+        article="15",
+    )
+    source = _obligation(
+        "AIFMD-RISK-0060",
+        level=2,
+        issuer="EU_Commission",
+        title="Commission Delegated Regulation (EU) 231/2013",
+        cited=["Directive 2011/61/EU"],
+        source_id_base="AIFMD_L2",
+        article="38",
+    )
+    resolved, _ = resolve_all([source, target])
+    relations = build_relations([source, target], resolved)
+    assert len(relations) == 1
+    assert relations[0].target_obligation_id == "AIFMD_L1#source"
+
+
+def test_article_level_link_excludes_self_reference() -> None:
+    # An obligation citing its own article must not link to itself; with no other
+    # target at that article it falls back to the document node.
+    ob = _obligation(
+        "AIFMD-RISK-0070",
+        level=1,
+        issuer="EU_Parliament_Council",
+        title="Directive 2011/61/EU on AIFMs",
+        cited=["Article 15 of Directive 2011/61/EU"],
+        source_id_base="AIFMD_L1",
+        article="15",
+    )
+    resolved, _ = resolve_all([ob])
+    relations = build_relations([ob], resolved)
+    assert len(relations) == 1
+    assert relations[0].target_obligation_id == "AIFMD_L1#source"

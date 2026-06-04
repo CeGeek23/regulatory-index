@@ -6,7 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 Level = Literal[1, 2, 3, "national"]
-Issuer = Literal["EU_Parliament_Council", "EU_Commission", "ESMA", "AMF"]
+Issuer = Literal["EU_Parliament_Council", "EU_Commission", "ESMA", "AMF", "FR_Legislator"]
 Language = Literal["EN", "FR"]
 AlignmentStatus = Literal["match_exact", "match_fuzzy"]
 

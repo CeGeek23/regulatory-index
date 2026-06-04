@@ -11,12 +11,12 @@ related to AIFMD transposition, e.g. L. 214-24-8 (depositary duties).
 
 from __future__ import annotations
 
-import hashlib
 from pathlib import Path
 
 import httpx
 from bs4 import BeautifulSoup
 
+from ._disk import persist_html
 from .unit_loader import NormativeUnit
 
 USER_AGENT = "regulatory-index-poc/0.1 (research; contact: tchakontecedrick@gmail.com)"
@@ -39,12 +39,7 @@ def fetch_html(article_id: str, *, timeout: float = 30.0) -> str:
 
 
 def fetch_to_disk(article_id: str, out_dir: Path) -> Path:
-    html = fetch_html(article_id)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    sha = hashlib.sha256(html.encode("utf-8")).hexdigest()[:12]
-    path = out_dir / f"{article_id}_{sha}.html"
-    path.write_text(html, encoding="utf-8")
-    return path
+    return persist_html(fetch_html(article_id), out_dir, article_id)
 
 
 def parse_article(
@@ -54,6 +49,8 @@ def parse_article(
     article_id: str,
     article_number: str,
     title: str,
+    level: int | str,
+    issuer: str,
     url: str,
 ) -> list[NormativeUnit]:
     soup = BeautifulSoup(html, "lxml")
@@ -75,8 +72,8 @@ def parse_article(
             language="FR",
             source_meta={
                 "title": title,
-                "level": "national",
-                "issuer": "AMF",
+                "level": level,
+                "issuer": issuer,
                 "article": article_number,
                 "legifrance_id": article_id,
                 "url": url,

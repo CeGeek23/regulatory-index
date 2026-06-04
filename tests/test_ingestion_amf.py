@@ -38,6 +38,8 @@ def test_parse_doctrine_produces_one_unit() -> None:
         source_id="AMF_DOC_2014_06",
         doc_code="DOC-2014-06",
         title="Position-recommandation AMF DOC-2014-06 — Guide AIFM",
+        level="national",
+        issuer="AMF",
         url="https://www.amf-france.org/fr/reglementation/doctrine/doc-2014-06",
     )
     assert len(units) == 1
@@ -59,6 +61,8 @@ def test_parse_doctrine_returns_empty_when_no_main_content() -> None:
         source_id="AMF_DOC_2014_06",
         doc_code="DOC-2014-06",
         title="t",
+        level="national",
+        issuer="AMF",
         url="https://example.org",
     )
     assert units == []

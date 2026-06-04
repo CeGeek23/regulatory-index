@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from collections import Counter
 from collections.abc import Iterable
-from datetime import UTC, datetime
 
 from ..ingestion.unit_loader import NormativeUnit
 from .obligation import Obligation
@@ -113,7 +112,6 @@ def build_obligations(
 
     counter: dict[str, int] = {}
     out: list[Obligation] = []
-    now = datetime.now(UTC)
     for _, unit, raw, meta in items:
         code = _theme_code_for(raw.theme)
         counter[code] = counter.get(code, 0) + 1
@@ -137,7 +135,7 @@ def build_obligations(
                 char_interval=raw.char_interval,
                 cited_references=raw.cited_references,
                 extraction_model=meta.model_id,
-                extracted_at=meta.extracted_at or now,
+                extracted_at=meta.extracted_at,
             )
         )
     return out

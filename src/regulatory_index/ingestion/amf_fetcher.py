@@ -16,15 +16,19 @@ is a refinement for later.
 
 from __future__ import annotations
 
-import hashlib
 from pathlib import Path
 
 import httpx
 from bs4 import BeautifulSoup
 
+from ._disk import persist_html
 from .unit_loader import NormativeUnit
 
 USER_AGENT = "regulatory-index-poc/0.1 (research; contact: tchakontecedrick@gmail.com)"
+
+# AMF pages interleave operative text with nav links / short labels; skip <p>/<li>
+# fragments shorter than this so menus and one-word items don't pollute the body.
+_MIN_PARAGRAPH_CHARS = 20
 
 
 def amf_url(doc_code: str) -> str:
@@ -43,12 +47,7 @@ def fetch_html(doc_code: str, *, timeout: float = 30.0) -> str:
 
 
 def fetch_to_disk(doc_code: str, out_dir: Path) -> Path:
-    html = fetch_html(doc_code)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    sha = hashlib.sha256(html.encode("utf-8")).hexdigest()[:12]
-    path = out_dir / f"{doc_code}_{sha}.html"
-    path.write_text(html, encoding="utf-8")
-    return path
+    return persist_html(fetch_html(doc_code), out_dir, doc_code)
 
 
 def parse_doctrine(
@@ -57,6 +56,8 @@ def parse_doctrine(
     source_id: str,
     doc_code: str,
     title: str,
+    level: int | str,
+    issuer: str,
     url: str,
 ) -> list[NormativeUnit]:
     """Extract the operative text as one NormativeUnit (whole doctrine document)."""
@@ -69,7 +70,7 @@ def parse_doctrine(
     paragraphs: list[str] = []
     for p in main.find_all(["p", "li", "h2", "h3", "h4"]):
         text = " ".join(p.get_text(" ").split())
-        if text and len(text) > 20:  # skip nav links and tiny tags
+        if text and len(text) > _MIN_PARAGRAPH_CHARS:
             paragraphs.append(text)
     body = "\n".join(paragraphs)
     if not body:
@@ -83,8 +84,8 @@ def parse_doctrine(
             language="FR",
             source_meta={
                 "title": title,
-                "level": "national",
-                "issuer": "AMF",
+                "level": level,
+                "issuer": issuer,
                 "doc_code": doc_code,
                 "url": url,
             },

@@ -149,7 +149,7 @@
   celex: null
   title: "Code monétaire et financier (France)"
   level: national
-  issuer: AMF
+  issuer: FR_Legislator
   language: FR
   url: "https://www.legifrance.gouv.fr/codes/texte_lc/LEGITEXT000006072026"
   aliases:

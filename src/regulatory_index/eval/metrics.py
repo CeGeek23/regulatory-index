@@ -1,8 +1,8 @@
 """Compute extraction-quality metrics from saved UnitExtraction JSONs.
 
-This is intentionally lightweight: coverage, grounding ratio, theme distribution,
-and per-source latency. It is run after a batch and produces a Markdown report
-that can be committed alongside the export.
+This is intentionally lightweight: grounding ratio, theme distribution, and
+overall latency percentiles (P50/P95). It is run after a batch and produces a
+Markdown report that can be committed alongside the export.
 """
 
 from __future__ import annotations

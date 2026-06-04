@@ -5,7 +5,6 @@ For each unit:
 - Otherwise, call LangExtract, normalise the result into a UnitExtraction, persist JSON.
 - Failures are logged to `data/obligations/_failed.jsonl` (one line per failure) and do NOT
   abort the run: the next unit is processed.
-- Optional HTML visualisation (with grounding highlights) is written next to the JSON.
 
 No regex, no fallback chain: one LangExtract call per unit, one disk write per outcome.
 """
@@ -34,7 +33,7 @@ log = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class RunnerConfig:
-    model_id: str = "gemma3:4b"
+    model_id: str = "mistral:7b"
     model_url: str = "http://localhost:11434"
     temperature: float = 0.0
     extraction_passes: int = 1
@@ -47,11 +46,11 @@ def _safe_path_segment(value: str) -> str:
     return value.replace("/", "_").replace("\\", "_").replace(":", "_")
 
 
-def output_paths(out_dir: Path, unit: NormativeUnit) -> tuple[Path, Path]:
-    """Return (json_path, html_path) for a unit."""
+def output_path(out_dir: Path, unit: NormativeUnit) -> Path:
+    """Return the JSON output path for a unit."""
     sub = out_dir / _safe_path_segment(unit.source_id)
     base = _safe_path_segment(unit.unit_id)
-    return sub / f"{base}.json", sub / f"{base}.html"
+    return sub / f"{base}.json"
 
 
 def _langextract_version() -> str | None:
@@ -136,7 +135,7 @@ def extract_unit(unit: NormativeUnit, config: RunnerConfig) -> UnitExtraction:
 
 
 def _persist(extraction: UnitExtraction, out_dir: Path) -> Path:
-    json_path, _ = output_paths(out_dir, extraction.unit)
+    json_path = output_path(out_dir, extraction.unit)
     json_path.parent.mkdir(parents=True, exist_ok=True)
     json_path.write_text(
         json.dumps(extraction.to_record_dict(), ensure_ascii=False, indent=2),
@@ -179,7 +178,7 @@ def run(
         failed_log.unlink()
 
     for unit in units:
-        json_path, _ = output_paths(out_dir, unit)
+        json_path = output_path(out_dir, unit)
         if json_path.exists() and not force:
             log.info("skip (already extracted): %s", unit.unit_id)
             counts["skipped"] += 1

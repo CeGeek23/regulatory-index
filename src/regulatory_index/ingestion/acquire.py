@@ -111,6 +111,8 @@ def acquire_one(
             source_id=entry.source_id,
             doc_code=entry.doc_code,
             title=reg_entry.title,
+            level=reg_entry.level,
+            issuer=reg_entry.issuer,
             url=reg_entry.url,
         )
 
@@ -127,6 +129,8 @@ def acquire_one(
             article_id=entry.article_id,
             article_number=entry.article_number,
             title=reg_entry.title,
+            level=reg_entry.level,
+            issuer=reg_entry.issuer,
             url=reg_entry.url,
         )
 

@@ -52,9 +52,11 @@ def _node_tooltip(node_id: str, data: dict[str, object]) -> str:
             f"<b>Source:</b> {data.get('source_id', '')} (Level {data.get('level', '')}, {data.get('issuer', '')})",
             f"<b>Language:</b> {data.get('language', '')}",
         ]
-        verbatim = str(data.get("verbatim_text", ""))[:240]
+        raw_verbatim = str(data.get("verbatim_text", ""))
+        verbatim = raw_verbatim[:240]
         if verbatim:
-            parts.append(f"<i>{verbatim}…</i>")
+            ellipsis = "…" if len(raw_verbatim) > 240 else ""
+            parts.append(f"<i>{verbatim}{ellipsis}</i>")
         return "<br>".join(parts)
     return (
         f"<b>{data.get('title', node_id)}</b><br>"

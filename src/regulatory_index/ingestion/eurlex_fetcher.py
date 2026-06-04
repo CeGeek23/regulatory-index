@@ -10,10 +10,11 @@ regex on the body.
 
 from __future__ import annotations
 
-import hashlib
 from pathlib import Path
 
 import httpx
+
+from ._disk import persist_html
 
 USER_AGENT = "regulatory-index-poc/0.1 (research; contact: tchakontecedrick@gmail.com)"
 
@@ -37,9 +38,4 @@ def fetch_html(celex: str, language: str, *, timeout: float = 30.0) -> str:
 
 def fetch_to_disk(celex: str, language: str, out_dir: Path) -> Path:
     """Persist the raw HTML on disk. Filename is reproducible from (celex, lang, sha256)."""
-    html = fetch_html(celex, language)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    sha = hashlib.sha256(html.encode("utf-8")).hexdigest()[:12]
-    path = out_dir / f"{celex}_{language.upper()}_{sha}.html"
-    path.write_text(html, encoding="utf-8")
-    return path
+    return persist_html(fetch_html(celex, language), out_dir, f"{celex}_{language.upper()}")

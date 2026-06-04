@@ -41,7 +41,6 @@ _OBLIGATION_COLUMNS = [
     ("condition", "Condition", 22),
     ("scope", "Scope", 22),
     ("exception", "Exception", 22),
-    ("enforcement", "Enforcement", 14),
     ("expected_evidence", "Expected evidence", 30),
     ("associated_control", "Associated control", 30),
     ("verbatim_text", "Verbatim", 60),
@@ -139,7 +138,7 @@ def write_workbook(materialized: MaterializedIndex, output_path: Path) -> dict[s
         header_fmt,
     )
 
-    # 5. Actor × Theme matrix
+    # 5. Actor x Theme matrix
     _write_summary_sheet(
         workbook,
         "Actor x Theme",

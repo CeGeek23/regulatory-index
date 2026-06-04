@@ -55,7 +55,7 @@ def extract(
     out_dir: Annotated[Path, typer.Option(help="Where to persist extractions.")] = Path(
         "data/obligations"
     ),
-    model_id: Annotated[str, typer.Option()] = "gemma3:4b",
+    model_id: Annotated[str, typer.Option()] = "mistral:7b",
     model_url: Annotated[str, typer.Option()] = "http://localhost:11434",
     extraction_passes: Annotated[int, typer.Option()] = 1,
     temperature: Annotated[float, typer.Option()] = 0.0,
@@ -150,27 +150,14 @@ def pipeline(
     units: Annotated[Path, typer.Argument(exists=True, help="JSONL of normative units.")],
     obligations_dir: Annotated[Path, typer.Option()] = Path("data/obligations"),
     out_dir: Annotated[Path, typer.Option()] = Path("data/exports"),
-    model_id: Annotated[str, typer.Option()] = "gemma3:4b",
+    model_id: Annotated[str, typer.Option()] = "mistral:7b",
     force: Annotated[bool, typer.Option(help="Re-extract even if outputs exist.")] = False,
 ) -> None:
     """End-to-end run: extract -> materialize -> export."""
-    extract(
-        units=units,
-        out_dir=obligations_dir,
-        model_id=model_id,
-        model_url="http://localhost:11434",
-        extraction_passes=1,
-        temperature=0.0,
-        request_timeout=600,
-        force=force,
-    )
-    export(
-        obligations_dir=obligations_dir,
-        out_dir=out_dir,
-        excel_name="aifmd_index.xlsx",
-        graphml_name="aifmd_relations.graphml",
-        csv_delimiter=";",
-    )
+    # Pass only what `pipeline` parameterises; the rest fall through to the
+    # callees' own defaults (RunnerConfig, export names/delimiter).
+    extract(units=units, out_dir=obligations_dir, model_id=model_id, force=force)
+    export(obligations_dir=obligations_dir, out_dir=out_dir)
 
 
 if __name__ == "__main__":

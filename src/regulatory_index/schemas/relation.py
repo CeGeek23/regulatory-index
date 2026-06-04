@@ -12,6 +12,9 @@ class CrossLevelRelationType(StrEnum):
     STRENGTHENS = "strengthens"
     OPERATIONALIZES = "operationalizes"
     INTERPRETS = "interprets"
+    # Reserved: derogation is a valid cross-level relation, but the heuristic
+    # graph_builder._derive_relation_type cannot detect it yet, so it is never
+    # produced today (kept for taxonomy completeness + the html graph colour).
     DEROGATES = "derogates"
     REFERENCES = "references"
 

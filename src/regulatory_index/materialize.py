@@ -31,7 +31,6 @@ from .schemas.obligation_builder import build_obligations
 from .schemas.raw import UnitExtraction
 from .schemas.relation import CrossLevelRelation
 
-
 # ──────────────────────────────────────────────────────────────────────────────
 # Schemas — keep DataFrames typed even when empty (avoid pivot/select errors)
 # ──────────────────────────────────────────────────────────────────────────────
@@ -54,7 +53,6 @@ OBLIGATION_SCHEMA: dict[str, pl.DataType] = {
     "condition": pl.Utf8(),
     "scope": pl.Utf8(),
     "exception": pl.Utf8(),
-    "enforcement": pl.Utf8(),
     "expected_evidence": pl.Utf8(),
     "associated_control": pl.Utf8(),
     "verbatim_text": pl.Utf8(),
@@ -126,7 +124,6 @@ def obligations_to_df(obligations: list[Obligation]) -> pl.DataFrame:
             "condition": o.condition,
             "scope": o.scope,
             "exception": o.exception,
-            "enforcement": o.enforcement,
             "expected_evidence": "; ".join(o.expected_evidence),
             "associated_control": o.associated_control,
             "verbatim_text": o.verbatim_text,
@@ -242,12 +239,6 @@ def by_actor(obligations_df: pl.DataFrame) -> pl.DataFrame:
         .len(name="n")
         .sort(["n", "actor"], descending=[True, False])
     )
-
-
-def by_level(obligations_df: pl.DataFrame) -> pl.DataFrame:
-    if obligations_df.is_empty():
-        return pl.DataFrame(schema={"level": pl.Utf8(), "issuer": pl.Utf8(), "n": pl.UInt32()})
-    return obligations_df.group_by(["level", "issuer"]).len(name="n").sort(["level", "issuer"])
 
 
 def actor_theme_matrix(obligations_df: pl.DataFrame) -> pl.DataFrame:

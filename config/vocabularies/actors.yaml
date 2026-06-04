@@ -4,7 +4,7 @@
 # surface forms that should be recognised and mapped to canonical at extraction.
 #
 # Coverage: minimal v0 derived from AIFMD L1 + L2 + ESMA + AMF terminology.
-# Expand iteratively; flag missing actors via `data/normalized/unmapped.csv`.
+# Expand iteratively; off-vocab actors surface as "vocab gaps" in data/exports/quality_report.md.
 
 - id: aifm
   canonical_en: AIFM

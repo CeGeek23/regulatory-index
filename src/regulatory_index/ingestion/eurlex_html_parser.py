@@ -13,9 +13,8 @@ EUR-Lex HTML layout (Office Journal `oj-*` + ELI `eli-*` classes):
     </div>
 
 We extract one NormativeUnit per `id="art_N"` div. Body text is the
-concatenated `oj-normal` / table-cell text in document order, with hierarchy
-preserved by indentation hints `(N)` `(a)` etc. that EUR-Lex already encodes
-inline. No regex; pure DOM traversal.
+concatenation of the article's `<p>` paragraphs (excluding the title/subtitle
+paragraphs) in document order, joined by newlines. No regex; pure DOM traversal.
 """
 
 from __future__ import annotations

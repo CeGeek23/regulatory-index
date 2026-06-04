@@ -34,9 +34,6 @@ class Vocabulary:
     def canonical_values(self, language: str = "EN") -> tuple[str, ...]:
         return tuple(e.canonical(language) for e in self.entries)
 
-    def by_id(self, vid: str) -> VocabEntry | None:
-        return next((e for e in self.entries if e.id == vid), None)
-
     def resolve(self, value: str) -> VocabEntry | None:
         """Map any surface form (canonical EN/FR, id, or alias) to its entry.
 

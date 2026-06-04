@@ -1,3 +1,6 @@
+# macOS
+.DS_Store
+
 # Python-generated files
 __pycache__/
 *.py[oc]
@@ -21,5 +24,3 @@ data/units/
 data/obligations/
 data/relations/
 data/exports/
-data/index.duckdb
-data/index.duckdb.wal

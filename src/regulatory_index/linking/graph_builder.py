@@ -1,11 +1,13 @@
 """Build a cross-level relations graph from resolved citations.
 
-Strategy (document-level, no regex):
+Strategy (article-level, no regex):
 - For each resolved citation, derive the relation_type from (source_obligation.level,
   source_obligation.issuer, target_source.level, target_source.issuer).
-- We currently link an obligation to the *target source* (not a target obligation),
-  because the LLM-extracted citation rarely encodes a precise article+paragraph
-  pair. Obligation-to-obligation linking is a v2 refinement.
+- When the citation names an article (e.g. "Article 15(3)"), link the obligation to
+  the target *obligations* extracted from that article in the cited document. Source
+  units are one-per-article, so the article is the finest target granularity available.
+- When no article is named (or none matches), fall back to the document node
+  `{target_source_id}#source`, preserving doc-level coverage.
 """
 
 from __future__ import annotations
@@ -17,7 +19,7 @@ import networkx as nx
 from ..schemas.obligation import Obligation
 from ..schemas.relation import CrossLevelRelation, CrossLevelRelationType
 from ..schemas.sources_registry import load_sources_registry
-from .citation_extractor import ResolvedCitation
+from .citation_extractor import ResolvedCitation, normalize_article
 
 
 def _derive_relation_type(
@@ -45,29 +47,69 @@ def _derive_relation_type(
     return CrossLevelRelationType.REFERENCES
 
 
+def _build_article_index(obligations: list[Obligation]) -> dict[tuple[str, str], list[str]]:
+    """Map (base_source_id, normalized_article) -> [obligation_id].
+
+    Source units are one-per-article, so all obligations extracted from a given
+    article share the same key — the finest target granularity we can resolve to.
+    """
+    index: dict[tuple[str, str], list[str]] = {}
+    for ob in obligations:
+        if ob.source.article is None:
+            continue
+        key = (ob.source.source_id.split("#")[0], normalize_article(ob.source.article))
+        index.setdefault(key, []).append(ob.obligation_id)
+    return index
+
+
+def _citation_char_interval(verbatim: str, citation: str) -> tuple[int, int]:
+    """Offsets of the citation within the source obligation's verbatim text (no regex)."""
+    idx = verbatim.lower().find(citation.lower())
+    if idx >= 0:
+        return (idx, idx + len(citation))
+    return (0, len(citation))
+
+
 def build_relations(
     obligations: list[Obligation],
     resolved: list[ResolvedCitation],
 ) -> list[CrossLevelRelation]:
     by_id: dict[str, Obligation] = {o.obligation_id: o for o in obligations}
+    article_index = _build_article_index(obligations)
     out: list[CrossLevelRelation] = []
+    seen: set[tuple[str, str, str]] = set()
     for rc in resolved:
         src = by_id.get(rc.obligation_id)
         if src is None:
             continue
         rel_type = _derive_relation_type(src, rc.target_source_id)
-        target_obligation_id = f"{rc.target_source_id}#source"
-        char_interval: tuple[int, int] = (0, len(rc.citation_text))
-        out.append(
-            CrossLevelRelation(
-                source_obligation_id=src.obligation_id,
-                target_obligation_id=target_obligation_id,
-                relation_type=rel_type,
-                evidence_text=src.verbatim_text,
-                citation_in_text=rc.citation_text,
-                char_interval=char_interval,
+        char_interval = _citation_char_interval(src.verbatim_text, rc.citation_text)
+
+        # Article-level targets: obligations of the cited document at the cited article.
+        targets: list[str] = []
+        if rc.target_article is not None:
+            key = (rc.target_source_id, normalize_article(rc.target_article))
+            targets = [t for t in article_index.get(key, []) if t != src.obligation_id]
+
+        # Fall back to the document node when no specific target obligation is known.
+        if not targets:
+            targets = [f"{rc.target_source_id}#source"]
+
+        for target_obligation_id in targets:
+            dedupe_key = (src.obligation_id, target_obligation_id, rel_type.value)
+            if dedupe_key in seen:
+                continue
+            seen.add(dedupe_key)
+            out.append(
+                CrossLevelRelation(
+                    source_obligation_id=src.obligation_id,
+                    target_obligation_id=target_obligation_id,
+                    relation_type=rel_type,
+                    evidence_text=src.verbatim_text,
+                    citation_in_text=rc.citation_text,
+                    char_interval=char_interval,
+                )
             )
-        )
     return out
 
 
