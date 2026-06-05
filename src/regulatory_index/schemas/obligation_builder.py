@@ -1,8 +1,8 @@
-"""Materialise final Obligation objects from RawObligation + NormativeUnit.
+"""Matérialise les objets Obligation finaux à partir de RawObligation + NormativeUnit.
 
-Assigns a deterministic obligation_id from theme code + a sequence number that
-is stable across re-runs (it depends only on a sort key, not on disk iteration
-order).
+Attribue un obligation_id déterministe à partir du code de theme + un numéro de
+séquence stable entre exécutions (il dépend uniquement d'une clé de tri, pas de
+l'ordre d'itération sur disque).
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from .source import AlignmentStatus, Source
 from .sources_registry import load_sources_registry
 from .vocab import load_vocabulary
 
-# Controlled-vocabulary fields and the vocab file that normalises each one.
+# Champs à vocabulaire contrôlé et le fichier vocab qui normalise chacun.
 _FIELD_VOCAB: dict[str, str] = {
     "actor": "actors",
     "action": "actions",
@@ -27,7 +27,7 @@ _FIELD_VOCAB: dict[str, str] = {
 
 
 def _theme_code_for(theme: str) -> str:
-    """Resolve a (possibly localised) theme to its stable code, else MISC."""
+    """Résout un theme (éventuellement localisé) en son code stable, sinon MISC."""
     entry = load_vocabulary("themes").resolve(theme)
     if entry is None:
         return "MISC"
@@ -35,7 +35,7 @@ def _theme_code_for(theme: str) -> str:
 
 
 def _canonicalize(field: str, value: str, language: str) -> str:
-    """Map a controlled-vocab value to its canonical pivot label; keep raw if unknown."""
+    """Mappe une valeur de vocab contrôlé sur son label pivot canonique ; garde la valeur brute si inconnue."""
     entry = load_vocabulary(_FIELD_VOCAB[field]).resolve(value)
     return entry.canonical(language) if entry is not None else value
 
@@ -43,10 +43,10 @@ def _canonicalize(field: str, value: str, language: str) -> str:
 def collect_vocab_gaps(
     extractions: Iterable[UnitExtraction],
 ) -> dict[str, list[tuple[str, int]]]:
-    """Per controlled-vocab field, the off-vocabulary raw values and their counts.
+    """Par champ de vocab contrôlé, les valeurs brutes hors vocab et leurs comptes.
 
-    Surfaces what the LLM emitted that the vocabularies don't yet cover — the role
-    the former 03_vocab_gaps notebook played.
+    Remonte ce que le LLM a produit et que les vocabulaires ne couvrent pas encore
+    (candidats à ajouter dans config/vocabularies/).
     """
     counters: dict[str, Counter[str]] = {field: Counter() for field in _FIELD_VOCAB}
     for ue in extractions:
@@ -95,11 +95,12 @@ def build_obligations(
     prefix: str = "AIFMD",
     canonical_language: str = "EN",
 ) -> list[Obligation]:
-    """Flatten UnitExtractions into Obligations with stable ids assigned per-theme.
+    """Aplatit les UnitExtractions en Obligations avec des ids stables attribués par theme.
 
-    Controlled-vocab fields (actor, action, object, theme) are normalised to their
-    canonical label in `canonical_language` so FR/EN surface forms collapse to one
-    value. Off-vocabulary values are kept verbatim (see `collect_vocab_gaps`).
+    Les champs de vocab contrôlé (actor, action, object, theme) sont normalisés vers
+    leur label canonique dans `canonical_language` afin que les formes de surface FR/EN
+    se ramènent à une seule valeur. Les valeurs hors vocab sont conservées telles
+    quelles (voir `collect_vocab_gaps`).
     """
 
     items: list[tuple[str, NormativeUnit, RawObligation, ExtractionMeta]] = []

@@ -1,8 +1,8 @@
-"""Intermediate schemas between LangExtract output and the final Obligation.
+"""Schémas intermédiaires entre la sortie de LangExtract et l'Obligation finale.
 
-A RawObligation is the LLM's structured output, normalised against vocab but
-without the final obligation_id, full Source nesting or extraction provenance.
-Final Obligation rows are materialised from these in `materialize.py`.
+Une RawObligation est la sortie structurée du LLM, normalisée par rapport au vocab
+mais sans l'obligation_id final, l'imbrication complète de Source ni la provenance
+d'extraction. Les lignes Obligation finales en sont matérialisées dans `materialize.py`.
 """
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ class ExtractionMeta(BaseModel):
 
 
 class UnitExtraction(BaseModel):
-    """Persisted file shape: one per (source_id, unit_id)."""
+    """Forme du fichier persisté : un par (source_id, unit_id)."""
 
     unit: NormativeUnit
     obligations: list[RawObligation]

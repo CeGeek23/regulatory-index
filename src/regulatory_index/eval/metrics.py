@@ -1,8 +1,8 @@
-"""Compute extraction-quality metrics from saved UnitExtraction JSONs.
+"""Calcule des métriques de qualité d'extraction depuis les JSON UnitExtraction sauvegardés.
 
-This is intentionally lightweight: grounding ratio, theme distribution, and
-overall latency percentiles (P50/P95). It is run after a batch and produces a
-Markdown report that can be committed alongside the export.
+Volontairement léger : ratio de grounding, distribution des thèmes et
+percentiles de latence globale (P50/P95). Exécuté après un batch, il produit un
+rapport Markdown qui peut être versionné aux côtés de l'export.
 """
 
 from __future__ import annotations

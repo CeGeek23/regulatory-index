@@ -1,11 +1,12 @@
-# High-level regulatory themes used to aggregate obligations.
-# `code` is a short 3-5 letter mnemonic used in the obligation_id pattern
-# AIFMD-{code}-{NNNN}. Codes are stable identifiers, do not rename.
+# Thèmes réglementaires de haut niveau servant à agréger les obligations.
+# `code` est un mnémonique court de 3 à 5 lettres utilisé dans le motif obligation_id
+# AIFMD-{code}-{NNNN}. Les codes sont des identifiants stables, ne pas les renommer.
 
 - id: governance
   canonical_en: Governance
   canonical_fr: Gouvernance
   code: GOV
+  aliases: ["Organizational Structure", "Structure Organisationnelle"]
   sub_themes:
     - Organisational requirements
     - Internal control framework
@@ -15,6 +16,7 @@
   canonical_en: Risk Management
   canonical_fr: Gestion des Risques
   code: RISK
+  aliases: ["Risk Management Reporting", "Reporting de Gestion des Risques"]
   sub_themes:
     - Risk framework
     - Market risk
@@ -63,6 +65,7 @@
   canonical_en: Conflicts of Interest
   canonical_fr: Conflits d'Intérêts
   code: CONF
+  aliases: ["Conflict of Interest Management", "Conflict of Interest", "Gestion des Conflits d'Intérêts"]
   sub_themes:
     - Identification
     - Mitigation
@@ -120,3 +123,30 @@
     - SFDR classification
     - Taxonomy alignment
     - Sustainability risk
+
+- id: leverage_management
+  canonical_en: Leverage Management
+  canonical_fr: Gestion de l'Effet de Levier
+  code: LEV
+  aliases: ["Leverage", "Gestion du Levier"]
+  sub_themes:
+    - Leverage limits
+    - Collateral and reuse
+
+- id: investment_strategy
+  canonical_en: Investment Strategy
+  canonical_fr: Stratégie d'Investissement
+  code: INV
+  aliases: ["Investment Decision Making", "Prise de Décision d'Investissement", "Investment Management"]
+  sub_themes:
+    - Investment decision-making
+    - Strategy consistency
+
+- id: investor_protection
+  canonical_en: Investor Protection
+  canonical_fr: Protection des Investisseurs
+  code: PROT
+  aliases: ["Fair treatment of investors", "Traitement équitable des investisseurs"]
+  sub_themes:
+    - Fair treatment
+    - Redemption fairness

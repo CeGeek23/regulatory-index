@@ -1,4 +1,4 @@
-"""Load few-shot examples from prompts/examples_*.yaml and convert to LangExtract objects."""
+"""Charge les exemples few-shot depuis prompts/examples_*.yaml et les convertit en objets LangExtract."""
 
 from __future__ import annotations
 
@@ -28,7 +28,7 @@ def _build_extraction(passage: str, raw: dict[str, Any]) -> lx.data.Extraction:
 
 @cache
 def load_examples(language: Literal["EN", "FR"]) -> tuple[lx.data.ExampleData, ...]:
-    """Return immutable few-shot examples for the given language."""
+    """Retourne les exemples few-shot immuables pour la langue donnée."""
     fname = "examples_en.yaml" if language == "EN" else "examples_fr.yaml"
     path = PROMPTS_DIR / fname
     with path.open(encoding="utf-8") as f:

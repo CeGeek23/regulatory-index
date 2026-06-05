@@ -1,4 +1,4 @@
-"""Build the LangExtract prompt_description from controlled vocabularies + templates."""
+"""Construit le prompt_description LangExtract à partir des vocabulaires contrôlés + templates."""
 
 from __future__ import annotations
 
@@ -25,13 +25,13 @@ def _env() -> Environment:
 
 
 def _csv(values: tuple[str, ...]) -> str:
-    """Render a vocabulary list as a comma-separated string for prompt injection."""
+    """Rend une liste de vocabulaire sous forme de chaîne séparée par des virgules pour l'injection dans le prompt."""
     return ", ".join(values)
 
 
 @cache
 def build_prompt_description(language: Literal["EN", "FR"]) -> str:
-    """Render the prompt_description for LangExtract from vocab YAMLs + Jinja template."""
+    """Rend le prompt_description pour LangExtract à partir des YAML de vocab + template Jinja."""
     actors = load_vocabulary("actors").canonical_values(language)
     actions = load_vocabulary("actions").canonical_values(language)
     objects_ = load_vocabulary("objects").canonical_values(language)

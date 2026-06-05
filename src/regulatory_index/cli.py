@@ -1,4 +1,4 @@
-"""Command-line entry point for the regulatory index pipeline."""
+"""Point d'entrée en ligne de commande du pipeline d'index réglementaire."""
 
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 
 @app.command()
 def vocab() -> None:
-    """Print a summary of loaded controlled vocabularies."""
+    """Affiche un résumé des vocabulaires contrôlés chargés."""
     vocabs = load_all_vocabularies()
     for name, vocabulary in vocabs.items():
         typer.echo(f"{name:<20} {len(vocabulary.entries):>3} entries")
@@ -44,7 +44,7 @@ def acquire(
         "data/units/corpus.jsonl"
     ),
 ) -> None:
-    """Fetch the corpus declared in sources_manifest.yaml and emit a units JSONL."""
+    """Récupère le corpus déclaré dans sources_manifest.yaml et émet un JSONL d'unités."""
     counts = acquire_all(manifest_path=manifest, raw_dir=raw_dir, units_out=out)
     typer.echo(json.dumps({**counts, "out": str(out)}))
 
@@ -60,15 +60,17 @@ def extract(
     extraction_passes: Annotated[int, typer.Option()] = 1,
     temperature: Annotated[float, typer.Option()] = 0.0,
     request_timeout: Annotated[int, typer.Option(help="Ollama request timeout (s).")] = 600,
+    num_ctx: Annotated[int, typer.Option(help="Ollama context window (tokens).")] = 8192,
     force: Annotated[bool, typer.Option(help="Re-extract even if output JSON exists.")] = False,
 ) -> None:
-    """Run LangExtract over a JSONL of normative units, persist one JSON per unit."""
+    """Exécute LangExtract sur un JSONL d'unités normatives, persiste un JSON par unité."""
     config = RunnerConfig(
         model_id=model_id,
         model_url=model_url,
         extraction_passes=extraction_passes,
         temperature=temperature,
         request_timeout=request_timeout,
+        num_ctx=num_ctx,
     )
     counts = run(load_units_jsonl(units), out_dir=out_dir, config=config, force=force)
     typer.echo(json.dumps({"counts": counts, "finished_at": datetime.now(UTC).isoformat()}))
@@ -78,9 +80,9 @@ def extract(
 def link(
     obligations_dir: Annotated[Path, typer.Option(exists=True)] = Path("data/obligations"),
 ) -> None:
-    """Materialise obligations + relations from extractions and print counts.
+    """Matérialise obligations + relations depuis les extractions et affiche les comptes.
 
-    Does not persist anything; use `export` to also write Excel / CSV / GraphML.
+    Ne persiste rien ; utilisez `export` pour aussi écrire Excel / CSV / GraphML.
     """
     unit_extractions = load_unit_extractions_from_dir(obligations_dir)
     materialized = materialize(unit_extractions)
@@ -103,7 +105,7 @@ def export(
     graphml_name: Annotated[str, typer.Option()] = "aifmd_relations.graphml",
     csv_delimiter: Annotated[str, typer.Option()] = ";",
 ) -> None:
-    """Materialise the index then export Excel + CSV + GraphML + HTML graph + quality report."""
+    """Matérialise l'index puis exporte Excel + CSV + GraphML + graphe HTML + rapport qualité."""
     out_dir.mkdir(parents=True, exist_ok=True)
 
     unit_extractions = load_unit_extractions_from_dir(obligations_dir)
@@ -153,9 +155,9 @@ def pipeline(
     model_id: Annotated[str, typer.Option()] = "mistral:7b",
     force: Annotated[bool, typer.Option(help="Re-extract even if outputs exist.")] = False,
 ) -> None:
-    """End-to-end run: extract -> materialize -> export."""
-    # Pass only what `pipeline` parameterises; the rest fall through to the
-    # callees' own defaults (RunnerConfig, export names/delimiter).
+    """Exécution de bout en bout : extract -> materialize -> export."""
+    # On ne passe que ce que `pipeline` paramètre ; le reste reprend les
+    # valeurs par défaut des appelés (RunnerConfig, noms/délimiteur d'export).
     extract(units=units, out_dir=obligations_dir, model_id=model_id, force=force)
     export(obligations_dir=obligations_dir, out_dir=out_dir)
 

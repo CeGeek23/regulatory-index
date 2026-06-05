@@ -45,8 +45,8 @@ def test_source_round_trip() -> None:
 
 
 def test_obligation_requires_grounding() -> None:
-    # char_interval is required; omitting it through model_validate triggers
-    # Pydantic validation while bypassing the static type checker.
+    # char_interval est requis ; l'omettre via model_validate déclenche
+    # la validation Pydantic tout en contournant le vérificateur de types statique.
     payload = {
         "obligation_id": "AIFMD-RISK-0001",
         "actor": "AIFM",

@@ -1,4 +1,4 @@
-"""Tests for the Légifrance HTML parser. Network calls are not exercised."""
+"""Tests du parseur HTML Légifrance. Les appels réseau ne sont pas sollicités."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Loader for controlled vocabularies stored as YAML in config/vocabularies/."""
+"""Chargeur pour les vocabulaires contrôlés stockés en YAML dans config/vocabularies/."""
 
 from __future__ import annotations
 
@@ -35,9 +35,9 @@ class Vocabulary:
         return tuple(e.canonical(language) for e in self.entries)
 
     def resolve(self, value: str) -> VocabEntry | None:
-        """Map any surface form (canonical EN/FR, id, or alias) to its entry.
+        """Mappe toute forme de surface (canonique EN/FR, id ou alias) sur son entrée.
 
-        Case-insensitive. Returns None for empty or off-vocabulary values.
+        Insensible à la casse. Retourne None pour les valeurs vides ou hors vocab.
         """
         if not value:
             return None
@@ -63,7 +63,7 @@ def _entry_from_dict(raw: dict[str, Any]) -> VocabEntry:
 
 @cache
 def load_vocabulary(name: str) -> Vocabulary:
-    """Load a vocab YAML by short name (e.g. 'actors', 'actions')."""
+    """Charge un YAML de vocab par nom court (ex. 'actors', 'actions')."""
     path = VOCAB_DIR / f"{name}.yaml"
     with path.open(encoding="utf-8") as f:
         raw: list[dict[str, Any]] = yaml.safe_load(f) or []
@@ -73,9 +73,10 @@ def load_vocabulary(name: str) -> Vocabulary:
 
 @cache
 def _resolve_index(name: str) -> dict[str, VocabEntry]:
-    """Reverse lookup {canonical_en, canonical_fr, id, *aliases} -> VocabEntry.
+    """Index inverse {canonical_en, canonical_fr, id, *aliases} -> VocabEntry.
 
-    Keys are lowercased. On collision the later entry wins (acceptable for v0).
+    Les clés sont en minuscules. En cas de collision, la dernière entrée l'emporte
+    (acceptable pour v0).
     """
     index: dict[str, VocabEntry] = {}
     for entry in load_vocabulary(name).entries:
@@ -86,7 +87,7 @@ def _resolve_index(name: str) -> dict[str, VocabEntry]:
 
 
 def load_all_vocabularies() -> dict[str, Vocabulary]:
-    """Load every vocab file in VOCAB_DIR (acronyms has a different shape, skipped)."""
+    """Charge tous les fichiers vocab de VOCAB_DIR (acronyms a une forme différente, ignoré)."""
     out: dict[str, Vocabulary] = {}
     for path in sorted(VOCAB_DIR.glob("*.yaml")):
         if path.stem == "acronyms":

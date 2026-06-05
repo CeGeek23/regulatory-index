@@ -1,12 +1,12 @@
-"""Fetch French legislative articles via the Légifrance public DILA API.
+"""Récupère les articles législatifs français via l'API publique DILA de Légifrance.
 
-Légifrance exposes a public REST API at api.piste.gouv.fr/dila/legifrance/lf-engine-app
-that returns structured JSON for any LEGIARTI/LEGITEXT identifier. Authentication
-is required for production use; for the POC we fall back to scraping the public
-HTML at legifrance.gouv.fr (DOM structure is stable, no regex).
+Légifrance expose une API REST publique sur api.piste.gouv.fr/dila/legifrance/lf-engine-app
+qui retourne du JSON structuré pour tout identifiant LEGIARTI/LEGITEXT. Une authentification
+est requise en production ; pour le POC on se rabat sur le scraping du HTML public de
+legifrance.gouv.fr (structure du DOM stable, pas de regex).
 
-For the small real corpus, we target Code monétaire et financier (CMF) articles
-related to AIFMD transposition, e.g. L. 214-24-8 (depositary duties).
+Pour le petit corpus réel, on cible les articles du Code monétaire et financier (CMF)
+liés à la transposition de l'AIFMD, ex. L. 214-24-8 (obligations du dépositaire).
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ USER_AGENT = "regulatory-index-poc/0.1 (research; contact: tchakontecedrick@gmai
 
 
 def legifrance_url(article_id: str) -> str:
-    """e.g. article_id = 'LEGIARTI000027780446' (CMF article L. 214-24-8)."""
+    """ex. article_id = 'LEGIARTI000027780446' (article L. 214-24-8 du CMF)."""
     return f"https://www.legifrance.gouv.fr/codes/article_lc/{article_id}"
 
 

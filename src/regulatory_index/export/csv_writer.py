@@ -1,4 +1,4 @@
-"""Export obligations and relations to UTF-8 CSV files (Excel-FR friendly by default)."""
+"""Exporte obligations et relations vers des fichiers CSV UTF-8 (compatibles Excel-FR par défaut)."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from ..materialize import MaterializedIndex
 
 
 def write_csv(materialized: MaterializedIndex, out_dir: Path, delimiter: str = ";") -> dict[str, int]:
-    """Write obligations.csv and relations.csv. Returns row counts per file."""
+    """Écrit obligations.csv et relations.csv. Renvoie le nombre de lignes par fichier."""
     out_dir.mkdir(parents=True, exist_ok=True)
 
     obligations_path = out_dir / "obligations.csv"

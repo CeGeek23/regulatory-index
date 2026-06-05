@@ -1,12 +1,12 @@
-"""Resolve `cited_references` strings to known source_ids using alias matching.
+"""Résout les chaînes `cited_references` vers des source_ids connus par correspondance d'alias.
 
-No regex: pure case-insensitive substring lookup against the alias index built
-from config/sources_registry.yaml. Returns one candidate target_source per
-citation that matches; unmatched citations are reported separately.
+Sans regex : simple recherche de sous-chaîne insensible à la casse dans l'index
+des alias construit depuis config/sources_registry.yaml. Renvoie un target_source
+candidat par citation qui correspond ; les citations non résolues sont reportées à part.
 
-We also parse the cited *article* number with plain string tokenisation (still
-no regex), so the graph builder can link to the specific target obligations of
-that article rather than only the document node.
+On parse aussi le numéro d'article cité par tokenisation de chaîne (toujours
+sans regex), afin que le constructeur de graphe puisse relier aux obligations cibles
+précises de cet article plutôt qu'au seul nœud document.
 """
 
 from __future__ import annotations
@@ -16,10 +16,10 @@ from dataclasses import dataclass
 from ..schemas.obligation import Obligation
 from ..schemas.sources_registry import load_alias_index
 
-# Tokens that introduce an article number, EN + FR (lowercased, punctuation-stripped).
+# Tokens qui introduisent un numéro d'article, EN + FR (minuscules, ponctuation retirée).
 _ARTICLE_KEYWORDS = frozenset({"article", "articles", "art"})
-# Punctuation that separates tokens inside a citation. Parentheses are included so
-# that "Article 15(3)" tokenises to ["article", "15", "3"] and we keep the article.
+# Ponctuation qui sépare les tokens dans une citation. Les parenthèses sont incluses pour
+# que "Article 15(3)" se tokenise en ["article", "15", "3"] et qu'on garde l'article.
 _CITATION_PUNCT = "()[]{},;:.§/"
 
 
@@ -38,23 +38,23 @@ class UnresolvedCitation:
 
 
 def _tokenize(citation: str) -> list[str]:
-    """Lowercase, replace citation punctuation with spaces, split on whitespace."""
+    """Met en minuscules, remplace la ponctuation de citation par des espaces, découpe sur les blancs."""
     folded = "".join(" " if ch in _CITATION_PUNCT else ch for ch in citation.lower())
     return folded.split()
 
 
 def normalize_article(value: str) -> str:
-    """Canonical form for matching: lowercase, no internal spaces ('15 a' -> '15a')."""
+    """Forme canonique pour la correspondance : minuscules, sans espaces internes ('15 a' -> '15a')."""
     return "".join(value.lower().split())
 
 
 def parse_article_locator(citation: str) -> str | None:
-    """Return the first cited article number (e.g. '15' from 'Article 15(3) ...'), else None.
+    """Renvoie le premier numéro d'article cité (ex. '15' depuis 'Article 15(3) ...'), sinon None.
 
-    Pure string tokenisation, no regex. Recognises EN/FR forms ('Article', 'article',
-    'Art.', 'articles'). Picks the first digit-leading token shortly after the
-    keyword, so 'Article 15(3)' -> '15' and 'Articles 38 to 40' -> '38' (first
-    article only; multi-article citations are not fully expanded).
+    Tokenisation de chaîne pure, sans regex. Reconnaît les formes EN/FR ('Article', 'article',
+    'Art.', 'articles'). Prend le premier token commençant par un chiffre peu après le
+    mot-clé, donc 'Article 15(3)' -> '15' et 'Articles 38 to 40' -> '38' (premier
+    article seulement ; les citations multi-articles ne sont pas entièrement développées).
     """
     tokens = _tokenize(citation)
     for i, tok in enumerate(tokens):
@@ -66,7 +66,7 @@ def parse_article_locator(citation: str) -> str | None:
 
 
 def resolve_citation(citation: str) -> str | None:
-    """Return the source_id whose longest alias is a substring of citation, else None."""
+    """Renvoie le source_id dont l'alias le plus long est une sous-chaîne de citation, sinon None."""
     needle = citation.lower()
     for alias, source_id in load_alias_index():
         if alias and alias in needle:
@@ -77,7 +77,7 @@ def resolve_citation(citation: str) -> str | None:
 def resolve_all(
     obligations: list[Obligation],
 ) -> tuple[list[ResolvedCitation], list[UnresolvedCitation]]:
-    """Walk every obligation's cited_references; classify each as resolved/unresolved."""
+    """Parcourt les cited_references de chaque obligation ; classe chacune en résolue/non résolue."""
     resolved: list[ResolvedCitation] = []
     unresolved: list[UnresolvedCitation] = []
     for ob in obligations:

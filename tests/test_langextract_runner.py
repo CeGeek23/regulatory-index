@@ -1,7 +1,7 @@
-"""Unit tests for the LangExtract runner, with the LLM call mocked.
+"""Tests unitaires du runner LangExtract, avec l'appel LLM mocke.
 
-The real Ollama-backed extraction is exercised separately in scripts/run_smoke_e2e.py
-and is too slow / non-deterministic for CI.
+L'extraction reelle via Ollama est testee separement dans scripts/run_smoke_e2e.py
+et est trop lente / non deterministe pour la CI.
 """
 
 from __future__ import annotations
@@ -94,7 +94,7 @@ def test_idempotent_skip_when_json_exists(
 ) -> None:
     json_path = output_path(tmp_path, en_unit)
     json_path.parent.mkdir(parents=True, exist_ok=True)
-    json_path.write_text("{}", encoding="utf-8")  # pretend already-extracted
+    json_path.write_text("{}", encoding="utf-8")  # simule une extraction deja faite
 
     def boom(**_: Any) -> Any:
         raise AssertionError("lx.extract should not have been called when output exists")
@@ -110,7 +110,7 @@ def test_failure_is_logged_and_does_not_abort(
     other = en_unit.model_copy(update={"unit_id": "AIFMD_L1#art_16_test"})
 
     def fake_extract(*, text_or_documents: str, **_: Any) -> lx.data.AnnotatedDocument:
-        # First unit explodes, second succeeds.
+        # La premiere unite echoue, la seconde reussit.
         if text_or_documents.startswith("AIFMs"):
             raise RuntimeError("ollama unreachable")
         return _fake_annotated_doc(

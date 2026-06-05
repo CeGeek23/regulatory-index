@@ -1,4 +1,4 @@
-"""Tests for the acquire orchestrator. Fetcher is monkeypatched (no network)."""
+"""Tests de l'orchestrateur acquire. Le fetcher est monkeypatché (pas de réseau)."""
 
 from __future__ import annotations
 
@@ -76,7 +76,7 @@ def test_acquire_one_unknown_fetcher_raises(
 ) -> None:
     entry = ManifestEntry(
         source_id="AIFMD_L1",
-        fetcher="ftp",  # unsupported
+        fetcher="ftp",  # non supporté
         celex="32011L0061",
         language="EN",
         filter_articles=None,

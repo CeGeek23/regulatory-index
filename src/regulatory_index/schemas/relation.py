@@ -6,15 +6,16 @@ from pydantic import BaseModel, Field
 
 
 class CrossLevelRelationType(StrEnum):
-    """How a downstream obligation relates to an upstream one."""
+    """Comment une obligation en aval se rapporte à une obligation en amont."""
 
     CLARIFIES = "clarifies"
     STRENGTHENS = "strengthens"
     OPERATIONALIZES = "operationalizes"
     INTERPRETS = "interprets"
-    # Reserved: derogation is a valid cross-level relation, but the heuristic
-    # graph_builder._derive_relation_type cannot detect it yet, so it is never
-    # produced today (kept for taxonomy completeness + the html graph colour).
+    # Réservé : la dérogation est une relation cross-level valide, mais l'heuristique
+    # graph_builder._derive_relation_type ne sait pas encore la détecter, donc elle
+    # n'est jamais produite aujourd'hui (gardée pour la complétude de la taxonomie
+    # + la couleur du graphe HTML).
     DEROGATES = "derogates"
     REFERENCES = "references"
 

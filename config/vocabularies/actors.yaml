@@ -1,15 +1,15 @@
-# Controlled vocabulary of regulatory actors for AIFMD scope.
-# Each entry must have a unique `id` (snake_case). The `canonical_*` fields are
-# what the LangExtract schema will accept as canonical values. `aliases` are
-# surface forms that should be recognised and mapped to canonical at extraction.
+# Vocabulaire contrôlé des acteurs réglementaires pour le périmètre AIFMD.
+# Chaque entrée doit avoir un `id` unique (snake_case). Les champs `canonical_*` sont
+# les valeurs canoniques acceptées par le schéma LangExtract. `aliases` sont les
+# formes de surface à reconnaître et à mapper vers la forme canonique à l'extraction.
 #
-# Coverage: minimal v0 derived from AIFMD L1 + L2 + ESMA + AMF terminology.
-# Expand iteratively; off-vocab actors surface as "vocab gaps" in data/exports/quality_report.md.
+# Couverture : v0 minimale issue de la terminologie AIFMD L1 + L2 + ESMA + AMF.
+# À étendre itérativement ; les acteurs hors vocab apparaissent comme "vocab gaps" dans data/exports/quality_report.md.
 
 - id: aifm
   canonical_en: AIFM
   canonical_fr: Gestionnaire de FIA
-  aliases: ["Alternative Investment Fund Manager", "AIF Manager", "Gestionnaire d'AIF", "Société de gestion AIFM"]
+  aliases: ["Alternative Investment Fund Manager", "AIF Manager", "Gestionnaire d'AIF", "Société de gestion AIFM", "Gestionnaire", "gestionnaire"]
   legal_basis: "Directive 2011/61/EU Art. 4(1)(b)"
 
 - id: ucits_manco
@@ -112,7 +112,7 @@
 - id: competent_authority
   canonical_en: Competent Authority
   canonical_fr: Autorité Compétente
-  aliases: ["national competent authority", "NCA"]
+  aliases: ["national competent authority", "NCA", "Competent Authorities", "competent authorities", "Autorités compétentes"]
 
 - id: esma
   canonical_en: ESMA
@@ -186,3 +186,9 @@
   canonical_en: Operations Team
   canonical_fr: Équipe Opérations
   aliases: ["middle office", "back office"]
+
+- id: european_commission
+  canonical_en: European Commission
+  canonical_fr: Commission européenne
+  aliases: ["Commission", "the Commission", "Commission UE", "EC"]
+  legal_basis: "Adopte les actes délégués/d'exécution AIFMD (Règlement délégué 231/2013)"

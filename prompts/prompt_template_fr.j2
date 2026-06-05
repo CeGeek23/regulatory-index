@@ -30,6 +30,7 @@ Glossaire des acronymes :
 Règles :
 - extraction_text DOIT être une sous-chaîne littérale du texte source. Jamais de paraphrase.
 - Une obligation par triplet (actor, action, object). Si un article contient plusieurs obligations, émettez plusieurs extractions.
+- actor, action, object et theme sont chacun UNE seule valeur (chaîne) — jamais une liste/tableau, jamais null ni vide. Si plusieurs actions s'appliquent, émettez une obligation par action.
 - Ne PAS émettre d'extractions dupliquées ou chevauchantes pour le même triplet.
 - Si l'acteur est implicite ("Il/Elle doit..."), résolvez-le depuis le contexte de l'article.
 - Si vous hésitez sur une valeur canonique (actor / action / theme / condition), choisissez la PLUS PROCHE de la liste plutôt que d'en inventer une nouvelle.

@@ -51,7 +51,7 @@ def test_ids_assigned_per_theme_with_codes() -> None:
     ids = [o.obligation_id for o in obligations]
     assert any(i.startswith("AIFMD-RISK-") for i in ids)
     assert any(i.startswith("AIFMD-GOV-") for i in ids)
-    # Two risk obligations -> ids 0001 and 0002
+    # Deux obligations de risque -> ids 0001 et 0002
     risk_ids = sorted(i for i in ids if i.startswith("AIFMD-RISK-"))
     assert risk_ids[0].endswith("0001")
     assert risk_ids[1].endswith("0002")
@@ -76,7 +76,7 @@ def test_ids_are_deterministic_across_runs() -> None:
 
 
 def test_fr_values_canonicalize_to_english_pivot() -> None:
-    # FR surface forms must collapse to the same canonical labels as their EN twins.
+    # Les formes de surface FR doivent se réduire aux mêmes libellés canoniques que leurs jumeaux EN.
     obligations = build_obligations(
         [
             _ue(
@@ -96,7 +96,7 @@ def test_fr_values_canonicalize_to_english_pivot() -> None:
 def test_off_vocab_value_kept_verbatim_and_reported() -> None:
     extractions = [_ue("u1", "AIFMD_L1", [_raw("Quantum Compliance")])]
     obligations = build_obligations(extractions)
-    # Unknown theme is preserved (no silent drop) and bucketed under the MISC code.
+    # Le thème inconnu est conservé (pas d'abandon silencieux) et regroupé sous le code MISC.
     assert obligations[0].theme == "Quantum Compliance"
     assert obligations[0].obligation_id.startswith("AIFMD-MISC-")
     gaps = collect_vocab_gaps(extractions)

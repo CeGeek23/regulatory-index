@@ -1,13 +1,13 @@
-"""Build a cross-level relations graph from resolved citations.
+"""Construit un graphe de relations inter-niveaux à partir des citations résolues.
 
-Strategy (article-level, no regex):
-- For each resolved citation, derive the relation_type from (source_obligation.level,
+Stratégie (au niveau article, sans regex) :
+- Pour chaque citation résolue, dérive le relation_type depuis (source_obligation.level,
   source_obligation.issuer, target_source.level, target_source.issuer).
-- When the citation names an article (e.g. "Article 15(3)"), link the obligation to
-  the target *obligations* extracted from that article in the cited document. Source
-  units are one-per-article, so the article is the finest target granularity available.
-- When no article is named (or none matches), fall back to the document node
-  `{target_source_id}#source`, preserving doc-level coverage.
+- Quand la citation nomme un article (ex. "Article 15(3)"), relie l'obligation aux
+  obligations cibles extraites de cet article dans le document cité. Les unités source
+  sont une-par-article, donc l'article est la granularité cible la plus fine disponible.
+- Quand aucun article n'est nommé (ou qu'aucun ne correspond), repli sur le nœud document
+  `{target_source_id}#source`, préservant la couverture au niveau document.
 """
 
 from __future__ import annotations
@@ -48,10 +48,10 @@ def _derive_relation_type(
 
 
 def _build_article_index(obligations: list[Obligation]) -> dict[tuple[str, str], list[str]]:
-    """Map (base_source_id, normalized_article) -> [obligation_id].
+    """Associe (base_source_id, normalized_article) -> [obligation_id].
 
-    Source units are one-per-article, so all obligations extracted from a given
-    article share the same key — the finest target granularity we can resolve to.
+    Les unités source sont une-par-article, donc toutes les obligations extraites d'un
+    article donné partagent la même clé — la granularité cible la plus fine atteignable.
     """
     index: dict[tuple[str, str], list[str]] = {}
     for ob in obligations:
@@ -63,7 +63,7 @@ def _build_article_index(obligations: list[Obligation]) -> dict[tuple[str, str],
 
 
 def _citation_char_interval(verbatim: str, citation: str) -> tuple[int, int]:
-    """Offsets of the citation within the source obligation's verbatim text (no regex)."""
+    """Offsets de la citation dans le verbatim_text de l'obligation source (sans regex)."""
     idx = verbatim.lower().find(citation.lower())
     if idx >= 0:
         return (idx, idx + len(citation))
@@ -85,13 +85,13 @@ def build_relations(
         rel_type = _derive_relation_type(src, rc.target_source_id)
         char_interval = _citation_char_interval(src.verbatim_text, rc.citation_text)
 
-        # Article-level targets: obligations of the cited document at the cited article.
+        # Cibles au niveau article : obligations du document cité à l'article cité.
         targets: list[str] = []
         if rc.target_article is not None:
             key = (rc.target_source_id, normalize_article(rc.target_article))
             targets = [t for t in article_index.get(key, []) if t != src.obligation_id]
 
-        # Fall back to the document node when no specific target obligation is known.
+        # Repli sur le nœud document quand aucune obligation cible précise n'est connue.
         if not targets:
             targets = [f"{rc.target_source_id}#source"]
 
@@ -124,7 +124,7 @@ class GraphStats:
 def build_graph(
     obligations: list[Obligation], relations: list[CrossLevelRelation]
 ) -> tuple[nx.DiGraph, GraphStats]:
-    """Build a NetworkX DiGraph with obligation + source nodes and typed edges."""
+    """Construit un DiGraph NetworkX avec nœuds obligation + source et arêtes typées."""
     g: nx.DiGraph = nx.DiGraph()
 
     for ob in obligations:

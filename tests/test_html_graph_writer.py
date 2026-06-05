@@ -1,4 +1,4 @@
-"""Tests for the pyvis HTML graph writer."""
+"""Tests de l'ecriture du graphe HTML pyvis."""
 
 from __future__ import annotations
 
@@ -72,12 +72,12 @@ def test_write_html_graph_creates_valid_html(tmp_path: Path) -> None:
     assert written == out
     assert out.exists()
     content = out.read_text(encoding="utf-8")
-    # vis.js is loaded
+    # vis.js est charge
     assert "vis-network" in content
-    # Both connected nodes are present
+    # Les deux noeuds connectes sont presents
     assert "AIFMD-RISK-0001" in content
     assert "AIFMD-RISK-0002" in content
-    # Edge label appears
+    # Le libelle de l'arete apparait
     assert "operationalizes" in content
 
 
@@ -86,7 +86,7 @@ def test_isolated_sources_are_hidden_by_default(tmp_path: Path) -> None:
     write_html_graph(_toy_graph(), out, hide_isolated_sources=True)
     content = out.read_text(encoding="utf-8")
     assert "Isolated source" not in content
-    # Connected source remains
+    # La source connectee reste
     assert "AIFMD_L1#source" in content
 
 

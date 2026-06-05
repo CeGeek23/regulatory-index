@@ -1,5 +1,5 @@
-# Controlled vocabulary of regulatory objects (what the action operates on).
-# `theme_id` links each object to its primary theme in themes.yaml.
+# Vocabulaire contrôlé des objets réglementaires (ce sur quoi porte l'action).
+# `theme_id` relie chaque objet à son thème principal dans themes.yaml.
 
 - id: risk_management_framework
   canonical_en: risk management framework
@@ -40,8 +40,8 @@
 - id: leverage_exposure
   canonical_en: leverage exposure
   canonical_fr: exposition au levier
-  aliases: ["leverage calculation"]
-  theme_id: risk_management
+  aliases: ["leverage calculation", "leverage limits", "limites de levier", "leverage"]
+  theme_id: leverage_management
 
 - id: due_diligence_process
   canonical_en: due diligence process
@@ -222,3 +222,39 @@
   canonical_fr: reporting réglementaire
   aliases: ["regulatory submission"]
   theme_id: reporting
+
+- id: risk_management_policy
+  canonical_en: risk management policy
+  canonical_fr: politique de gestion des risques
+  aliases: ["risk policy", "RM policy", "politique de risque"]
+  theme_id: risk_management
+
+- id: risk_management_function
+  canonical_en: risk management function
+  canonical_fr: fonction de gestion des risques
+  aliases: ["permanent risk management function", "fonction permanente de gestion des risques"]
+  theme_id: risk_management
+
+- id: risk_limits
+  canonical_en: risk limits
+  canonical_fr: limites de risque
+  aliases: ["risk limit system", "système de limites de risque", "limites de risques"]
+  theme_id: risk_management
+
+- id: liquidity_buffer
+  canonical_en: liquidity buffer
+  canonical_fr: coussin de liquidité
+  aliases: ["liquidity reserve", "réserve de liquidité"]
+  theme_id: liquidity
+
+- id: liquidity_risk
+  canonical_en: liquidity risk
+  canonical_fr: risque de liquidité
+  aliases: ["liquidity risk exposure", "exposition au risque de liquidité"]
+  theme_id: liquidity
+
+- id: liquidity_policy
+  canonical_en: liquidity policy
+  canonical_fr: politique de liquidité
+  aliases: ["liquidity management policy", "politique de gestion de la liquidité"]
+  theme_id: liquidity

@@ -1,5 +1,5 @@
-# Cross-level relation types between obligations.
-# Used to type edges in the regulatory graph (NetworkX/GraphML).
+# Types de relations inter-niveaux entre obligations.
+# Utilisés pour typer les arêtes du graphe réglementaire (NetworkX/GraphML).
 
 - id: clarifies
   canonical_en: clarifies

@@ -1,13 +1,13 @@
-"""Orchestrate corpus acquisition from config/sources_manifest.yaml.
+"""Orchestre l'acquisition du corpus depuis config/sources_manifest.yaml.
 
-Reads the manifest, dispatches to the matching fetcher (eurlex / amf /
-legifrance), persists raw HTML in data/raw/, parses to NormativeUnit, and
-emits a single JSONL ready for `regindex extract`.
+Lit le manifeste, dispatche vers le fetcher correspondant (eurlex / amf /
+legifrance), écrit le HTML brut dans data/raw/, parse en NormativeUnit, et
+produit un unique JSONL prêt pour `regindex extract`.
 
-Strictly no regex in the parsing chain; DOM-based traversal only.
+Aucune regex dans la chaîne de parsing ; uniquement de la traversée du DOM.
 
-ESMA Guidelines / Q&A are not supported yet — ESMA publishes mostly as PDF,
-which is out of scope for this iteration (no PDF parsing).
+Les Guidelines / Q&A ESMA ne sont pas prises en charge — ESMA publie surtout
+en PDF, hors périmètre (pas de parsing PDF).
 """
 
 from __future__ import annotations
@@ -40,9 +40,9 @@ class ManifestEntry:
     celex: str | None
     language: str
     filter_articles: tuple[str, ...] | None
-    # AMF: doctrine document code (e.g. "DOC-2014-06")
+    # AMF : code du document de doctrine (ex. "DOC-2014-06")
     doc_code: str | None = None
-    # Légifrance: LEGIARTI identifier + display article number
+    # Légifrance : identifiant LEGIARTI + numéro d'article affiché
     article_id: str | None = None
     article_number: str | None = None
 
@@ -72,7 +72,7 @@ def acquire_one(
     entry: ManifestEntry,
     raw_dir: Path,
 ) -> list[NormativeUnit]:
-    """Fetch + parse one manifest entry. Returns the NormativeUnits produced."""
+    """Récupère + parse une entrée du manifeste. Retourne les NormativeUnit produites."""
     registry = load_sources_registry()
     reg_entry = registry.get(entry.source_id)
     if reg_entry is None:
@@ -143,7 +143,7 @@ def acquire_all(
     raw_dir: Path = Path("data/raw"),
     units_out: Path = Path("data/units/corpus.jsonl"),
 ) -> dict[str, int]:
-    """Run acquisition over the full manifest. Returns counters."""
+    """Exécute l'acquisition sur l'ensemble du manifeste. Retourne les compteurs."""
     entries = load_manifest(manifest_path)
     all_units: list[NormativeUnit] = []
     counts: dict[str, int] = {"manifest_entries": len(entries), "units": 0, "failed": 0}
@@ -153,7 +153,7 @@ def acquire_all(
             units = acquire_one(entry, raw_dir)
             log.info("parsed %s -> %d unit(s)", entry.source_id, len(units))
             all_units.extend(units)
-        except Exception as e:  # per-entry isolation
+        except Exception as e:  # isolation par entrée
             log.exception("acquisition failed for %s: %s", entry.source_id, e)
             counts["failed"] += 1
 

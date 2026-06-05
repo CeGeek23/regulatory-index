@@ -1,4 +1,4 @@
-"""Write a multi-sheet, formatted Excel workbook from a MaterializedIndex."""
+"""Écrit un classeur Excel multi-feuilles et formaté à partir d'un MaterializedIndex."""
 
 from __future__ import annotations
 
@@ -64,7 +64,7 @@ def _df_rows(df: pl.DataFrame, columns: list[str]) -> list[tuple[Any, ...]]:
 
 
 def write_workbook(materialized: MaterializedIndex, output_path: Path) -> dict[str, int]:
-    """Build the workbook from in-memory DataFrames. Returns row counts per sheet."""
+    """Construit le classeur à partir des DataFrames en mémoire. Renvoie le nombre de lignes par feuille."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     obligations_df = materialized.obligations_df.sort(["level", "theme", "obligation_id"])
@@ -86,7 +86,7 @@ def write_workbook(materialized: MaterializedIndex, output_path: Path) -> dict[s
 
     counts: dict[str, int] = {}
 
-    # 1. Obligations sheet
+    # 1. Feuille Obligations
     ws = workbook.add_worksheet("Obligations")
     ws.freeze_panes(1, 1)
     ws.autofilter(0, 0, max(1, len(obligations)), len(_OBLIGATION_COLUMNS) - 1)
@@ -100,7 +100,7 @@ def write_workbook(materialized: MaterializedIndex, output_path: Path) -> dict[s
             ws.write(row, col, value if value is not None else "", fmt)
     counts["Obligations"] = len(obligations)
 
-    # 2. Relations sheet
+    # 2. Feuille Relations
     ws = workbook.add_worksheet("Relations")
     ws.freeze_panes(1, 0)
     if relations:
@@ -113,7 +113,7 @@ def write_workbook(materialized: MaterializedIndex, output_path: Path) -> dict[s
             ws.write(row, col, value if value is not None else "", wrap_fmt)
     counts["Relations"] = len(relations)
 
-    # 3. Sources sheet
+    # 3. Feuille Sources
     ws = workbook.add_worksheet("Sources")
     headers = ["Source ID", "Level", "Issuer", "Language", "Title", "URL"]
     widths = [22, 8, 22, 8, 50, 40]
@@ -128,7 +128,7 @@ def write_workbook(materialized: MaterializedIndex, output_path: Path) -> dict[s
             ws.write(row, col, value if value is not None else "", wrap_fmt)
     counts["Sources"] = len(sources)
 
-    # 4. Themes summary
+    # 4. Synthèse par thème
     _write_summary_sheet(
         workbook,
         "Themes summary",
@@ -138,7 +138,7 @@ def write_workbook(materialized: MaterializedIndex, output_path: Path) -> dict[s
         header_fmt,
     )
 
-    # 5. Actor x Theme matrix
+    # 5. Matrice Acteur x Thème
     _write_summary_sheet(
         workbook,
         "Actor x Theme",
@@ -148,7 +148,7 @@ def write_workbook(materialized: MaterializedIndex, output_path: Path) -> dict[s
         header_fmt,
     )
 
-    # 6. Actors summary
+    # 6. Synthèse par acteur
     _write_summary_sheet(
         workbook,
         "Actors summary",
@@ -158,7 +158,7 @@ def write_workbook(materialized: MaterializedIndex, output_path: Path) -> dict[s
         header_fmt,
     )
 
-    # 7. Relations summary
+    # 7. Synthèse des relations
     _write_summary_sheet(
         workbook,
         "Relations summary",

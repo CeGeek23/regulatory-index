@@ -1,10 +1,10 @@
-# Registry of regulatory sources for the AIFMD scope.
-# Used by linking/citation_extractor.py to resolve `cited_references` strings
-# captured by LangExtract into a target source_id without any regex: the
-# resolver simply checks whether one of the `aliases` appears (case-insensitive)
-# as a substring of the citation.
+# Registre des sources réglementaires pour le périmètre AIFMD.
+# Utilisé par linking/citation_extractor.py pour résoudre les chaînes `cited_references`
+# captées par LangExtract vers un source_id cible, sans aucune regex : le résolveur
+# vérifie simplement si l'un des `aliases` apparaît (insensible à la casse) comme
+# sous-chaîne de la citation.
 #
-# `level` and `issuer` are used by linking/graph_builder.py to derive the
+# `level` et `issuer` sont utilisés par linking/graph_builder.py pour dériver le
 # relation_type (clarifies / strengthens / operationalizes / interprets / references).
 
 - source_id: AIFMD_L1

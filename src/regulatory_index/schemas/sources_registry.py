@@ -1,4 +1,4 @@
-"""Loader for config/sources_registry.yaml — maps source_id to full Source metadata."""
+"""Chargeur pour config/sources_registry.yaml — mappe source_id vers les métadonnées Source complètes."""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ class RegistryEntry:
 
 @cache
 def load_sources_registry() -> dict[str, RegistryEntry]:
-    """Return {source_id: RegistryEntry}."""
+    """Retourne {source_id: RegistryEntry}."""
     with REGISTRY_PATH.open(encoding="utf-8") as f:
         raw: list[dict[str, Any]] = yaml.safe_load(f) or []
     out: dict[str, RegistryEntry] = {}
@@ -51,10 +51,11 @@ def load_sources_registry() -> dict[str, RegistryEntry]:
 
 @cache
 def load_alias_index() -> tuple[tuple[str, str], ...]:
-    """Return a flat ((alias_lowercase, source_id), ...) sorted by alias length DESC.
+    """Retourne un ((alias_lowercase, source_id), ...) plat trié par longueur d'alias DESC.
 
-    Longer aliases first so that matching prefers the most specific alias when
-    several share a substring (e.g. 'AIFMD' vs 'Directive 2011/61/EU').
+    Les alias les plus longs en premier, pour que la correspondance préfère l'alias
+    le plus spécifique quand plusieurs partagent une sous-chaîne (ex. 'AIFMD' vs
+    'Directive 2011/61/EU').
     """
     registry = load_sources_registry()
     pairs: list[tuple[str, str]] = [

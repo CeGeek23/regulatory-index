@@ -1,17 +1,17 @@
-"""Fetch AMF doctrine pages (Positions, Recommendations, Instructions).
+"""Récupère les pages de doctrine AMF (Positions, Recommandations, Instructions).
 
-AMF publishes its doctrine at:
+L'AMF publie sa doctrine à :
     https://www.amf-france.org/fr/reglementation/doctrine/{DOC_CODE}
 
-These pages embed a `<div class="amf-content">` or similar container with the
-operative text in `<p>` tags. PDFs are also linked but we avoid them on
-purpose. This fetcher just downloads the HTML; the parser extracts numbered
-sections heuristically (no regex; we rely on DOM structure).
+Ces pages contiennent un conteneur `<div class="amf-content">` ou similaire avec le
+texte opérationnel dans des balises `<p>`. Des PDF sont aussi liés mais on les évite
+volontairement. Ce fetcher télécharge seulement le HTML ; le parser extrait les
+sections numérotées de façon heuristique (pas de regex ; on s'appuie sur la structure du DOM).
 
-Note: AMF HTML is much less standardised than EUR-Lex. The parser here is
-best-effort and produces ONE NormativeUnit per doctrine document (the whole
-operative text), with hierarchy_path = doctrine title. Per-section splitting
-is a refinement for later.
+Note : le HTML de l'AMF est bien moins standardisé que celui d'EUR-Lex. Le parser ici
+fait au mieux et produit UNE NormativeUnit par document de doctrine (tout le texte
+opérationnel), avec hierarchy_path = titre de la doctrine. Le découpage par section
+n'est pas implémenté.
 """
 
 from __future__ import annotations
@@ -26,8 +26,8 @@ from .unit_loader import NormativeUnit
 
 USER_AGENT = "regulatory-index-poc/0.1 (research; contact: tchakontecedrick@gmail.com)"
 
-# AMF pages interleave operative text with nav links / short labels; skip <p>/<li>
-# fragments shorter than this so menus and one-word items don't pollute the body.
+# Les pages AMF mêlent texte opérationnel et liens de navigation / libellés courts ; on ignore
+# les fragments <p>/<li> plus courts que ceci pour que menus et items d'un mot ne polluent pas le corps.
 _MIN_PARAGRAPH_CHARS = 20
 
 
@@ -60,10 +60,10 @@ def parse_doctrine(
     issuer: str,
     url: str,
 ) -> list[NormativeUnit]:
-    """Extract the operative text as one NormativeUnit (whole doctrine document)."""
+    """Extrait le texte opérationnel en une seule NormativeUnit (tout le document de doctrine)."""
     soup = BeautifulSoup(html, "lxml")
-    # AMF wraps the operative content in a main article tag. We pull all
-    # paragraphs and headings inside <main> to skip menus/footers.
+    # L'AMF englobe le contenu opérationnel dans une balise <main>. On récupère tous
+    # les paragraphes et titres dans <main> pour ignorer les menus/pieds de page.
     main = soup.find("main") or soup.body
     if main is None:
         return []

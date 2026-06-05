@@ -1,16 +1,16 @@
-"""Smoke test of the real Ollama-backed extraction path (no mocks).
+"""Smoke test du chemin d'extraction réel via Ollama (sans mocks).
 
-Unlike tests/test_langextract_runner.py (which mocks `lx.extract`), this script
-exercises the genuine extraction against a locally running Ollama. It is deliberately
-NOT a pytest test: it needs `ollama serve` up with the model pulled, which is not
-available in CI and is non-deterministic.
+Contrairement à tests/test_langextract_runner.py (qui mocke `lx.extract`), ce script
+exerce l'extraction réelle contre un Ollama tournant en local. Ce n'est volontairement
+PAS un test pytest : il requiert `ollama serve` actif avec le modèle téléchargé, ce qui
+n'est pas disponible en CI et n'est pas déterministe.
 
-Run it manually after `ollama pull mistral:7b` and `ollama serve`:
+À lancer manuellement après `ollama pull mistral:7b` et `ollama serve` :
 
     uv run python scripts/run_smoke_e2e.py
     uv run python scripts/run_smoke_e2e.py --model-id qwen2.5:7b
 
-Exit code 0 if at least one grounded obligation is extracted, 1 otherwise.
+Code de sortie 0 si au moins une obligation grounded est extraite, 1 sinon.
 """
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Tests for the AMF and Légifrance branches of acquire_one (no network)."""
+"""Tests des branches AMF et Légifrance de acquire_one (pas de réseau)."""
 
 from __future__ import annotations
 

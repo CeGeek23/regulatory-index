@@ -1,6 +1,6 @@
-"""Parse EUR-Lex HTML into NormativeUnit objects, one per article.
+"""Parse le HTML EUR-Lex en objets NormativeUnit, un par article.
 
-EUR-Lex HTML layout (Office Journal `oj-*` + ELI `eli-*` classes):
+Mise en page HTML EUR-Lex (classes Journal Officiel `oj-*` + ELI `eli-*`) :
     <div class="eli-container">
       <div class="eli-subdivision" id="art_15">
         <p class="oj-ti-art">Article 15</p>
@@ -12,9 +12,9 @@ EUR-Lex HTML layout (Office Journal `oj-*` + ELI `eli-*` classes):
       </div>
     </div>
 
-We extract one NormativeUnit per `id="art_N"` div. Body text is the
-concatenation of the article's `<p>` paragraphs (excluding the title/subtitle
-paragraphs) in document order, joined by newlines. No regex; pure DOM traversal.
+On extrait une NormativeUnit par div `id="art_N"`. Le corps est la
+concaténation des paragraphes `<p>` de l'article (hors paragraphes titre/sous-titre)
+dans l'ordre du document, joints par des sauts de ligne. Pas de regex ; pure traversée du DOM.
 """
 
 from __future__ import annotations
@@ -29,12 +29,12 @@ def _clean_whitespace(s: str) -> str:
 
 
 def _extract_article_number(article_div: Tag) -> str | None:
-    """The 'oj-ti-art' paragraph holds 'Article 15' / 'Article 15 a'."""
+    """Le paragraphe 'oj-ti-art' contient 'Article 15' / 'Article 15 a'."""
     title = article_div.find("p", class_="oj-ti-art")
     if title is None:
         return None
     text = _clean_whitespace(title.get_text(" "))
-    # 'Article 15' -> '15'; 'Article 15 a' -> '15 a'; pure DOM, no regex
+    # 'Article 15' -> '15' ; 'Article 15 a' -> '15 a' ; pur DOM, pas de regex
     prefix = "Article "
     if text.startswith(prefix):
         return text[len(prefix) :].strip() or None
@@ -42,7 +42,7 @@ def _extract_article_number(article_div: Tag) -> str | None:
 
 
 def _extract_article_subtitle(article_div: Tag) -> str | None:
-    """The 'oj-sti-art' paragraph holds the article subtitle (e.g. 'Risk management')."""
+    """Le paragraphe 'oj-sti-art' contient le sous-titre de l'article (ex. 'Risk management')."""
     sub = article_div.find("p", class_="oj-sti-art")
     if sub is None:
         return None
@@ -50,7 +50,7 @@ def _extract_article_subtitle(article_div: Tag) -> str | None:
 
 
 def _extract_article_body(article_div: Tag) -> str:
-    """Return the literal text of the article minus the title/subtitle paragraphs."""
+    """Retourne le texte littéral de l'article sans les paragraphes titre/sous-titre."""
     title = article_div.find("p", class_="oj-ti-art")
     subtitle = article_div.find("p", class_="oj-sti-art")
     skip_ids = {id(title), id(subtitle)}
@@ -77,7 +77,7 @@ def parse_articles(
     url: str,
     keep: set[str] | None = None,
 ) -> list[NormativeUnit]:
-    """Return one NormativeUnit per article. `keep` filters by article number."""
+    """Retourne une NormativeUnit par article. `keep` filtre par numéro d'article."""
     soup = BeautifulSoup(html, "lxml")
 
     units: list[NormativeUnit] = []
@@ -85,7 +85,7 @@ def parse_articles(
     for div in soup.select('div.eli-subdivision[id^="art_"]'):
         elem_id_raw = div.get("id") or ""
         elem_id = elem_id_raw if isinstance(elem_id_raw, str) else " ".join(elem_id_raw)
-        # Skip sub-elements like 'art_15.1', we only want top-level articles.
+        # Ignore les sous-éléments comme 'art_15.1', on ne veut que les articles de premier niveau.
         if "." in elem_id:
             continue
         if elem_id in seen:

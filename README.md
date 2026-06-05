@@ -39,9 +39,6 @@ ollama pull mistral:7b  # ~4.4 Go
 #    [tool.uv] python-preference = "only-system" : uv ne télécharge jamais son
 #    propre interpréteur). Prérequis : `pyenv install 3.12.11`.
 uv sync
-
-# 4. Variables d'env (optionnel)
-cp .env.example .env
 ```
 
 ## Pipeline end-to-end
@@ -125,7 +122,7 @@ src/regulatory_index/
   cli.py               Typer CLI : vocab / acquire / extract / link /
                        export / pipeline
 
-notebooks/             04_corpus_acquisition (exploration corpus, sans LLM)
+notebooks/             corpus_acquisition (exploration corpus, sans LLM)
 
 tests/                 pytest (schemas, vocab, sources_registry,
                        examples_loader, schema_builder, unit_loader,

@@ -8,13 +8,14 @@ from .source import Source
 
 
 class Obligation(BaseModel):
-    """A single normative requirement extracted from a regulatory text.
+    """Une exigence normative unique extraite d'un texte réglementaire.
 
-    The vocabulary fields actor, action, object and theme are canonicalised to a
-    pivot label (FR/EN folded to one form) in `obligation_builder._canonicalize`;
-    values outside the controlled vocabularies are kept verbatim and surfaced by
-    `obligation_builder.collect_vocab_gaps`. They are typed as `str` here to keep the
-    schema decoupled from the YAML files. (sub_theme and condition are free text.)
+    Les champs de vocabulaire actor, action, object et theme sont canonicalisés en
+    un label pivot (FR/EN ramenés à une seule forme) dans
+    `obligation_builder._canonicalize` ; les valeurs hors vocabulaires contrôlés sont
+    conservées telles quelles et remontées par `obligation_builder.collect_vocab_gaps`.
+    Elles sont typées `str` ici pour découpler le schéma des fichiers YAML.
+    (sub_theme et condition sont du texte libre.)
     """
 
     obligation_id: str = Field(
@@ -54,10 +55,11 @@ class Obligation(BaseModel):
     @field_validator("obligation_id")
     @classmethod
     def _check_id_format(cls, v: str) -> str:
-        """Validate SCOPE-THEME_CODE-NNNN with plain string ops (no regex).
+        """Valide SCOPE-THEME_CODE-NNNN via opérations de chaîne simples (sans regex).
 
-        SCOPE: >=2 uppercase alphanumerics starting with a letter (e.g. AIFMD, MIFID2).
-        THEME_CODE: uppercase letters (e.g. RISK). NNNN: a 3-4 digit number.
+        SCOPE : >=2 caractères alphanumériques majuscules commençant par une lettre
+        (ex. AIFMD, MIFID2). THEME_CODE : lettres majuscules (ex. RISK).
+        NNNN : un nombre de 3 à 4 chiffres.
         """
         scope, theme, number = v.split("-") if v.count("-") == 2 else ("", "", "")
         valid = (

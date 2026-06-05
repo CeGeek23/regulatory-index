@@ -30,6 +30,7 @@ Acronym glossary:
 Rules:
 - extraction_text MUST be a verbatim substring of the source. Never paraphrase.
 - One obligation per (actor, action, object) triple. If an article contains multiple obligations, emit multiple extractions.
+- actor, action, object and theme are each a SINGLE string value — never a list/array, never null or empty. If several actions apply, emit one obligation per action.
 - Do NOT emit duplicate or overlapping extractions for the same triple.
 - When the actor is implicit ("It shall..."), resolve it from the article context.
 - When you are unsure about a canonical value (actor / action / theme / condition), pick the CLOSEST one in the list rather than inventing a new one.

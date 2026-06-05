@@ -134,7 +134,7 @@ def test_build_graph_produces_nodes_and_edges() -> None:
     graph, stats = build_graph(obligations, relations)
     assert isinstance(graph, nx.DiGraph)
     assert stats.obligation_nodes == 1
-    assert stats.source_nodes >= 5  # several known sources in the registry
+    assert stats.source_nodes >= 5  # plusieurs sources connues dans le registre
     assert stats.edges == 1
     assert stats.edges_by_type.get("clarifies") == 1
 
@@ -170,7 +170,7 @@ def test_article_level_link_targets_specific_obligation() -> None:
     resolved, _ = resolve_all([source, target])
     relations = build_relations([source, target], resolved)
     assert len(relations) == 1
-    # Links to the specific target obligation at Article 15, not the document node.
+    # Pointe vers l'obligation cible precise a l'article 15, pas vers le noeud document.
     assert relations[0].target_obligation_id == "AIFMD-RISK-0050"
     assert relations[0].relation_type is CrossLevelRelationType.OPERATIONALIZES
 
@@ -198,8 +198,8 @@ def test_no_article_falls_back_to_source_node() -> None:
 
 
 def test_article_level_link_excludes_self_reference() -> None:
-    # An obligation citing its own article must not link to itself; with no other
-    # target at that article it falls back to the document node.
+    # Une obligation citant son propre article ne doit pas se lier a elle-meme ; sans
+    # autre cible a cet article, elle se rabat sur le noeud document.
     ob = _obligation(
         "AIFMD-RISK-0070",
         level=1,

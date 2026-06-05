@@ -1,8 +1,8 @@
-"""Render a NetworkX DiGraph to a self-contained interactive HTML file (pyvis/vis.js).
+"""Rend un DiGraph NetworkX dans un fichier HTML interactif autonome (pyvis/vis.js).
 
-The output file opens in any modern browser — no VS Code extension required.
-Nodes are coloured by level (1, 2, 3, national) and by kind (obligation vs source);
-edges by relation_type. Hover shows the full obligation triple.
+Le fichier produit s'ouvre dans tout navigateur moderne — aucune extension VS Code requise.
+Les nœuds sont colorés par niveau (1, 2, 3, national) et par type (obligation vs source) ;
+les arêtes par relation_type. Le survol affiche le triplet d'obligation complet.
 """
 
 from __future__ import annotations
@@ -71,12 +71,12 @@ def write_html_graph(
     title: str = "Regulatory Index — Cross-level relations",
     hide_isolated_sources: bool = True,
 ) -> Path:
-    """Write a standalone interactive HTML graph. Returns the path written."""
+    """Écrit un graphe HTML interactif autonome. Renvoie le chemin écrit."""
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     g = graph
     if hide_isolated_sources:
-        # Drop source nodes that have no edge — they clutter the view without info.
+        # Supprime les nœuds source sans arête — ils encombrent la vue sans apport.
         to_drop = [
             n
             for n, d in graph.nodes(data=True)

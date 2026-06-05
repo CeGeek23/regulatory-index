@@ -1,12 +1,12 @@
-# Controlled vocabulary of regulatory actions (verbs).
-# `canonical` is the lemma form. `semantic_group` clusters verbs by intent
-# (governance, monitoring, reporting, control, escalation, etc.) to enable
-# thematic aggregations in the final table.
+# Vocabulaire contrôlé des actions réglementaires (verbes).
+# `canonical` est la forme lemmatisée. `semantic_group` regroupe les verbes par intention
+# (governance, monitoring, reporting, control, escalation, etc.) pour permettre des
+# agrégations thématiques dans la table finale.
 
 - id: establish
   canonical_en: establish
   canonical_fr: établir
-  aliases: ["set up", "put in place", "mettre en place", "instaurer"]
+  aliases: ["set up", "put in place", "mettre en place", "instaurer", "establish and maintain", "develop", "développer"]
   semantic_group: governance
 
 - id: maintain
@@ -228,5 +228,71 @@
 - id: update
   canonical_en: update
   canonical_fr: mettre à jour
-  aliases: ["refresh", "actualiser"]
+  aliases: ["refresh", "actualiser", "provide updates", "amend or supplement", "amend", "supplement", "review and update"]
   semantic_group: maintenance
+
+- id: consider
+  canonical_en: consider
+  canonical_fr: prendre en compte
+  aliases: ["take into account", "prendre en considération"]
+  semantic_group: assessment
+
+- id: comply
+  canonical_en: comply
+  canonical_fr: se conformer
+  aliases: ["adhere", "satisfy", "respecter", "se conformer à"]
+  semantic_group: control
+
+- id: define
+  canonical_en: define
+  canonical_fr: définir
+  aliases: ["specify", "spécifier"]
+  semantic_group: governance
+
+- id: separate
+  canonical_en: separate
+  canonical_fr: séparer
+  aliases: ["segregate", "ségréguer", "cloisonner"]
+  semantic_group: governance
+
+- id: manage
+  canonical_en: manage
+  canonical_fr: gérer
+  aliases: ["administer", "administrer"]
+  semantic_group: execution
+
+- id: demonstrate
+  canonical_en: demonstrate
+  canonical_fr: démontrer
+  aliases: ["evidence", "demontrer", "justifier par des éléments"]
+  semantic_group: control
+
+- id: justify
+  canonical_en: justify
+  canonical_fr: justifier
+  aliases: ["substantiate", "motiver"]
+  semantic_group: control
+
+- id: address
+  canonical_en: address
+  canonical_fr: traiter
+  aliases: ["respond", "remediate", "répondre", "remédier à"]
+  semantic_group: execution
+
+- id: align
+  canonical_en: align
+  canonical_fr: aligner
+  aliases: ["ensure alignment", "mettre en cohérence"]
+  semantic_group: governance
+
+- id: adopt
+  canonical_en: adopt
+  canonical_fr: adopter
+  aliases: ["enact"]
+  semantic_group: governance
+
+- id: exempt
+  canonical_en: exempt
+  canonical_fr: exempter
+  aliases: ["exempted", "not apply", "ne pas appliquer", "dispenser"]
+  semantic_group: governance

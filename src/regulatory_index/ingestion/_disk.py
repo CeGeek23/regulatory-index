@@ -1,9 +1,9 @@
-"""Shared helper: persist fetched HTML to disk with a content-hashed filename.
+"""Utilitaire commun : écrire le HTML récupéré sur disque avec un nom basé sur un hash du contenu.
 
-Every fetcher writes its raw HTML the same way — `{stem}_{sha}.html` where `sha`
-is the first 12 hex chars of the SHA-256 of the content — so the path is stable
-and re-downloads of identical content collide on the same file. Only the `stem`
-differs per fetcher (CELEX+lang / doc code / article id).
+Chaque fetcher écrit son HTML brut de la même façon — `{stem}_{sha}.html` où `sha`
+correspond aux 12 premiers caractères hexadécimaux du SHA-256 du contenu — afin que le
+chemin soit stable et que les re-téléchargements d'un contenu identique pointent vers le
+même fichier. Seul le `stem` diffère selon le fetcher (CELEX+langue / code doc / id article).
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from pathlib import Path
 
 
 def persist_html(html: str, out_dir: Path, stem: str) -> Path:
-    """Write `html` to `{out_dir}/{stem}_{sha}.html` and return the path."""
+    """Écrit `html` dans `{out_dir}/{stem}_{sha}.html` et retourne le chemin."""
     out_dir.mkdir(parents=True, exist_ok=True)
     sha = hashlib.sha256(html.encode("utf-8")).hexdigest()[:12]
     path = out_dir / f"{stem}_{sha}.html"

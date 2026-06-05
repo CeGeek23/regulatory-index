@@ -1,11 +1,11 @@
-"""Fetch EUR-Lex acts as HTML (Office Journal layout, no PDF needed).
+"""Récupère les actes EUR-Lex en HTML (mise en page Journal Officiel, sans PDF).
 
-EUR-Lex serves a stable HTML rendering at:
+EUR-Lex fournit un rendu HTML stable à :
     https://eur-lex.europa.eu/legal-content/{LANG}/TXT/HTML/?uri=CELEX:{CELEX}
 
-The HTML structure is predictable (`div.eli-subdivision`, `p.oj-normal` etc.),
-which lets us extract articles structurally with BeautifulSoup without any
-regex on the body.
+La structure HTML est prévisible (`div.eli-subdivision`, `p.oj-normal`, etc.),
+ce qui permet d'extraire les articles structurellement avec BeautifulSoup sans
+aucune regex sur le corps.
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ def eurlex_url(celex: str, language: str) -> str:
 
 
 def fetch_html(celex: str, language: str, *, timeout: float = 30.0) -> str:
-    """Fetch the EUR-Lex HTML for a CELEX in a given language. Raises on HTTP error."""
+    """Récupère le HTML EUR-Lex d'un CELEX dans une langue donnée. Lève une exception en cas d'erreur HTTP."""
     url = eurlex_url(celex, language)
     with httpx.Client(
         headers={"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml"},
@@ -37,5 +37,5 @@ def fetch_html(celex: str, language: str, *, timeout: float = 30.0) -> str:
 
 
 def fetch_to_disk(celex: str, language: str, out_dir: Path) -> Path:
-    """Persist the raw HTML on disk. Filename is reproducible from (celex, lang, sha256)."""
+    """Écrit le HTML brut sur disque. Le nom de fichier est reproductible à partir de (celex, langue, sha256)."""
     return persist_html(fetch_html(celex, language), out_dir, f"{celex}_{language.upper()}")

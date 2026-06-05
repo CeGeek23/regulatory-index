@@ -23,5 +23,5 @@ def test_alias_index_sorted_by_length_desc() -> None:
     pairs = load_alias_index()
     lengths = [len(a) for a, _ in pairs]
     assert lengths == sorted(lengths, reverse=True)
-    # The longest alias should win against shorter ones for the same source.
+    # L'alias le plus long doit l'emporter sur les plus courts pour une même source.
     assert any("directive 2011/61/eu" in a for a, _ in pairs)

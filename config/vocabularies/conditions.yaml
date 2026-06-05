@@ -1,5 +1,5 @@
-# Controlled vocabulary of conditions / temporal modalities.
-# `category` distinguishes timing, materiality, scope conditions, etc.
+# Vocabulaire contrôlé des conditions / modalités temporelles.
+# `category` distingue les conditions de timing, de matérialité, de portée, etc.
 
 - id: continuously
   canonical_en: continuously

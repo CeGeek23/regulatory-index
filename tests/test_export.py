@@ -91,7 +91,7 @@ def test_full_export_pipeline(tmp_path: Path) -> None:
 
 
 def test_by_theme_merges_across_languages() -> None:
-    # Same canonical theme in EN and FR obligations -> a single aggregated row.
+    # Meme theme canonique pour des obligations EN et FR -> une seule ligne agregee.
     obligations = [
         _make_obligation("AIFMD-RISK-0001", "Risk Management", language="EN"),
         _make_obligation("AIFMD-RISK-0002", "Risk Management", language="FR"),

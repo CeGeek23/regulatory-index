@@ -1,4 +1,4 @@
-"""Write a NetworkX DiGraph to GraphML for inspection in Gephi / yEd."""
+"""Écrit un DiGraph NetworkX au format GraphML pour inspection dans Gephi / yEd."""
 
 from __future__ import annotations
 

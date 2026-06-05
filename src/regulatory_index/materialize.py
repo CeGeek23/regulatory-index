@@ -1,12 +1,12 @@
-"""Materialise persisted extractions into in-memory Polars DataFrames.
+"""Matérialise les extractions persistées en DataFrames Polars en mémoire.
 
-This module replaces the previous DuckDB layer. The source of truth is the
-JSON files in `data/obligations/` (one per NormativeUnit). At export time we
-load them, build Obligations, run the citation linker, and turn everything
-into three Polars DataFrames that the writers (Excel / CSV) consume directly.
+La source de vérité est les fichiers JSON dans `data/obligations/` (un par
+NormativeUnit). À l'export, on les charge, on construit les Obligations, on
+exécute le lieur de citations, et on transforme le tout en trois DataFrames
+Polars consommés directement par les writers (Excel / CSV).
 
-No persistent database, no SQL — Polars is sufficient for our scale
-(thousands of obligations) and keeps the dependency surface minimal.
+Pas de base persistante, pas de SQL — Polars suffit à notre échelle
+(milliers d'obligations) et réduit la surface des dépendances.
 """
 
 from __future__ import annotations
@@ -32,7 +32,7 @@ from .schemas.raw import UnitExtraction
 from .schemas.relation import CrossLevelRelation
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Schemas — keep DataFrames typed even when empty (avoid pivot/select errors)
+# Schémas — garde les DataFrames typés même vides (évite les erreurs pivot/select)
 # ──────────────────────────────────────────────────────────────────────────────
 
 OBLIGATION_SCHEMA: dict[str, pl.DataType] = {
@@ -91,12 +91,12 @@ UNIT_SCHEMA: dict[str, pl.DataType] = {
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Loaders / converters
+# Chargeurs / convertisseurs
 # ──────────────────────────────────────────────────────────────────────────────
 
 
 def load_unit_extractions_from_dir(obligations_dir: Path) -> list[UnitExtraction]:
-    """Read every `{source_id}/{unit_id}.json` produced by the runner."""
+    """Lit chaque `{source_id}/{unit_id}.json` produit par le runner."""
     out: list[UnitExtraction] = []
     for path in sorted(obligations_dir.glob("*/*.json")):
         payload: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
@@ -181,13 +181,13 @@ def units_to_df(units: Iterable[NormativeUnit]) -> pl.DataFrame:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# One-call materialisation
+# Matérialisation en un appel
 # ──────────────────────────────────────────────────────────────────────────────
 
 
 @dataclass(frozen=True)
 class MaterializedIndex:
-    """Fully materialised view of the corpus, in-memory."""
+    """Vue entièrement matérialisée du corpus, en mémoire."""
 
     obligations: list[Obligation]
     relations: list[CrossLevelRelation]
@@ -199,7 +199,7 @@ class MaterializedIndex:
 
 
 def materialize(unit_extractions: list[UnitExtraction]) -> MaterializedIndex:
-    """JSON extractions -> Obligations + Relations + DataFrames, single call."""
+    """Extractions JSON -> Obligations + Relations + DataFrames, en un seul appel."""
     obligations = build_obligations(unit_extractions)
     resolved, unresolved = resolve_all(obligations)
     relations = build_relations(obligations, resolved)
@@ -215,13 +215,13 @@ def materialize(unit_extractions: list[UnitExtraction]) -> MaterializedIndex:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Aggregations — replace the former SQL views, used by the Excel summary sheets
+# Agrégations utilisées par les feuilles de synthèse Excel
 # ──────────────────────────────────────────────────────────────────────────────
 
 
 def by_theme(obligations_df: pl.DataFrame) -> pl.DataFrame:
-    # Themes are canonicalised at build time, so we group by theme alone:
-    # FR/EN variants of one theme collapse to a single row.
+    # Les thèmes sont canonisés à la construction, donc on groupe sur le seul thème :
+    # les variantes FR/EN d'un même thème fusionnent en une seule ligne.
     if obligations_df.is_empty():
         return pl.DataFrame(schema={"theme": pl.Utf8(), "n": pl.UInt32()})
     return (
@@ -254,7 +254,7 @@ def relations_summary(relations_df: pl.DataFrame) -> pl.DataFrame:
 
 
 def sources_view(obligations_df: pl.DataFrame) -> pl.DataFrame:
-    """Distinct (source_id, level, issuer, language, title, url) used by Excel."""
+    """Tuples distincts (source_id, level, issuer, language, title, url) utilisés par Excel."""
     if obligations_df.is_empty():
         return pl.DataFrame(
             schema={

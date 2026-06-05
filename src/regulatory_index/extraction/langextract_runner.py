@@ -1,12 +1,12 @@
-"""Idempotent runner: feed normative units to LangExtract via Ollama and persist outputs.
+"""Runner idempotent : soumet les unités normatives à LangExtract via Ollama et persiste les sorties.
 
-For each unit:
-- If `data/obligations/{source_id}/{unit_id}.json` already exists, skip (idempotent reruns).
-- Otherwise, call LangExtract, normalise the result into a UnitExtraction, persist JSON.
-- Failures are logged to `data/obligations/_failed.jsonl` (one line per failure) and do NOT
-  abort the run: the next unit is processed.
+Pour chaque unité :
+- Si `data/obligations/{source_id}/{unit_id}.json` existe déjà, on saute (réexécutions idempotentes).
+- Sinon, on appelle LangExtract, on normalise le résultat en UnitExtraction, on persiste le JSON.
+- Les échecs sont journalisés dans `data/obligations/_failed.jsonl` (une ligne par échec) et
+  n'interrompent PAS l'exécution : l'unité suivante est traitée.
 
-No regex, no fallback chain: one LangExtract call per unit, one disk write per outcome.
+Pas de regex, pas de chaîne de repli : un appel LangExtract par unité, une écriture disque par résultat.
 """
 
 from __future__ import annotations
@@ -39,7 +39,8 @@ class RunnerConfig:
     extraction_passes: int = 1
     fence_output: bool = True
     use_schema_constraints: bool = False
-    request_timeout: int = 600  # seconds; default LangExtract value (120) too short on CPU
+    request_timeout: int = 600  # secondes ; la valeur LangExtract par défaut (120) est trop courte sur CPU
+    num_ctx: int = 8192  # fenêtre de contexte ; 2048 (défaut Ollama) tronque les longs articles
 
 
 def _safe_path_segment(value: str) -> str:
@@ -47,7 +48,7 @@ def _safe_path_segment(value: str) -> str:
 
 
 def output_path(out_dir: Path, unit: NormativeUnit) -> Path:
-    """Return the JSON output path for a unit."""
+    """Retourne le chemin du fichier JSON de sortie pour une unité."""
     sub = out_dir / _safe_path_segment(unit.source_id)
     base = _safe_path_segment(unit.unit_id)
     return sub / f"{base}.json"
@@ -60,6 +61,19 @@ def _langextract_version() -> str | None:
         return None
 
 
+def _as_text(value: Any) -> str:
+    """Coerce un attribut en une chaîne unique (le LLM renvoie parfois une liste ou None)."""
+    if value is None:
+        return ""
+    if isinstance(value, list | tuple):
+        for item in value:
+            text = str(item).strip()
+            if text:
+                return text
+        return ""
+    return str(value).strip()
+
+
 def _to_raw_obligation(extraction: lx.data.Extraction) -> RawObligation:
     attrs: dict[str, Any] = dict(extraction.attributes or {})
     ci = extraction.char_interval
@@ -70,11 +84,15 @@ def _to_raw_obligation(extraction: lx.data.Extraction) -> RawObligation:
         if extraction.alignment_status is not None
         else None
     )
+    actor = _as_text(attrs.get("actor"))
+    action = _as_text(attrs.get("action"))
+    if not actor or not action:
+        raise ValueError(f"obligation sans actor/action exploitable (actor={actor!r}, action={action!r})")
     return RawObligation(
-        actor=str(attrs.get("actor", "")).strip(),
-        action=str(attrs.get("action", "")).strip(),
-        object=str(attrs.get("object", "")).strip(),
-        theme=str(attrs.get("theme", "")).strip(),
+        actor=actor,
+        action=action,
+        object=_as_text(attrs.get("object")),
+        theme=_as_text(attrs.get("theme")),
         sub_theme=attrs.get("sub_theme"),
         condition=attrs.get("condition"),
         scope=attrs.get("scope"),
@@ -89,7 +107,7 @@ def _to_raw_obligation(extraction: lx.data.Extraction) -> RawObligation:
 
 
 def extract_unit(unit: NormativeUnit, config: RunnerConfig) -> UnitExtraction:
-    """Run a single LangExtract call on one unit, return a UnitExtraction (may be empty)."""
+    """Exécute un seul appel LangExtract sur une unité, retourne une UnitExtraction (éventuellement vide)."""
     prompt = build_prompt_description(unit.language)
     examples = load_examples(unit.language)
 
@@ -104,14 +122,14 @@ def extract_unit(unit: NormativeUnit, config: RunnerConfig) -> UnitExtraction:
         use_schema_constraints=config.use_schema_constraints,
         extraction_passes=config.extraction_passes,
         temperature=config.temperature,
-        language_model_params={"timeout": config.request_timeout},
+        language_model_params={"timeout": config.request_timeout, "num_ctx": config.num_ctx},
     )
     elapsed = time.monotonic() - started
 
-    # lx.extract is wrapped in __init__.py as `(*args: Any, **kwargs: Any)`, so
-    # static checkers can't see its real return signature
-    # (`AnnotatedDocument | list[AnnotatedDocument]`). We pass a single str so we
-    # get the single-doc branch; force the narrowing with cast.
+    # lx.extract est encapsulée dans __init__.py sous la forme `(*args: Any, **kwargs: Any)`,
+    # donc les analyseurs statiques ne voient pas sa vraie signature de retour
+    # (`AnnotatedDocument | list[AnnotatedDocument]`). On passe une seule str, donc on
+    # obtient la branche single-doc ; on force le rétrécissement de type avec cast.
     doc = cast(lx.data.AnnotatedDocument, result)
     extractions: list[lx.data.Extraction] = list(doc.extractions or [])
 
@@ -166,12 +184,12 @@ def run(
     *,
     force: bool = False,
 ) -> dict[str, int]:
-    """Process units sequentially. Returns counters: {processed, skipped, failed}."""
+    """Traite les unités séquentiellement. Retourne les compteurs : {processed, skipped, failed}."""
     config = config or RunnerConfig()
     counts = {"processed": 0, "skipped": 0, "failed": 0}
 
-    # Reset the failure log so quality reports reflect only this run's failures.
-    # A unit that failed previously then succeeded should not leave a phantom line.
+    # Réinitialise le journal d'échecs pour que les rapports qualité ne reflètent que les échecs de cette exécution.
+    # Une unité ayant échoué puis réussi ne doit pas laisser de ligne fantôme.
     out_dir.mkdir(parents=True, exist_ok=True)
     failed_log = out_dir / "_failed.jsonl"
     if failed_log.exists():

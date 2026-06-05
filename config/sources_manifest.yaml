@@ -1,17 +1,17 @@
-# Small real corpus for S3 — official sources only, no PDFs, no synthetic text.
-# Each entry tells the acquire pipeline which document to fetch and which
-# articles to keep (filter_articles is article numbers as strings).
+# Petit corpus réel pour S3 — sources officielles uniquement, sans PDF, sans texte synthétique.
+# Chaque entrée indique au pipeline d'acquisition quel document récupérer et quels
+# articles conserver (filter_articles est une liste de numéros d'article sous forme de chaînes).
 #
-# Schema:
-#   source_id: must match an entry in sources_registry.yaml
-#   fetcher: which fetcher module to use (eurlex | amf | esma | legifrance)
-#   filter_articles: optional list of article numbers to keep (else: all)
+# Schéma :
+#   source_id : doit correspondre à une entrée de sources_registry.yaml
+#   fetcher : module fetcher à utiliser (eurlex | amf | esma | legifrance)
+#   filter_articles : liste optionnelle de numéros d'article à conserver (sinon : tous)
 
 - source_id: AIFMD_L1
   fetcher: eurlex
   celex: "32011L0061"
   language: EN
-  filter_articles: ["15", "16"]   # Art 21 (Depositary, 19K chars) skipped here, too long for gemma3:4b on CPU
+  filter_articles: ["15", "16"]   # Art 21 (Dépositaire, 19K caractères) ignoré ici, trop long pour mistral:7b sur CPU
 
 - source_id: AIFMD_L2
   fetcher: eurlex

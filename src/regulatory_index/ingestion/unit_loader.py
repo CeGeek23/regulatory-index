@@ -1,4 +1,4 @@
-"""Load normative units (articles/paragraphs) from JSONL files."""
+"""Charge les unités normatives (articles/paragraphes) depuis des fichiers JSONL."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 
 
 class NormativeUnit(BaseModel):
-    """One article, paragraph, or guideline section extracted from a regulatory source."""
+    """Un article, paragraphe ou section de guideline extrait d'une source réglementaire."""
 
     unit_id: str = Field(description="Stable id, e.g. 'AIFMD_L1#art_15_para_3'")
     source_id: str = Field(description="Document-level id, e.g. 'AIFMD_L1'")
@@ -27,7 +27,7 @@ class NormativeUnit(BaseModel):
 
 
 def load_units_jsonl(path: Path) -> Iterator[NormativeUnit]:
-    """Yield NormativeUnit objects line by line from a JSONL file."""
+    """Génère les objets NormativeUnit ligne par ligne depuis un fichier JSONL."""
     with path.open(encoding="utf-8") as f:
         for line in f:
             line = line.strip()
@@ -38,7 +38,7 @@ def load_units_jsonl(path: Path) -> Iterator[NormativeUnit]:
 
 
 def write_units_jsonl(units: list[NormativeUnit], path: Path) -> None:
-    """Write a list of units to JSONL (utility for fixtures/tests)."""
+    """Écrit une liste d'unités en JSONL (utilitaire pour fixtures/tests)."""
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as f:
         for u in units:

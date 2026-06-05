@@ -1,4 +1,4 @@
-"""Verify that _failed.jsonl is reset at the start of each run() call."""
+"""Vérifie que _failed.jsonl est réinitialisé au début de chaque appel à run()."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ def test_failed_log_is_reset_each_run(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     failed_log = tmp_path / "_failed.jsonl"
-    # Seed a stale failure entry from a previous run.
+    # Injecte une entrée d'échec obsolète issue d'une exécution précédente.
     failed_log.write_text('{"unit_id":"old_phantom","error":"stale"}\n', encoding="utf-8")
     assert failed_log.exists()
 
@@ -34,5 +34,5 @@ def test_failed_log_is_reset_each_run(
     )
     counts = run([unit], out_dir=tmp_path, config=RunnerConfig(model_id="mock"))
     assert counts["failed"] == 0
-    # The stale phantom entry should be gone.
+    # L'entrée fantôme obsolète doit avoir disparu.
     assert not failed_log.exists()

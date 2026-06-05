@@ -1,4 +1,4 @@
-"""Tests for the AMF HTML parser. Network calls are not exercised."""
+"""Tests du parseur HTML AMF. Les appels réseau ne sont pas sollicités."""
 
 from __future__ import annotations
 
@@ -47,15 +47,15 @@ def test_parse_doctrine_produces_one_unit() -> None:
     assert unit.unit_id == "AMF_DOC_2014_06#fr#full"
     assert unit.language == "FR"
     assert unit.source_id == "AMF_DOC_2014_06"
-    # Operative paragraphs included, header/footer skipped.
+    # Paragraphes opérationnels inclus, en-tête/pied de page ignorés.
     assert "fonction permanente de gestion des risques" in unit.text
     assert "indépendance soit effective" in unit.text
-    # Short snippets and nav links should be filtered out by the >20 char rule.
+    # Les courts extraits et liens de navigation doivent être filtrés par la règle >20 caractères.
     assert "Short link" not in unit.text
 
 
 def test_parse_doctrine_returns_empty_when_no_main_content() -> None:
-    """Empty body should yield no units rather than raising."""
+    """Un body vide doit produire zéro unité plutôt que lever une exception."""
     units = parse_doctrine(
         "<html><head></head><body></body></html>",
         source_id="AMF_DOC_2014_06",

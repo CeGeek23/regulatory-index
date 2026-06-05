@@ -1,4 +1,4 @@
-"""Tests for the EUR-Lex HTML parser. Network calls are mocked / not exercised."""
+"""Tests du parseur HTML EUR-Lex. Les appels réseau sont mockés / non sollicités."""
 
 from __future__ import annotations
 
@@ -56,7 +56,7 @@ def test_parse_articles_extracts_each_top_level_article() -> None:
     assert "Risk management" in art15.hierarchy_path
     assert "AIFMs shall functionally" in art15.text
     assert "implement adequate risk management" in art15.text
-    # The article header is included once.
+    # L'en-tête de l'article est inclus une seule fois.
     assert art15.text.count("Risk management") == 1
 
 
@@ -103,7 +103,7 @@ def test_parse_articles_unit_id_includes_language() -> None:
 
 
 def test_parse_articles_skips_subdivisions() -> None:
-    """Inner divs like art_15.1 are sub-paragraphs — not top-level articles."""
+    """Les divs internes comme art_15.1 sont des sous-paragraphes, pas des articles de premier niveau."""
     units = parse_articles(
         _SAMPLE_HTML,
         source_id="AIFMD_L1",
