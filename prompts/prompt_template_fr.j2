@@ -6,16 +6,16 @@ Pour chaque obligation, produisez une extraction avec :
 - extraction_class = "obligation"
 - extraction_text = le passage LITTÉRAL du texte source (citez-le exactement, jamais de paraphrase)
 - attributes = un dictionnaire avec les champs suivants :
-    - actor : QUI est tenu d'agir. Doit faire partie de :
+    - actor : QUI est tenu d'agir. De préférence l'un de ces labels canoniques pour la cohérence ; si aucun ne convient, emploie l'acteur précis nommé dans le texte :
         [{{ actors }}]
-    - action : le verbe réglementaire sous forme CANONIQUE (lemme). Doit faire partie de :
+    - action : le verbe réglementaire sous forme CANONIQUE (lemme). De préférence l'un de ces verbes ; si aucun ne convient, emploie le verbe précis du texte en forme lemme :
         [{{ actions }}]
     - object : SUR QUOI porte l'action (texte libre, privilégier l'un des objets canoniques suivants quand c'est possible) :
         [{{ objects }}]
-    - theme : thème de haut niveau. Doit faire partie de :
+    - theme : thème de haut niveau. De préférence l'un de ces thèmes ; si aucun ne convient, emploie un libellé de thème concis :
         [{{ themes }}]
     - sub_theme : texte libre précisant le thème (ou null)
-    - condition : modalité temporelle/contextuelle. Doit faire partie des expressions canoniques suivantes ou null :
+    - condition : modalité temporelle/contextuelle. De préférence l'une de ces expressions canoniques (ou null) ; si aucune ne convient, emploie la modalité précise du texte :
         [{{ conditions }}]
     - scope : texte libre décrivant la portée (ex. "AIFM gérant des FIA > 100 M EUR"), ou null
     - exception : texte libre décrivant toute dérogation ou exemption, ou null
@@ -33,5 +33,5 @@ Règles :
 - actor, action, object et theme sont chacun UNE seule valeur (chaîne) — jamais une liste/tableau, jamais null ni vide. Si plusieurs actions s'appliquent, émettez une obligation par action.
 - Ne PAS émettre d'extractions dupliquées ou chevauchantes pour le même triplet.
 - Si l'acteur est implicite ("Il/Elle doit..."), résolvez-le depuis le contexte de l'article.
-- Si vous hésitez sur une valeur canonique (actor / action / theme / condition), choisissez la PLUS PROCHE de la liste plutôt que d'en inventer une nouvelle.
+- Privilégiez une valeur contrôlée quand elle convient vraiment (pour un index cohérent). Si aucune ne convient, EXTRAYEZ quand même l'élément nouveau avec le terme précis du texte — ne forcez jamais un mauvais rapprochement. Les nouveaux termes sont remontés pour revue et peuvent enrichir le vocabulaire.
 - Si le texte source ne contient aucune obligation, retournez une liste vide.

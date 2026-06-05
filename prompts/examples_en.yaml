@@ -82,3 +82,16 @@
       theme: Regulatory Reporting
       condition: where leverage is used
       cited_references: []
+
+# Discovery example: when an actor/object is NOT in the controlled vocabulary,
+# extract it with the precise term from the text (it is surfaced as a vocab gap).
+- text: |
+    The remuneration committee shall review, at least annually, the general principles of the remuneration policy and oversee the remuneration of senior officers in the risk management and compliance functions.
+  extractions:
+    - verbatim: "The remuneration committee shall review, at least annually, the general principles of the remuneration policy"
+      actor: Remuneration Committee
+      action: review
+      object: remuneration policy
+      theme: Remuneration
+      condition: at least annually
+      cited_references: []

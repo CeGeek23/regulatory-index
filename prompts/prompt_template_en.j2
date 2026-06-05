@@ -6,16 +6,16 @@ For each obligation, produce one extraction with:
 - extraction_class = "obligation"
 - extraction_text = the LITERAL passage from the source (quote it exactly, never paraphrase)
 - attributes = a dict with these fields:
-    - actor: WHO is required to act. Must be one of:
+    - actor: WHO is required to act. Prefer one of these canonical labels for consistency; if none fits, use the precise actor named in the text:
         [{{ actors }}]
-    - action: the regulatory verb in CANONICAL LEMMA form. Must be one of:
+    - action: the regulatory verb in CANONICAL LEMMA form. Prefer one of these; if none fits, use the precise verb from the text in lemma form:
         [{{ actions }}]
     - object: WHAT the action operates on (free text, prefer one of these canonical objects when possible):
         [{{ objects }}]
-    - theme: high-level theme. Must be one of:
+    - theme: high-level theme. Prefer one of these; if none fits, use a concise new theme label:
         [{{ themes }}]
     - sub_theme: free text refining the theme (or null)
-    - condition: temporal/contextual modality. Must be one of these canonical phrases or null:
+    - condition: temporal/contextual modality. Prefer one of these canonical phrases (or null); if none fits, use the precise modality from the text:
         [{{ conditions }}]
     - scope: free text describing the scope (e.g. "AIFM managing AIFs > EUR 100M"), or null
     - exception: free text describing any derogation or exemption, or null
@@ -33,5 +33,5 @@ Rules:
 - actor, action, object and theme are each a SINGLE string value — never a list/array, never null or empty. If several actions apply, emit one obligation per action.
 - Do NOT emit duplicate or overlapping extractions for the same triple.
 - When the actor is implicit ("It shall..."), resolve it from the article context.
-- When you are unsure about a canonical value (actor / action / theme / condition), pick the CLOSEST one in the list rather than inventing a new one.
+- Prefer a controlled value when one genuinely fits (for a consistent index). If none fits, DO extract the new element using the precise term from the text — never force a poor match. New terms are surfaced for review and may enrich the vocabulary.
 - If the source text contains no obligation, return an empty list.

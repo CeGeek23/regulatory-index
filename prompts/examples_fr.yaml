@@ -72,3 +72,16 @@
       theme: Reporting Réglementaire
       condition: en cas de recours au levier
       cited_references: []
+
+# Exemple "découverte" : quand un actor/object n'est PAS dans le vocabulaire contrôlé,
+# on l'extrait avec le terme précis du texte (il remonte ensuite comme vocab gap).
+- text: |
+    Le comité de rémunération examine au moins une fois par an les principes généraux de la politique de rémunération et supervise la rémunération des responsables des fonctions de gestion des risques et de conformité.
+  extractions:
+    - verbatim: "Le comité de rémunération examine au moins une fois par an les principes généraux de la politique de rémunération"
+      actor: Comité de Rémunération
+      action: réviser
+      object: politique de rémunération
+      theme: Rémunération
+      condition: au moins annuellement
+      cited_references: []
