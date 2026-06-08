@@ -189,6 +189,12 @@ def write_html_graph(
     )
 
     html = net.generate_html(notebook=False)
+    # pyvis insère le heading (<h1>) en double ; on ne garde que la 1re occurrence.
+    heading = f"<h1>{title}</h1>"
+    first = html.find(heading)
+    if first != -1:
+        cut = first + len(heading)
+        html = html[:cut] + html[cut:].replace(heading, "")
     legend = _legend_html(g)
     html = html.replace("</body>", legend + "</body>", 1) if "</body>" in html else html + legend
     out_path.write_text(html, encoding="utf-8")
