@@ -146,7 +146,13 @@ def write_html_graph(
         heading=title,
         bgcolor="#ffffff",
     )
-    net.barnes_hut(gravity=-3000, spring_length=180, damping=0.4)
+    # Ressorts plus longs et plus souples (spring_length/strength) + plus de
+    # répulsion (gravity) + anti-chevauchement (overlap) => liens « extensibles »,
+    # les nœuds s'écartent et restent lisibles.
+    net.barnes_hut(
+        gravity=-15000, central_gravity=0.1, spring_length=350,
+        spring_strength=0.005, damping=0.5, overlap=1,
+    )
 
     for node_id, data in g.nodes(data=True):
         kind = data.get("kind", "obligation")
