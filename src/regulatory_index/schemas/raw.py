@@ -2,7 +2,8 @@
 
 Une RawObligation est la sortie structurée du LLM, normalisée par rapport au vocab
 mais sans l'obligation_id final, l'imbrication complète de Source ni la provenance
-d'extraction. Les lignes Obligation finales en sont matérialisées dans `materialize.py`.
+d'extraction. Les lignes Obligation finales sont construites par
+`obligation_builder.build_obligations` (orchestré par `materialize.py`).
 """
 
 from __future__ import annotations

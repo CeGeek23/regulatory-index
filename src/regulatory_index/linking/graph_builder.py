@@ -63,7 +63,10 @@ def _build_article_index(obligations: list[Obligation]) -> dict[tuple[str, str],
 
 
 def _citation_char_interval(verbatim: str, citation: str) -> tuple[int, int]:
-    """Offsets de la citation dans le verbatim_text de l'obligation source (sans regex)."""
+    """Offsets de la citation dans le verbatim_text de l'obligation source (sans regex).
+
+    Repli si la citation n'est pas retrouvée : (0, len(citation)), intervalle indicatif.
+    """
     idx = verbatim.lower().find(citation.lower())
     if idx >= 0:
         return (idx, idx + len(citation))

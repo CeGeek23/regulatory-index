@@ -4,14 +4,14 @@
 #
 # Schéma :
 #   source_id : doit correspondre à une entrée de sources_registry.yaml
-#   fetcher : module fetcher à utiliser (eurlex | amf | esma | legifrance)
+#   fetcher : module fetcher à utiliser (eurlex | amf | legifrance)
 #   filter_articles : liste optionnelle de numéros d'article à conserver (sinon : tous)
 
 - source_id: AIFMD_L1
   fetcher: eurlex
   celex: "32011L0061"
   language: EN
-  filter_articles: ["15", "16", "22", "23"]   # 22-23 = chapitre Transparence (texte neuf) ; Art 21 (Dépositaire, 19K caractères) ignoré, trop long pour mistral:7b sur CPU
+  filter_articles: ["15", "16", "22", "23"]   # 22-23 = chapitre Transparence (texte neuf) ; Art 21 (Dépositaire, 19K caractères) ignoré : trop long pour un petit modèle local sans chunking
 
 - source_id: AIFMD_L2
   fetcher: eurlex

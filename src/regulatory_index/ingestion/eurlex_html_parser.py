@@ -89,8 +89,7 @@ def parse_articles(
     units: list[NormativeUnit] = []
     seen: set[str] = set()
     for div in soup.select('div.eli-subdivision[id^="art_"]'):
-        elem_id_raw = div.get("id") or ""
-        elem_id = elem_id_raw if isinstance(elem_id_raw, str) else " ".join(elem_id_raw)
+        elem_id = str(div.get("id") or "")
         # Ignore les sous-éléments comme 'art_15.1', on ne veut que les articles de premier niveau.
         if "." in elem_id:
             continue

@@ -52,8 +52,8 @@ def parse_article_locator(citation: str) -> str | None:
     """Renvoie le premier numéro d'article cité (ex. '15' depuis 'Article 15(3) ...'), sinon None.
 
     Tokenisation de chaîne pure, sans regex. Reconnaît les formes EN/FR ('Article', 'article',
-    'Art.', 'articles'). Prend le premier token commençant par un chiffre peu après le
-    mot-clé, donc 'Article 15(3)' -> '15' et 'Articles 38 to 40' -> '38' (premier
+    'Art.', 'articles'). Prend le premier token commençant par un chiffre dans les 3
+    tokens qui suivent le mot-clé, donc 'Article 15(3)' -> '15' et 'Articles 38 to 40' -> '38' (premier
     article seulement ; les citations multi-articles ne sont pas entièrement développées).
     """
     tokens = _tokenize(citation)

@@ -55,7 +55,7 @@ def test_obligation_requires_grounding() -> None:
         "source": _dummy_source().model_dump(mode="json"),
         "theme": "Risk Management",
         "verbatim_text": "AIFMs shall establish ...",
-        "extraction_model": "gemma3:4b",
+        "extraction_model": "qwen2.5-7b-instruct",
         "extracted_at": datetime.now(UTC).isoformat(),
     }
     with pytest.raises(ValidationError):
@@ -73,7 +73,7 @@ def test_obligation_id_pattern() -> None:
             theme="Risk Management",
             verbatim_text="...",
             char_interval=(0, 10),
-            extraction_model="gemma3:4b",
+            extraction_model="qwen2.5-7b-instruct",
             extracted_at=datetime.now(UTC),
         )
 

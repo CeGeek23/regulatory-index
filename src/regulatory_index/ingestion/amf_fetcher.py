@@ -3,10 +3,10 @@
 L'AMF publie sa doctrine à :
     https://www.amf-france.org/fr/reglementation/doctrine/{DOC_CODE}
 
-Ces pages contiennent un conteneur `<div class="amf-content">` ou similaire avec le
-texte opérationnel dans des balises `<p>`. Des PDF sont aussi liés mais on les évite
-volontairement. Ce fetcher télécharge seulement le HTML ; le parser extrait les
-sections numérotées de façon heuristique (pas de regex ; on s'appuie sur la structure du DOM).
+Des PDF sont aussi liés mais on les évite volontairement. Ce fetcher télécharge
+seulement le HTML ; le parser collecte les paragraphes et titres (`<p>`, `<li>`,
+`<h2>`-`<h4>`) du conteneur `<main>` et les concatène (pas de regex ; on s'appuie
+sur la structure du DOM).
 
 Note : le HTML de l'AMF est bien moins standardisé que celui d'EUR-Lex. Le parser ici
 fait au mieux et produit UNE NormativeUnit par document de doctrine (tout le texte

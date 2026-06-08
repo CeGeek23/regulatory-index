@@ -40,7 +40,7 @@ def _make_obligation(
         verbatim_text="AIFMs shall establish a risk management function.",
         char_interval=(0, 49),
         cited_references=["Directive 2011/61/EU"],
-        extraction_model="gemma3:4b",
+        extraction_model="qwen2.5-7b-instruct",
         extracted_at=datetime.now(UTC),
     )
 

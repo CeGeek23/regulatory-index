@@ -1,7 +1,7 @@
 # Few-shot examples for English regulatory text extraction.
 # Each example: a short passage + a list of gold obligations with verbatim quotes
-# that MUST appear literally inside the passage. char_interval is computed at
-# load time from the verbatim string.
+# that MUST appear literally inside the passage (checked at load time);
+# char_interval/grounding is computed by LangExtract during inference.
 
 - text: |
     AIFMs shall establish an independent risk management function which shall be functionally and hierarchically separated from the operating units. The risk management function shall review the risk policy at least annually.
@@ -9,7 +9,7 @@
     - verbatim: "AIFMs shall establish an independent risk management function"
       actor: AIFM
       action: establish
-      object: independent risk management function
+      object: risk management function
       theme: Risk Management
       condition: null
       scope: null

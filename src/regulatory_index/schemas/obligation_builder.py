@@ -31,7 +31,11 @@ def _theme_code_for(theme: str) -> str:
     entry = load_vocabulary("themes").resolve(theme)
     if entry is None:
         return "MISC"
-    return str(entry.extra.get("code") or entry.id[:4].upper())
+    code = entry.extra.get("code")
+    if code:
+        return str(code)
+    # Repli : seulement les lettres de l'id (cohérent avec _check_id_format), sinon MISC.
+    return "".join(c for c in entry.id if c.isalpha())[:4].upper() or "MISC"
 
 
 def _canonicalize(field: str, value: str, language: str) -> str:

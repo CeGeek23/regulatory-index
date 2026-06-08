@@ -21,7 +21,7 @@ def _ue(
         source_meta={"celex": "32011L0061", "level": 1, "issuer": "EU_Parliament_Council"},
     )
     meta = ExtractionMeta(
-        model_id="gemma3:4b",
+        model_id="qwen2.5-7b-instruct",
         extraction_passes=1,
         temperature=0.0,
         extracted_at=datetime.now(UTC),

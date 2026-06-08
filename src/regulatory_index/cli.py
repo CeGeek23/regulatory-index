@@ -81,7 +81,7 @@ def link(
 ) -> None:
     """Matérialise obligations + relations depuis les extractions et affiche les comptes.
 
-    Ne persiste rien ; utilisez `export` pour aussi écrire Excel / CSV / GraphML.
+    Ne persiste rien ; utilisez `export` pour aussi écrire Excel / CSV / graphe HTML / rapport qualité.
     """
     unit_extractions = load_unit_extractions_from_dir(obligations_dir)
     materialized = materialize(unit_extractions)

@@ -1,7 +1,7 @@
 # Exemples few-shot pour l'extraction sur texte réglementaire français (AMF, transposition AIFMD).
 # Chaque exemple : un passage court + une liste d'obligations gold avec citations
-# verbatim qui DOIVENT apparaître littéralement dans le passage. char_interval
-# est calculé au chargement à partir de la chaîne verbatim.
+# verbatim qui DOIVENT apparaître littéralement dans le passage (vérifié au
+# chargement) ; char_interval/grounding est produit par LangExtract à l'inférence.
 
 - text: |
     La société de gestion établit une fonction permanente de gestion des risques, hiérarchiquement et fonctionnellement indépendante des unités opérationnelles. La fonction de gestion des risques réexamine la politique de gestion des risques au moins une fois par an.

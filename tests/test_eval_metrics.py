@@ -20,7 +20,7 @@ def _unit_extraction() -> UnitExtraction:
         char_interval=(0, 5),
     )
     meta = ExtractionMeta(
-        model_id="gemma3:4b",
+        model_id="qwen2.5-7b-instruct",
         extraction_passes=1,
         temperature=0.0,
         extracted_at=datetime.now(UTC),
@@ -47,7 +47,7 @@ def _obligation() -> Obligation:
         theme="Risk Management",
         verbatim_text="...",
         char_interval=(0, 5),
-        extraction_model="gemma3:4b",
+        extraction_model="qwen2.5-7b-instruct",
         extracted_at=datetime.now(UTC),
     )
 

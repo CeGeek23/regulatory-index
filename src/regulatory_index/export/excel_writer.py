@@ -89,7 +89,8 @@ def write_workbook(materialized: MaterializedIndex, output_path: Path) -> dict[s
     # 1. Feuille Obligations
     ws = workbook.add_worksheet("Obligations")
     ws.freeze_panes(1, 1)
-    ws.autofilter(0, 0, max(1, len(obligations)), len(_OBLIGATION_COLUMNS) - 1)
+    if obligations:
+        ws.autofilter(0, 0, len(obligations), len(_OBLIGATION_COLUMNS) - 1)
     for col, (_, label, width) in enumerate(_OBLIGATION_COLUMNS):
         ws.write(0, col, label, header_fmt)
         ws.set_column(col, col, width)

@@ -107,8 +107,6 @@ def test_idempotent_skip_when_json_exists(
 def test_failure_is_logged_and_does_not_abort(
     tmp_path: Path, en_unit: NormativeUnit, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    other = en_unit.model_copy(update={"unit_id": "AIFMD_L1#art_16_test"})
-
     def fake_extract(*, text_or_documents: str, **_: Any) -> lx.data.AnnotatedDocument:
         # La premiere unite echoue, la seconde reussit.
         if text_or_documents.startswith("AIFMs"):
@@ -128,7 +126,9 @@ def test_failure_is_logged_and_does_not_abort(
             ],
         )
 
-    other_with_match = other.model_copy(update={"text": "Other obligation text here"})
+    other_with_match = en_unit.model_copy(
+        update={"unit_id": "AIFMD_L1#art_16_test", "text": "Other obligation text here"}
+    )
     monkeypatch.setattr(lx, "extract", fake_extract)
     counts = run([en_unit, other_with_match], out_dir=tmp_path)
     assert counts == {"processed": 1, "skipped": 0, "failed": 1}

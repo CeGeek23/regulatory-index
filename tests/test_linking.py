@@ -41,7 +41,7 @@ def _obligation(
         verbatim_text="...",
         char_interval=(0, 10),
         cited_references=cited or [],
-        extraction_model="gemma3:4b",
+        extraction_model="qwen2.5-7b-instruct",
         extracted_at=datetime.now(UTC),
     )
 

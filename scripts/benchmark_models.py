@@ -7,10 +7,10 @@ corpus (EN L1/L2, FR, court/dense), mesure :
 - taux de canonicalisation : % des champs actor/action/theme qui résolvent dans le
   vocabulaire contrôlé (proxy de cohérence avec l'index ; le reste = découverte/bruit).
 
-Chaque modèle est chargé à contexte 8192 via `lms` avant son tour (comparaison équitable).
+Chaque modèle est chargé au contexte CTX (16384) via `lms` avant son tour (comparaison équitable).
 
 Usage:
-    uv run python scripts/benchmark_models.py "google/gemma-4-e4b" "<qwen>" "<mistral>"
+    uv run python scripts/benchmark_models.py "qwen2.5-7b-instruct" "google/gemma-4-e4b"
 
 Sortie: récap console + rapport markdown dans data/exports/model_benchmark.md
 """
@@ -83,7 +83,7 @@ def _bench_model(model: str, units: list[NormativeUnit]) -> list[dict[str, Any]]
     return rows
 
 
-def _aggregate(model: str, rows: list[dict[str, Any]], n_units: int) -> dict[str, Any]:
+def _aggregate(model: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
     ok = [r for r in rows if r["err"] is None]
     obl = sum(r["obl"] for r in ok)
     grounded = sum(r["grounded"] for r in ok)
@@ -120,7 +120,7 @@ def main() -> int:
         print()
 
     detail = {m: cache[m] for m in models if m in cache}
-    summaries = [_aggregate(m, detail[m], len(units)) for m in models if m in detail]
+    summaries = [_aggregate(m, detail[m]) for m in models if m in detail]
 
     lines = [
         "# Benchmark modèles — extraction d'obligations (LM Studio)", "",

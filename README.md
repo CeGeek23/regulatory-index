@@ -132,9 +132,9 @@ notebooks/             corpus_acquisition (exploration corpus, sans LLM)
 tests/                 pytest (schemas, vocab, sources_registry,
                        examples_loader, schema_builder, unit_loader,
                        langextract_runner with mocked LLM, obligation_builder,
-                       linking, export, eval_metrics,
-                       ingestion_eurlex, ingestion_acquire, ingestion_amf,
-                       ingestion_legifrance, html_graph_writer)
+                       linking, export, eval_metrics, failed_log,
+                       ingestion_eurlex, ingestion_acquire (+ other_fetchers),
+                       ingestion_amf, ingestion_legifrance, html_graph_writer)
 ```
 
 ## Architecture du pipeline (5 étapes, sans regex, sans fallback)
@@ -166,7 +166,7 @@ tests/                 pytest (schemas, vocab, sources_registry,
 
 - **Les petits LLM locaux capturent imparfaitement les citations externes** : ils confondent parfois l'en-tête de section avec une citation et ratent des références internes (Article 44 sans préciser le document). Modèle swappable via LM Studio (`--model-id`) ; pour plus de robustesse, un 7B+ comme `qwen2.5-7b-instruct`. NB : le GGUF stock de Mistral n'expose pas de rôle `system` sur LM Studio → préférer gemma/qwen ou une variante `lmstudio-community`.
 - **Linkage article-level** : on lie obligation → obligations cibles partageant l'**article** cité. Comme les unités source sont découpées par article, la granularité fine paragraphe/point n'est pas encore disponible côté source ; et les citations multi-articles (`Articles 38 à 40`) ne rattachent que le premier article. Quand aucun article n'est résolu, on retombe sur le nœud document.
-- **Vocabulary v0** : 34 actors, 38 actions, 37 objects, 13 themes. À enrichir avec l'expert AIFMD.
+- **Vocabulary v0** : 35 actors, 49 actions, 43 objects, 16 themes, 42 conditions. À enrichir avec l'expert AIFMD.
 - **Pas de support ESMA** : ESMA publie en PDF, hors scope cette itération.
 - **Article 21 (Depositary, 19K chars)** non traité dans le run par défaut : trop long pour un petit modèle local (prévoir chunking ou un modèle/contexte plus grand).
 
