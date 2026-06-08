@@ -13,7 +13,6 @@ import typer
 from .eval.metrics import compute, write_report
 from .export.csv_writer import write_csv
 from .export.excel_writer import write_workbook
-from .export.graphml_writer import write_graphml
 from .export.html_graph_writer import write_html_graph
 from .extraction.langextract_runner import RunnerConfig, run
 from .ingestion.acquire import MANIFEST_PATH, acquire_all
@@ -103,10 +102,13 @@ def export(
     obligations_dir: Annotated[Path, typer.Option(exists=True)] = Path("data/obligations"),
     out_dir: Annotated[Path, typer.Option()] = Path("data/exports"),
     excel_name: Annotated[str, typer.Option()] = "aifmd_index.xlsx",
-    graphml_name: Annotated[str, typer.Option()] = "aifmd_relations.graphml",
     csv_delimiter: Annotated[str, typer.Option()] = ";",
 ) -> None:
-    """Matérialise l'index puis exporte Excel + CSV + GraphML + graphe HTML + rapport qualité."""
+    """Matérialise l'index puis exporte Excel + CSV + graphe HTML + rapport qualité.
+
+    GraphML (Gephi/yEd) n'est pas produit par défaut ; le writer
+    `export.graphml_writer.write_graphml` reste dispo pour l'analyse de graphe.
+    """
     out_dir.mkdir(parents=True, exist_ok=True)
 
     unit_extractions = load_unit_extractions_from_dir(obligations_dir)
@@ -115,7 +117,6 @@ def export(
     excel_counts = write_workbook(materialized, out_dir / excel_name)
     csv_counts = write_csv(materialized, out_dir, delimiter=csv_delimiter)
     graph, stats = build_graph(materialized.obligations, materialized.relations)
-    graphml_path = write_graphml(graph, out_dir / graphml_name)
     html_graph_path = write_html_graph(graph, out_dir / "aifmd_relations.html")
 
     failed_log = obligations_dir / "_failed.jsonl"
@@ -133,7 +134,6 @@ def export(
             {
                 "excel": excel_counts,
                 "csv": csv_counts,
-                "graphml": str(graphml_path),
                 "graph_html": str(html_graph_path),
                 "graph_stats": {
                     "obligation_nodes": stats.obligation_nodes,

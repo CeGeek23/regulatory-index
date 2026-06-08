@@ -14,10 +14,10 @@ import networkx as nx
 from pyvis.network import Network
 
 _LEVEL_NODE_COLOURS: dict[str, str] = {
-    "1": "#A8E6A1",
-    "2": "#FFD699",
-    "3": "#B5D1FF",
-    "national": "#F4B0B0",
+    "1": "#1B7837",        # vert soutenu (L1 — Directive)
+    "2": "#E66101",        # orange soutenu (L2 — Règlement délégué) : bien distinct du vert
+    "3": "#1F6FB2",        # bleu (L3 — ESMA)
+    "national": "#C0392B",  # rouge (national)
 }
 
 _SOURCE_NODE_COLOUR = "#444444"

@@ -10,7 +10,7 @@ POC d'un index réglementaire structuré pour AIFMD (Level 1 + Level 2 + ESMA Le
 - **LLM backend** : **LM Studio** — serveur local OpenAI-compatible (GPU Metal/MLX) piloté via le provider OpenAI de LangExtract ; modèle au choix (**`qwen2.5-7b-instruct`** par défaut — meilleur rappel au benchmark, à charger en contexte **32k** ; `google/gemma-4-e4b` = alternative plus rapide/robuste ; swap via `--model-id`), **sortie structurée** (JSON schema) activée
 - **Matérialisation** : Polars (DataFrames en mémoire, pas de base persistante)
 - **Graphe** : NetworkX + GraphML + HTML interactif (pyvis)
-- **Export** : xlsxwriter (Excel multi-onglets), CSV UTF-8, GraphML, HTML interactif, rapport Markdown
+- **Export** : xlsxwriter (Excel multi-onglets), CSV UTF-8, HTML interactif (pyvis), rapport Markdown — GraphML (Gephi/yEd) disponible en option, non produit par défaut
 
 Contraintes méthodologiques :
 - **Pas de clé API LLM cloud** — tout tourne en local
@@ -60,7 +60,7 @@ uv run regindex extract data/units/corpus.jsonl
 # 3. Construire les obligations finales + relations (matérialisation en mémoire + compteurs)
 uv run regindex link
 
-# 4. Exporter Excel + CSV + GraphML + HTML interactif + quality_report.md
+# 4. Exporter Excel + CSV + HTML interactif + quality_report.md
 uv run regindex export
 
 # Tout-en-un (acquire → extract → link → export)
@@ -107,7 +107,7 @@ data/
   obligations/         Extractions JSONL (1 fichier par unit, idempotent)
                        + _failed.jsonl si échec (réinitialisé à chaque run)
   exports/             aifmd_index.xlsx, obligations.csv, relations.csv,
-                       aifmd_relations.graphml, aifmd_relations.html,
+                       aifmd_relations.html,
                        quality_report.md
 
 src/regulatory_index/
@@ -143,7 +143,7 @@ tests/                 pytest (schemas, vocab, sources_registry,
 2. **Extraction LangExtract** — 1 appel LM Studio (API OpenAI-compatible) par unité, guidé par un prompt structuré (description + few-shots) avec vocab contrôlé injecté en texte. **Sortie structurée** (`use_schema_constraints=True` → JSON schema) : le **format** est garanti (1 valeur par champ, jamais liste/null) **sans figer le vocab en enum** — la découverte de termes hors-vocab reste possible. Persistance idempotente sur disque (`{source_id}/{unit_id}.json`). Échec d'une unité → log dans `_failed.jsonl` (réinitialisé au début de chaque run), on continue.
 3. **Materialization** — `RawObligation` → `Obligation` avec id stable `{SCOPE}-{THEME_CODE}-{NNNN}` (déterministe par sort key). Source résolue depuis `sources_registry.yaml`. Les champs à vocabulaire contrôlé sont canonicalisés (pivot EN par défaut) via `Vocabulary.resolve` ; les termes non résolus alimentent le rapport « vocab gaps ».
 4. **Linkage cross-level** — `cited_references` → `target_source_id` par alias matching (substring case-insensitive, alias les plus longs gagnent). Quand la citation nomme un article (`Article 15(3)`…), on rattache l'obligation aux **obligations cibles** extraites de cet article dans le document cité (linkage article-level, parsing par tokenisation, sans regex) ; sinon on retombe sur le nœud document `{source}#source`. Relation typée d'après `(level_src, issuer_src, level_tgt, title_src)` : `clarifies` / `strengthens` / `operationalizes` / `interprets` / `references`.
-5. **Materialization + Export** — `materialize.py` charge les JSON, construit Obligations/Relations et trois DataFrames Polars (obligations / relations / units) + agrégations, le tout en mémoire → Excel formaté (7 onglets) + CSV (UTF-8, `;`) + GraphML (Gephi/yEd) + HTML interactif (pyvis, ouvrable dans n'importe quel navigateur) + Markdown quality report.
+5. **Materialization + Export** — `materialize.py` charge les JSON, construit Obligations/Relations et trois DataFrames Polars (obligations / relations / units) + agrégations, le tout en mémoire → Excel formaté (7 onglets) + CSV (UTF-8, `;`) + HTML interactif (pyvis, ouvrable dans n'importe quel navigateur) + Markdown quality report. (GraphML pour Gephi/yEd disponible en option via `graphml_writer`, non produit par défaut.)
 
 ## Phases
 
