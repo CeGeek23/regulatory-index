@@ -81,13 +81,11 @@ def _legend_html(g: nx.DiGraph) -> str:
 
 
 def _node_label(node_id: str, data: dict[str, object]) -> str:
+    # Label court (identifiant) pour aérer le graphe ; le triplet complet
+    # actor/action/object est dans l'infobulle au survol.
     if data.get("kind") == "obligation":
-        actor = str(data.get("actor", ""))
-        action = str(data.get("action", ""))
-        obj = str(data.get("object", ""))
-        return f"{node_id}\n{actor} → {action} → {obj[:40]}"
-    title = str(data.get("title", node_id))
-    return title[:60]
+        return node_id
+    return str(data.get("title", node_id))[:40]
 
 
 def _node_tooltip(node_id: str, data: dict[str, object]) -> str:
@@ -117,7 +115,7 @@ def write_html_graph(
     graph: nx.DiGraph,
     out_path: Path,
     *,
-    title: str = "Index réglementaire AIFMD",
+    title: str = "Index réglementaire",
     hide_isolated_sources: bool = True,
 ) -> Path:
     """Écrit un graphe HTML interactif autonome. Renvoie le chemin écrit."""
@@ -146,7 +144,8 @@ def write_html_graph(
         heading=title,
         bgcolor="#ffffff",
     )
-    net.barnes_hut(gravity=-3000, spring_length=180, damping=0.4)
+    # Forte répulsion + ressorts longs => nœuds bien espacés, graphe lisible.
+    net.barnes_hut(gravity=-12000, central_gravity=0.15, spring_length=230, spring_strength=0.03, damping=0.5)
 
     for node_id, data in g.nodes(data=True):
         kind = data.get("kind", "obligation")
@@ -172,8 +171,7 @@ def write_html_graph(
         net.add_edge(
             source,
             target,
-            title=f"{rel}: {data.get('citation', '')}",
-            label=rel,
+            title=f"{rel}: {data.get('citation', '')}",  # relation au survol (pas de texte sur l'arête)
             color=_RELATION_EDGE_COLOURS.get(rel, "#999999"),
             arrows="to",
         )
