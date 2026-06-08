@@ -1,5 +1,4 @@
-# Glossaire d'acronymes injecté dans le prompt_description de LangExtract.
-# Aide le LLM à résoudre correctement les abréviations propres au domaine.
+# Sigles du domaine, injectés dans le prompt pour aider le modèle à les comprendre.
 
 - short: AIFM
   long_en: Alternative Investment Fund Manager

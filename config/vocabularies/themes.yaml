@@ -1,6 +1,5 @@
-# Thèmes réglementaires de haut niveau servant à agréger les obligations.
-# `code` est un mnémonique court de 3 à 5 lettres utilisé dans le motif obligation_id
-# AIFMD-{code}-{NNNN}. Les codes sont des identifiants stables, ne pas les renommer.
+# Thèmes pour regrouper les obligations. code = 3-5 lettres repris dans l'obligation_id
+# (AIFMD-{code}-{NNNN}) : stable, ne pas renommer.
 
 - id: governance
   canonical_en: Governance

@@ -1,5 +1,4 @@
-# Vocabulaire contrôlé des objets réglementaires (ce sur quoi porte l'action).
-# `theme_id` relie chaque objet à son thème principal dans themes.yaml.
+# Objets de l'obligation (ce sur quoi porte l'action). theme_id pointe vers themes.yaml.
 
 - id: risk_management_framework
   canonical_en: risk management framework

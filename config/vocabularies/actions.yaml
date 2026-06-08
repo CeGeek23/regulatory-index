@@ -1,7 +1,4 @@
-# Vocabulaire contrôlé des actions réglementaires (verbes).
-# `canonical` est la forme lemmatisée. `semantic_group` regroupe les verbes par intention
-# (governance, monitoring, reporting, control, escalation, etc.) pour permettre des
-# agrégations thématiques dans la table finale.
+# Verbes d'obligation. canonical = forme lemmatisée ; semantic_group sert aux regroupements.
 
 - id: establish
   canonical_en: establish

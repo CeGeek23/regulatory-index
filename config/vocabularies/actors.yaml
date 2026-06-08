@@ -1,10 +1,5 @@
-# Vocabulaire contrôlé des acteurs réglementaires pour le périmètre AIFMD.
-# Chaque entrée doit avoir un `id` unique (snake_case). Les champs `canonical_*` sont
-# les valeurs canoniques acceptées par le schéma LangExtract. `aliases` sont les
-# formes de surface à reconnaître et à mapper vers la forme canonique à l'extraction.
-#
-# Couverture : v0 minimale issue de la terminologie AIFMD L1 + L2 + ESMA + AMF.
-# À étendre itérativement ; les acteurs hors vocab apparaissent comme "vocab gaps" dans data/exports/quality_report.md.
+# Acteurs AIFMD. id en snake_case ; canonical_en/fr = forme retenue ; aliases = variantes
+# rabattues dessus. Liste v0, complétée au fil des vocab gaps du quality_report.
 
 - id: aifm
   canonical_en: AIFM

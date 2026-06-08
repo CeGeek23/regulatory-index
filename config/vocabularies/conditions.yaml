@@ -1,5 +1,4 @@
-# Vocabulaire contrôlé des conditions / modalités temporelles.
-# `category` distingue les conditions de timing, de matérialité, de portée, etc.
+# Conditions / modalités. category = type (timing, matérialité, portée...).
 
 - id: continuously
   canonical_en: continuously
