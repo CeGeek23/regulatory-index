@@ -115,6 +115,7 @@ def write_workbook(materialized: MaterializedIndex, output_path: Path) -> dict[s
 
     # 3. Feuille Sources
     ws = workbook.add_worksheet("Sources")
+    ws.freeze_panes(1, 0)
     headers = ["Source ID", "Level", "Issuer", "Language", "Title", "URL"]
     widths = [22, 8, 22, 8, 50, 40]
     for col, (label, width) in enumerate(zip(headers, widths, strict=False)):
@@ -181,6 +182,7 @@ def _write_summary_sheet(
     header_fmt: Any,
 ) -> None:
     ws = workbook.add_worksheet(name)
+    ws.freeze_panes(1, 0)
     for col, (label, width) in enumerate(zip(headers, widths, strict=False)):
         ws.write(0, col, label, header_fmt)
         ws.set_column(col, col, width)

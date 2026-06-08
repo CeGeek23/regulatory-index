@@ -1,6 +1,6 @@
 """Tests unitaires du runner LangExtract, avec l'appel LLM mocke.
 
-L'extraction reelle via Ollama est testee separement dans scripts/run_smoke_e2e.py
+L'extraction reelle via LM Studio est testee separement dans scripts/run_smoke_e2e.py
 et est trop lente / non deterministe pour la CI.
 """
 
@@ -112,7 +112,7 @@ def test_failure_is_logged_and_does_not_abort(
     def fake_extract(*, text_or_documents: str, **_: Any) -> lx.data.AnnotatedDocument:
         # La premiere unite echoue, la seconde reussit.
         if text_or_documents.startswith("AIFMs"):
-            raise RuntimeError("ollama unreachable")
+            raise RuntimeError("backend unreachable")
         return _fake_annotated_doc(
             text_or_documents,
             [

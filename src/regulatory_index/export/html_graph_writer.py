@@ -3,6 +3,7 @@
 Le fichier produit s'ouvre dans tout navigateur moderne — aucune extension VS Code requise.
 Les nœuds sont colorés par niveau (1, 2, 3, national) et par type (obligation vs source) ;
 les arêtes par relation_type. Le survol affiche le triplet d'obligation complet.
+Une petite légende fixe explique les couleurs (niveaux + types de relations).
 """
 
 from __future__ import annotations
@@ -29,6 +30,54 @@ _RELATION_EDGE_COLOURS: dict[str, str] = {
     "derogates": "#9467bd",
     "references": "#7f7f7f",
 }
+
+
+def _legend_html(g: nx.DiGraph) -> str:
+    """Petite légende fixe expliquant les couleurs (niveaux de nœuds + types de relations).
+
+    Ne liste que les catégories réellement présentes dans le graphe.
+    """
+    levels = {str(d.get("level", "")) for _, d in g.nodes(data=True) if d.get("kind") == "obligation"}
+    has_source = any(d.get("kind") == "source" for _, d in g.nodes(data=True))
+    rels = {str(d.get("relation_type", "references")) for _, _, d in g.edges(data=True)}
+
+    def dot(label: str, colour: str) -> str:
+        return (
+            f"<div><span style='display:inline-block;width:12px;height:12px;border-radius:50%;"
+            f"background:{colour};margin-right:6px;vertical-align:middle'></span>{label}</div>"
+        )
+
+    def line(label: str, colour: str) -> str:
+        return (
+            f"<div><span style='display:inline-block;width:18px;height:3px;background:{colour};"
+            f"margin-right:6px;vertical-align:middle'></span>{label}</div>"
+        )
+
+    level_label = {"1": "Niveau 1", "2": "Niveau 2", "3": "Niveau 3", "national": "National"}
+    node_rows = [
+        dot(level_label.get(lv, lv), _LEVEL_NODE_COLOURS.get(lv, "#cccccc"))
+        for lv in ("1", "2", "3", "national")
+        if lv in levels
+    ]
+    if has_source:
+        node_rows.append(dot("Source (document)", _SOURCE_NODE_COLOUR))
+    edge_rows = [
+        line(rel, _RELATION_EDGE_COLOURS.get(rel, "#999999"))
+        for rel in _RELATION_EDGE_COLOURS
+        if rel in rels
+    ]
+
+    return (
+        "<div style='position:fixed;top:12px;right:12px;z-index:999;background:rgba(255,255,255,.95);"
+        "border:1px solid #ccc;border-radius:6px;padding:8px 10px;font:12px sans-serif;color:#222;"
+        "box-shadow:0 1px 4px rgba(0,0,0,.15)'>"
+        "<div style='font-weight:bold;margin-bottom:4px'>Légende</div>"
+        "<div style='font-size:11px;color:#666;margin-bottom:2px'>Nœuds (niveau)</div>"
+        + "".join(node_rows)
+        + "<div style='font-size:11px;color:#666;margin:5px 0 2px'>Arêtes (relation)</div>"
+        + "".join(edge_rows)
+        + "</div>"
+    )
 
 
 def _node_label(node_id: str, data: dict[str, object]) -> str:
@@ -140,5 +189,7 @@ def write_html_graph(
     )
 
     html = net.generate_html(notebook=False)
+    legend = _legend_html(g)
+    html = html.replace("</body>", legend + "</body>", 1) if "</body>" in html else html + legend
     out_path.write_text(html, encoding="utf-8")
     return out_path

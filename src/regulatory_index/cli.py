@@ -46,7 +46,7 @@ def acquire(
 ) -> None:
     """Récupère le corpus déclaré dans sources_manifest.yaml et émet un JSONL d'unités."""
     counts = acquire_all(manifest_path=manifest, raw_dir=raw_dir, units_out=out)
-    typer.echo(json.dumps({**counts, "out": str(out)}))
+    typer.echo(json.dumps({**counts, "out": str(out)}, indent=2))
 
 
 @app.command()
@@ -55,25 +55,25 @@ def extract(
     out_dir: Annotated[Path, typer.Option(help="Where to persist extractions.")] = Path(
         "data/obligations"
     ),
-    model_id: Annotated[str, typer.Option()] = "mistral:7b",
-    model_url: Annotated[str, typer.Option()] = "http://localhost:11434",
+    model_id: Annotated[str, typer.Option()] = "google/gemma-4-e4b",
+    base_url: Annotated[str, typer.Option(help="OpenAI-compatible server (LM Studio).")] = "http://localhost:1234/v1",
+    api_key: Annotated[str, typer.Option(help="Factice pour un serveur local.")] = "lm-studio",
     extraction_passes: Annotated[int, typer.Option()] = 1,
     temperature: Annotated[float, typer.Option()] = 0.0,
-    request_timeout: Annotated[int, typer.Option(help="Ollama request timeout (s).")] = 600,
-    num_ctx: Annotated[int, typer.Option(help="Ollama context window (tokens).")] = 8192,
+    request_timeout: Annotated[int, typer.Option(help="Request timeout (s).")] = 600,
     force: Annotated[bool, typer.Option(help="Re-extract even if output JSON exists.")] = False,
 ) -> None:
     """Exécute LangExtract sur un JSONL d'unités normatives, persiste un JSON par unité."""
     config = RunnerConfig(
         model_id=model_id,
-        model_url=model_url,
+        base_url=base_url,
+        api_key=api_key,
         extraction_passes=extraction_passes,
         temperature=temperature,
         request_timeout=request_timeout,
-        num_ctx=num_ctx,
     )
     counts = run(load_units_jsonl(units), out_dir=out_dir, config=config, force=force)
-    typer.echo(json.dumps({"counts": counts, "finished_at": datetime.now(UTC).isoformat()}))
+    typer.echo(json.dumps({"counts": counts, "finished_at": datetime.now(UTC).isoformat()}, indent=2))
 
 
 @app.command()
@@ -92,7 +92,8 @@ def link(
                 "obligations": len(materialized.obligations),
                 "relations": len(materialized.relations),
                 "unresolved_citations": len(materialized.unresolved_citations),
-            }
+            },
+            indent=2,
         )
     )
 
@@ -142,7 +143,8 @@ def export(
                 },
                 "unresolved_citations": len(materialized.unresolved_citations),
                 "quality_report": str(out_dir / "quality_report.md"),
-            }
+            },
+            indent=2,
         )
     )
 
@@ -152,7 +154,7 @@ def pipeline(
     units: Annotated[Path, typer.Argument(exists=True, help="JSONL of normative units.")],
     obligations_dir: Annotated[Path, typer.Option()] = Path("data/obligations"),
     out_dir: Annotated[Path, typer.Option()] = Path("data/exports"),
-    model_id: Annotated[str, typer.Option()] = "mistral:7b",
+    model_id: Annotated[str, typer.Option()] = "google/gemma-4-e4b",
     force: Annotated[bool, typer.Option(help="Re-extract even if outputs exist.")] = False,
 ) -> None:
     """Exécution de bout en bout : extract -> materialize -> export."""

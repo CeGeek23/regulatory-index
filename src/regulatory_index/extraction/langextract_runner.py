@@ -1,4 +1,4 @@
-"""Runner idempotent : soumet les unités normatives à LangExtract via Ollama et persiste les sorties.
+"""Runner idempotent : soumet les unités normatives à LangExtract via un backend OpenAI-compatible (LM Studio) et persiste les sorties.
 
 Pour chaque unité :
 - Si `data/obligations/{source_id}/{unit_id}.json` existe déjà, on saute (réexécutions idempotentes).
@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Any, cast
 
 import langextract as lx
+from langextract import factory
 
 from ..ingestion.unit_loader import NormativeUnit
 from ..schemas.raw import ExtractionMeta, RawObligation, UnitExtraction
@@ -33,14 +34,16 @@ log = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class RunnerConfig:
-    model_id: str = "mistral:7b"
-    model_url: str = "http://localhost:11434"
+    # Backend LLM local via API OpenAI-compatible (LM Studio par défaut, sur :1234/v1).
+    model_id: str = "google/gemma-4-e4b"  # clé du modèle chargé dans LM Studio
+    base_url: str = "http://localhost:1234/v1"
+    api_key: str = "lm-studio"  # factice : serveur local, pas d'authentification
     temperature: float = 0.0
+    max_tokens: int = 8192  # généreux : une unité peut produire un gros JSON (12+ obligations)
     extraction_passes: int = 1
-    fence_output: bool = True
-    use_schema_constraints: bool = False
-    request_timeout: int = 600  # secondes ; la valeur LangExtract par défaut (120) est trop courte sur CPU
-    num_ctx: int = 8192  # fenêtre de contexte ; 2048 (défaut Ollama) tronque les longs articles
+    fence_output: bool = False  # sortie structurée (JSON schema) -> pas de fences
+    use_schema_constraints: bool = True  # LM Studio impose le JSON schema -> format garanti
+    request_timeout: int = 600  # secondes
 
 
 def _safe_path_segment(value: str) -> str:
@@ -111,18 +114,26 @@ def extract_unit(unit: NormativeUnit, config: RunnerConfig) -> UnitExtraction:
     prompt = build_prompt_description(unit.language)
     examples = load_examples(unit.language)
 
+    model_config = factory.ModelConfig(
+        model_id=config.model_id,
+        provider="OpenAILanguageModel",
+        provider_kwargs={
+            "base_url": config.base_url,
+            "api_key": config.api_key,
+            "temperature": config.temperature,
+            "max_tokens": config.max_tokens,
+            "timeout": config.request_timeout,
+        },
+    )
     started = time.monotonic()
     result = lx.extract(
         text_or_documents=unit.text,
         prompt_description=prompt,
         examples=list(examples),
-        model_id=config.model_id,
-        model_url=config.model_url,
+        config=model_config,
         fence_output=config.fence_output,
         use_schema_constraints=config.use_schema_constraints,
         extraction_passes=config.extraction_passes,
-        temperature=config.temperature,
-        language_model_params={"timeout": config.request_timeout, "num_ctx": config.num_ctx},
     )
     elapsed = time.monotonic() - started
 

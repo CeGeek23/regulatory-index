@@ -19,9 +19,15 @@ dans l'ordre du document, joints par des sauts de ligne. Pas de regex ; pure tra
 
 from __future__ import annotations
 
-from bs4 import BeautifulSoup, Tag
+import warnings
+
+from bs4 import BeautifulSoup, Tag, XMLParsedAsHTMLWarning
 
 from .unit_loader import NormativeUnit
+
+# EUR-Lex sert du HTML "Office Journal" que bs4 détecte parfois comme XML ; on parse
+# volontairement en HTML (lxml), donc on neutralise cet avertissement spécifique.
+warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
 
 def _clean_whitespace(s: str) -> str:

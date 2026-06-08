@@ -11,7 +11,7 @@
   fetcher: eurlex
   celex: "32011L0061"
   language: EN
-  filter_articles: ["15", "16"]   # Art 21 (Dépositaire, 19K caractères) ignoré ici, trop long pour mistral:7b sur CPU
+  filter_articles: ["15", "16", "22", "23"]   # 22-23 = chapitre Transparence (texte neuf) ; Art 21 (Dépositaire, 19K caractères) ignoré, trop long pour mistral:7b sur CPU
 
 - source_id: AIFMD_L2
   fetcher: eurlex

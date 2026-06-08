@@ -7,7 +7,7 @@ POC d'un index réglementaire structuré pour AIFMD (Level 1 + Level 2 + ESMA Le
 - **Package manager** : `uv`
 - **Acquisition** : `httpx` + `BeautifulSoup` (DOM, pas de regex, pas de PDF) — fetchers EUR-Lex, AMF, Légifrance
 - **Extraction** : [LangExtract](https://github.com/google/langextract) avec source grounding natif
-- **LLM backend** : Ollama local (`mistral:7b` par défaut, swap possible vers `qwen2.5:7b`/`qwen2.5:14b` ou `gemma3:4b`)
+- **LLM backend** : **LM Studio** — serveur local OpenAI-compatible (GPU Metal/MLX) piloté via le provider OpenAI de LangExtract ; modèle au choix (`google/gemma-4-e4b` par défaut, swap via `--model-id`), **sortie structurée** (JSON schema) activée
 - **Matérialisation** : Polars (DataFrames en mémoire, pas de base persistante)
 - **Graphe** : NetworkX + GraphML + HTML interactif (pyvis)
 - **Export** : xlsxwriter (Excel multi-onglets), CSV UTF-8, GraphML, HTML interactif, rapport Markdown
@@ -26,13 +26,13 @@ Contraintes méthodologiques :
 # 1. Installer uv (sans sudo)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 2. Installer Ollama
-#    macOS : app officielle (runner Metal) — `brew install --cask ollama`
-#            (PAS `brew install ollama` : la formule ne livre pas le runner d'inférence)
-#            ou télécharger Ollama.app depuis https://ollama.com/download
-#    Linux : curl -fsSL https://ollama.com/install.sh | sh
-ollama serve            # ou lancer l'app Ollama (menubar) ; sert sur localhost:11434
-ollama pull mistral:7b  # ~4.4 Go
+# 2. Installer LM Studio (runner Metal/MLX) + un modèle, puis lancer le serveur local.
+#    macOS : brew install --cask lm-studio  (lancer l'app une fois pour initialiser la CLI `lms`)
+#    Modèle : préférer un template gérant le rôle `system` (gemma, qwen, ou les variantes
+#    lmstudio-community) — le GGUF stock de Mistral ne gère pas `system` sur LM Studio.
+lms get google/gemma-4-e4b --yes
+lms server start                                    # API OpenAI-compatible sur :1234/v1
+lms load google/gemma-4-e4b --context-length 8192 --yes
 
 # 3. Installer les deps Python
 #    uv construit .venv à partir du Python pyenv 3.12.11 (cf. .python-version +
@@ -48,8 +48,13 @@ uv sync
 uv run regindex acquire
 # → télécharge les CELEX listés dans config/sources_manifest.yaml
 #   et produit data/units/corpus.jsonl
+#
+# Variante HORS-LIGNE (pour les essais, ou si EUR-Lex bloque les requêtes
+# automatiques via son WAF) : reconstruit le corpus depuis le HTML déjà en
+# cache dans data/raw/, sans réseau :
+#   uv run python scripts/build_corpus_offline.py
 
-# 2. Extraire les obligations (LangExtract + Ollama local, idempotent)
+# 2. Extraire les obligations (LangExtract + LM Studio local, idempotent)
 uv run regindex extract data/units/corpus.jsonl
 
 # 3. Construire les obligations finales + relations (matérialisation en mémoire + compteurs)
@@ -135,7 +140,7 @@ tests/                 pytest (schemas, vocab, sources_registry,
 ## Architecture du pipeline (5 étapes, sans regex, sans fallback)
 
 1. **Acquisition** — fetcher (`eurlex` / `amf` / `legifrance`) télécharge le HTML officiel ; parser DOM extrait un `NormativeUnit` par article.
-2. **Extraction LangExtract** — 1 appel Ollama par unité, guidé par un prompt structuré (description + few-shots) avec vocab contrôlé injecté en texte — **pas d'enum imposé** dans le schéma JSON (`use_schema_constraints=False` ; à activer/tester avec un modèle qui tient fiablement les contraintes de schéma JSON), persistance idempotente sur disque (`{source_id}/{unit_id}.json`). Échec d'une unité → log dans `_failed.jsonl` (réinitialisé au début de chaque run), on continue.
+2. **Extraction LangExtract** — 1 appel LM Studio (API OpenAI-compatible) par unité, guidé par un prompt structuré (description + few-shots) avec vocab contrôlé injecté en texte. **Sortie structurée** (`use_schema_constraints=True` → JSON schema) : le **format** est garanti (1 valeur par champ, jamais liste/null) **sans figer le vocab en enum** — la découverte de termes hors-vocab reste possible. Persistance idempotente sur disque (`{source_id}/{unit_id}.json`). Échec d'une unité → log dans `_failed.jsonl` (réinitialisé au début de chaque run), on continue.
 3. **Materialization** — `RawObligation` → `Obligation` avec id stable `{SCOPE}-{THEME_CODE}-{NNNN}` (déterministe par sort key). Source résolue depuis `sources_registry.yaml`. Les champs à vocabulaire contrôlé sont canonicalisés (pivot EN par défaut) via `Vocabulary.resolve` ; les termes non résolus alimentent le rapport « vocab gaps ».
 4. **Linkage cross-level** — `cited_references` → `target_source_id` par alias matching (substring case-insensitive, alias les plus longs gagnent). Quand la citation nomme un article (`Article 15(3)`…), on rattache l'obligation aux **obligations cibles** extraites de cet article dans le document cité (linkage article-level, parsing par tokenisation, sans regex) ; sinon on retombe sur le nœud document `{source}#source`. Relation typée d'après `(level_src, issuer_src, level_tgt, title_src)` : `clarifies` / `strengthens` / `operationalizes` / `interprets` / `references`.
 5. **Materialization + Export** — `materialize.py` charge les JSON, construit Obligations/Relations et trois DataFrames Polars (obligations / relations / units) + agrégations, le tout en mémoire → Excel formaté (7 onglets) + CSV (UTF-8, `;`) + GraphML (Gephi/yEd) + HTML interactif (pyvis, ouvrable dans n'importe quel navigateur) + Markdown quality report.
@@ -144,8 +149,8 @@ tests/                 pytest (schemas, vocab, sources_registry,
 
 | Sem. | Livrable | État |
 |---|---|---|
-| S1 | Setup uv + Ollama + schémas Pydantic + vocab v0 | ✅ |
-| S2 | Pipeline extraction MVP (LangExtract + Ollama, `mistral:7b`) | ✅ |
+| S1 | Setup uv + LLM local + schémas Pydantic + vocab v0 | ✅ |
+| S2 | Pipeline extraction MVP (LangExtract + LM Studio) | ✅ |
 | S3 | Acquisition corpus réel (EUR-Lex L1 + L2, FR/EN) | ✅ |
 | S4 | Linkage cross-level (citation_extractor + graph_builder) | ✅ |
 | S5 | Matérialisation Polars + export Excel/CSV/GraphML + HTML + quality report | ✅ |
@@ -159,11 +164,11 @@ tests/                 pytest (schemas, vocab, sources_registry,
 
 ## Limitations connues
 
-- **Les petits LLM locaux capturent imparfaitement les citations externes** : ils confondent parfois l'en-tête de section avec une citation et ratent des références internes (Article 44 sans préciser le document). `mistral:7b` (défaut) fait mieux que `gemma3:4b` ; pour plus de robustesse, `qwen2.5:7b`/`14b` sur GPU.
+- **Les petits LLM locaux capturent imparfaitement les citations externes** : ils confondent parfois l'en-tête de section avec une citation et ratent des références internes (Article 44 sans préciser le document). Modèle swappable via LM Studio (`--model-id`) ; pour plus de robustesse, un 7B+ comme `qwen2.5-7b-instruct`. NB : le GGUF stock de Mistral n'expose pas de rôle `system` sur LM Studio → préférer gemma/qwen ou une variante `lmstudio-community`.
 - **Linkage article-level** : on lie obligation → obligations cibles partageant l'**article** cité. Comme les unités source sont découpées par article, la granularité fine paragraphe/point n'est pas encore disponible côté source ; et les citations multi-articles (`Articles 38 à 40`) ne rattachent que le premier article. Quand aucun article n'est résolu, on retombe sur le nœud document.
 - **Vocabulary v0** : 34 actors, 38 actions, 37 objects, 13 themes. À enrichir avec l'expert AIFMD.
 - **Pas de support ESMA** : ESMA publie en PDF, hors scope cette itération.
-- **Article 21 (Depositary, 19K chars)** non traité dans le run par défaut : trop long sur CPU pour un modèle 7B comme `mistral:7b` (prévoir chunking ou GPU).
+- **Article 21 (Depositary, 19K chars)** non traité dans le run par défaut : trop long pour un petit modèle local (prévoir chunking ou un modèle/contexte plus grand).
 
 ## Différenciateurs vs RegTech existants
 

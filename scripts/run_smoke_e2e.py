@@ -1,14 +1,14 @@
-"""Smoke test du chemin d'extraction réel via Ollama (sans mocks).
+"""Smoke test du chemin d'extraction réel via LM Studio (sans mocks).
 
 Contrairement à tests/test_langextract_runner.py (qui mocke `lx.extract`), ce script
-exerce l'extraction réelle contre un Ollama tournant en local. Ce n'est volontairement
-PAS un test pytest : il requiert `ollama serve` actif avec le modèle téléchargé, ce qui
-n'est pas disponible en CI et n'est pas déterministe.
+exerce l'extraction réelle contre un serveur LM Studio (API OpenAI-compatible) tournant
+en local. Ce n'est volontairement PAS un test pytest : il requiert le serveur LM Studio
+actif avec le modèle chargé, ce qui n'est pas disponible en CI et n'est pas déterministe.
 
-À lancer manuellement après `ollama pull mistral:7b` et `ollama serve` :
+À lancer manuellement après `lms server start` et `lms load <modèle>` :
 
     uv run python scripts/run_smoke_e2e.py
-    uv run python scripts/run_smoke_e2e.py --model-id qwen2.5:7b
+    uv run python scripts/run_smoke_e2e.py --model-id qwen2.5-7b-instruct
 
 Code de sortie 0 si au moins une obligation grounded est extraite, 1 sinon.
 """
@@ -47,12 +47,12 @@ _SAMPLE = NormativeUnit(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--model-id", default="mistral:7b")
-    parser.add_argument("--model-url", default="http://localhost:11434")
+    parser.add_argument("--model-id", default="google/gemma-4-e4b")
+    parser.add_argument("--base-url", default="http://localhost:1234/v1")
     args = parser.parse_args()
 
-    config = RunnerConfig(model_id=args.model_id, model_url=args.model_url)
-    print(f"Running real extraction against Ollama ({config.model_id}) at {config.model_url} ...")
+    config = RunnerConfig(model_id=args.model_id, base_url=args.base_url)
+    print(f"Running real extraction against LM Studio ({config.model_id}) at {config.base_url} ...")
     extraction = extract_unit(_SAMPLE, config)
 
     grounded = sum(
