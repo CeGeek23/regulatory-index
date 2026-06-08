@@ -47,7 +47,7 @@ _SAMPLE = NormativeUnit(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--model-id", default="google/gemma-4-e4b")
+    parser.add_argument("--model-id", default="qwen2.5-7b-instruct")
     parser.add_argument("--base-url", default="http://localhost:1234/v1")
     args = parser.parse_args()
 

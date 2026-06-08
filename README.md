@@ -7,7 +7,7 @@ POC d'un index réglementaire structuré pour AIFMD (Level 1 + Level 2 + ESMA Le
 - **Package manager** : `uv`
 - **Acquisition** : `httpx` + `BeautifulSoup` (DOM, pas de regex, pas de PDF) — fetchers EUR-Lex, AMF, Légifrance
 - **Extraction** : [LangExtract](https://github.com/google/langextract) avec source grounding natif
-- **LLM backend** : **LM Studio** — serveur local OpenAI-compatible (GPU Metal/MLX) piloté via le provider OpenAI de LangExtract ; modèle au choix (`google/gemma-4-e4b` par défaut, swap via `--model-id`), **sortie structurée** (JSON schema) activée
+- **LLM backend** : **LM Studio** — serveur local OpenAI-compatible (GPU Metal/MLX) piloté via le provider OpenAI de LangExtract ; modèle au choix (**`qwen2.5-7b-instruct`** par défaut — meilleur rappel au benchmark, à charger en contexte **32k** ; `google/gemma-4-e4b` = alternative plus rapide/robuste ; swap via `--model-id`), **sortie structurée** (JSON schema) activée
 - **Matérialisation** : Polars (DataFrames en mémoire, pas de base persistante)
 - **Graphe** : NetworkX + GraphML + HTML interactif (pyvis)
 - **Export** : xlsxwriter (Excel multi-onglets), CSV UTF-8, GraphML, HTML interactif, rapport Markdown
@@ -30,9 +30,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 #    macOS : brew install --cask lm-studio  (lancer l'app une fois pour initialiser la CLI `lms`)
 #    Modèle : préférer un template gérant le rôle `system` (gemma, qwen, ou les variantes
 #    lmstudio-community) — le GGUF stock de Mistral ne gère pas `system` sur LM Studio.
-lms get google/gemma-4-e4b --yes
-lms server start                                    # API OpenAI-compatible sur :1234/v1
-lms load google/gemma-4-e4b --context-length 8192 --yes
+lms get https://huggingface.co/lmstudio-community/Qwen2.5-7B-Instruct-GGUF --yes  # URL HF (le nom court ne résout pas toujours)
+lms server start                                        # API OpenAI-compatible sur :1234/v1
+lms load qwen2.5-7b-instruct --context-length 32768 --yes   # 32k : qwen produit beaucoup sur les textes denses
 
 # 3. Installer les deps Python
 #    uv construit .venv à partir du Python pyenv 3.12.11 (cf. .python-version +

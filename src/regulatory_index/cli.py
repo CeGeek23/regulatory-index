@@ -55,7 +55,7 @@ def extract(
     out_dir: Annotated[Path, typer.Option(help="Where to persist extractions.")] = Path(
         "data/obligations"
     ),
-    model_id: Annotated[str, typer.Option()] = "google/gemma-4-e4b",
+    model_id: Annotated[str, typer.Option()] = "qwen2.5-7b-instruct",
     base_url: Annotated[str, typer.Option(help="OpenAI-compatible server (LM Studio).")] = "http://localhost:1234/v1",
     api_key: Annotated[str, typer.Option(help="Factice pour un serveur local.")] = "lm-studio",
     extraction_passes: Annotated[int, typer.Option()] = 1,
@@ -154,7 +154,7 @@ def pipeline(
     units: Annotated[Path, typer.Argument(exists=True, help="JSONL of normative units.")],
     obligations_dir: Annotated[Path, typer.Option()] = Path("data/obligations"),
     out_dir: Annotated[Path, typer.Option()] = Path("data/exports"),
-    model_id: Annotated[str, typer.Option()] = "google/gemma-4-e4b",
+    model_id: Annotated[str, typer.Option()] = "qwen2.5-7b-instruct",
     force: Annotated[bool, typer.Option(help="Re-extract even if outputs exist.")] = False,
 ) -> None:
     """Exécution de bout en bout : extract -> materialize -> export."""

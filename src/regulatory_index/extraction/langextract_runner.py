@@ -35,7 +35,7 @@ log = logging.getLogger(__name__)
 @dataclass(frozen=True)
 class RunnerConfig:
     # Backend LLM local via API OpenAI-compatible (LM Studio par défaut, sur :1234/v1).
-    model_id: str = "google/gemma-4-e4b"  # clé du modèle chargé dans LM Studio
+    model_id: str = "qwen2.5-7b-instruct"  # clé du modèle chargé dans LM Studio
     base_url: str = "http://localhost:1234/v1"
     api_key: str = "lm-studio"  # factice : serveur local, pas d'authentification
     temperature: float = 0.0
