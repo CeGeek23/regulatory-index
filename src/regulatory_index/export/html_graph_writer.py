@@ -117,7 +117,7 @@ def write_html_graph(
     graph: nx.DiGraph,
     out_path: Path,
     *,
-    title: str = "Index réglementaire",
+    title: str = "Regulatory Index",
     hide_isolated_sources: bool = True,
 ) -> Path:
     """Écrit un graphe HTML interactif autonome. Renvoie le chemin écrit."""
