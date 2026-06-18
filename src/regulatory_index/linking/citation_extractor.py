@@ -13,8 +13,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from ..refdata.sources_registry import load_alias_index
 from ..schemas.obligation import Obligation
-from ..schemas.sources_registry import load_alias_index
 
 # Tokens qui introduisent un numéro d'article, EN + FR (minuscules, ponctuation retirée).
 _ARTICLE_KEYWORDS = frozenset({"article", "articles", "art"})

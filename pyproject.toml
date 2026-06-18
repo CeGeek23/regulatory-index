@@ -72,6 +72,9 @@ reportUnknownParameterType = "none"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra --strict-markers"
+# Layout src/ : on garantit l'import du paquet même si l'install editable du .venv
+# a dérivé (uv run peut le désinstaller au re-sync). Indépendant de l'état d'install.
+pythonpath = ["src"]
 
 [tool.uv]
 # Use a system / pyenv-managed interpreter only — never download a uv-managed

@@ -18,7 +18,7 @@ from pathlib import Path
 from regulatory_index.ingestion.acquire import load_manifest
 from regulatory_index.ingestion.eurlex_html_parser import parse_articles
 from regulatory_index.ingestion.unit_loader import NormativeUnit, write_units_jsonl
-from regulatory_index.schemas.sources_registry import load_sources_registry
+from regulatory_index.refdata.sources_registry import load_sources_registry
 
 RAW_DIR = Path("data/raw")
 OUT = Path("data/units/corpus.jsonl")

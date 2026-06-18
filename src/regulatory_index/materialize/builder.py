@@ -11,11 +11,11 @@ from collections import Counter
 from collections.abc import Iterable
 
 from ..ingestion.unit_loader import NormativeUnit
-from .obligation import Obligation
-from .raw import ExtractionMeta, RawObligation, UnitExtraction
-from .source import AlignmentStatus, Source
-from .sources_registry import load_sources_registry
-from .vocab import load_vocabulary
+from ..refdata.sources_registry import load_sources_registry
+from ..refdata.vocab import load_vocabulary
+from ..schemas.obligation import Obligation
+from ..schemas.raw import ExtractionMeta, RawObligation, UnitExtraction
+from ..schemas.source import AlignmentStatus, Source
 
 # Champs à vocabulaire contrôlé et le fichier vocab qui normalise chacun.
 _FIELD_VOCAB: dict[str, str] = {

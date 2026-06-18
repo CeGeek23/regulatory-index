@@ -1,0 +1,260 @@
+
+"""Moissonne les termes définis d'un acte EUR-Lex, à partir de son HTML.
+
+Point de départ = le **contenu de l'acte** (déjà disponible, p. ex. en base d'actes) ;
+aucune acquisition réseau. La sortie est bilingue (`DefinedTerm`).
+
+Étapes :
+1. localiser l'article de définitions (passé en paramètre, ou détecté via le sommaire) ;
+2. découper sa liste de points (a), (b), ... — ou (1), (2), ... — de façon déterministe ;
+3. apparier EN/FR par étiquette de point ;
+4. y attacher l'enrichissement relu (`type` acteur/concept..., `cites` renvois inter-actes).
+
+**Un seul chemin, sans heuristique** : l'extraction (terme/définition/base légale) est
+automatique ; l'enrichissement (`type`, `cites`) vient exclusivement d'un fichier relu par
+acte (`config/glossary/overrides/{source_id}.yaml`). Acte sans override = glossaire complet
+mais `type`/`cites` non renseignés (jamais devinés). Pur `str` / parcours DOM, sans regex.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Iterator
+from dataclasses import dataclass
+from functools import cache
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+from ..ingestion.eurlex_html_parser import parse_articles
+from ..schemas.source import Language, Level
+from .models import DefinedTerm
+from .toc import build_toc
+
+OVERRIDES_DIR = Path(__file__).resolve().parents[3] / "config" / "glossary" / "overrides"
+
+# Guillemets EUR-Lex par langue (échappés pour lever l'ambiguïté unicode de ruff).
+_QUOTES: dict[str, tuple[str, str]] = {
+    "EN": (chr(0x2018), chr(0x2019)),
+    "FR": (chr(0x00AB), chr(0x00BB)),
+}
+
+
+@dataclass(frozen=True)
+class ParsedPoint:
+    """Un point de la liste de définitions : étiquette, terme cité, corps de la définition."""
+
+    label: str
+    term: str
+    definition: str
+
+
+def _letter_labels() -> Iterator[str]:
+    """a, b, ..., z, aa, ab, ... — étiquettes alphabétiques des points."""
+    for i in range(26):
+        yield chr(ord("a") + i)
+    prefix = 0
+    while True:
+        for i in range(26):
+            yield chr(ord("a") + prefix) + chr(ord("a") + i)
+        prefix += 1
+
+
+def _number_labels() -> Iterator[str]:
+    """1, 2, 3, ... — étiquettes numériques (certains actes numérotent leurs définitions)."""
+    n = 1
+    while True:
+        yield str(n)
+        n += 1
+
+
+def _fmt(label: str, language: str) -> str:
+    """Forme de l'étiquette telle qu'elle apparaît seule sur sa ligne : EN '(a)', FR 'a)'."""
+    return f"({label})" if language.upper() == "EN" else f"{label})"
+
+
+def _first_quoted(text: str, language: str) -> str:
+    """Premier terme entre guillemets de la langue ; '' si absent."""
+    open_q, close_q = _QUOTES[language.upper()]
+    start = text.find(open_q)
+    if start == -1:
+        return ""
+    end = text.find(close_q, start + 1)
+    if end == -1:
+        return ""
+    return text[start + 1 : end].strip()
+
+
+def _is_paragraph_boundary(line: str) -> bool:
+    """Vrai si la ligne ouvre un nouveau paragraphe de premier niveau ('2.', '3.' ...).
+
+    Sert à borner la définition du DERNIER point : sans cela, elle absorberait les
+    paragraphes 2, 3, 4 de l'article (ex. AIFMD art. 4(2)-(4)).
+    """
+    head = line.split(" ", 1)[0]
+    return len(head) <= 3 and head.endswith(".") and head[:-1].isdigit()
+
+
+def parse_points(text: str, *, language: Language) -> list[ParsedPoint]:
+    """Découpe la liste de définitions d'un article en points {label, term, definition}.
+
+    On recherche les étiquettes DANS L'ORDRE (lettres a,b,... ou nombres 1,2,...) : à
+    chaque étape, seule la PROCHAINE étiquette attendue est cherchée, ce qui évite de
+    confondre un sous-point (i)/(ii) avec un point de premier niveau. La liste se termine
+    dès qu'on ne trouve plus l'étiquette attendue ou qu'un nouveau paragraphe commence.
+    """
+    lines = [line.strip() for line in text.splitlines()]
+
+    def first_index(token: str) -> int:
+        target = _fmt(token, language)
+        for i, line in enumerate(lines):
+            if line == target:
+                return i
+        return -1
+
+    letters_at = first_index("a")
+    numbers_at = first_index("1")
+    if letters_at == -1 and numbers_at == -1:
+        return []
+    use_letters = letters_at != -1 and (numbers_at == -1 or letters_at <= numbers_at)
+    labels = _letter_labels() if use_letters else _number_labels()
+
+    positions: list[tuple[str, int]] = []
+    cursor = 0
+    for label in labels:
+        target = _fmt(label, language)
+        found = -1
+        for j in range(cursor, len(lines)):
+            if lines[j] == target:
+                found = j
+                break
+        if found == -1:
+            break  # fin de la liste de définitions
+        positions.append((label, found))
+        cursor = found + 1
+
+    points: list[ParsedPoint] = []
+    for idx, (label, pos) in enumerate(positions):
+        end = positions[idx + 1][1] if idx + 1 < len(positions) else len(lines)
+        body: list[str] = []
+        for line in lines[pos + 1 : end]:
+            if not line:
+                continue
+            if _is_paragraph_boundary(line):
+                break
+            body.append(line)
+        joined = " ".join(body).strip()
+        points.append(ParsedPoint(label=label, term=_first_quoted(joined, language), definition=joined))
+    return points
+
+
+@cache
+def load_overrides(source_id: str) -> dict[str, dict[str, Any]]:
+    """Charge config/glossary/overrides/{source_id}.yaml (enrichissement relu), {} si absent."""
+    path = OVERRIDES_DIR / f"{source_id}.yaml"
+    if not path.exists():
+        return {}
+    raw: dict[str, Any] = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    return {str(label): (value or {}) for label, value in raw.items()}
+
+
+def _slug(text: str) -> str:
+    """Identifiant snake_case depuis un libellé (alnum conservés, reste -> '_')."""
+    out: list[str] = []
+    prev_us = False
+    for ch in text.lower():
+        if ch.isalnum():
+            out.append(ch)
+            prev_us = False
+        elif not prev_us:
+            out.append("_")
+            prev_us = True
+    return "".join(out).strip("_")
+
+
+def harvest_glossary(
+    html_en: str,
+    html_fr: str = "",
+    *,
+    source_id: str,
+    celex: str | None = None,
+    level: Level = 1,
+    act_label: str | None = None,
+    definitions_article: str | None = None,
+    overrides: dict[str, dict[str, Any]] | None = None,
+) -> list[DefinedTerm]:
+    """Termes définis d'un acte, bilingue, depuis son HTML EN (+ FR optionnel).
+
+    Extraction automatique (terme/définition/base légale) ; `type` et `cites` proviennent
+    UNIQUEMENT de l'override relu (`config/glossary/overrides/{source_id}.yaml`), sinon
+    laissés à `None`/`[]` (jamais devinés). `definitions_article` détecté via le sommaire
+    EN si None. `act_label` : préfixe de `legal_basis` (défaut : source_id).
+    """
+    if definitions_article is None:
+        toc = build_toc(html_en, source_id=source_id, language="EN")
+        definitions_article = toc.definitions_article
+        if definitions_article is None:
+            raise ValueError(
+                f"{source_id}: article de définitions introuvable dans le sommaire ; "
+                "passez definitions_article explicitement."
+            )
+    if overrides is None:
+        overrides = load_overrides(source_id)
+    prefix = act_label or source_id
+
+    en_text = _definitions_text(html_en, definitions_article, source_id, celex, "EN", level)
+    en_points = parse_points(en_text, language="EN")
+    fr_points: dict[str, ParsedPoint] = {}
+    if html_fr:  # FR optionnel : tous les actes n'ont pas leur version FR sous la main
+        fr_text = _definitions_text(html_fr, definitions_article, source_id, celex, "FR", level)
+        fr_points = {p.label: p for p in parse_points(fr_text, language="FR")}
+
+    terms: list[DefinedTerm] = []
+    for ep in en_points:
+        fp = fr_points.get(ep.label)
+        ov = overrides.get(ep.label, {})
+        term_en = str(ov.get("term_en") or ep.term)
+        term_fr = str(ov.get("term_fr") or (fp.term if fp else ""))
+        definition_en = ep.definition
+        definition_fr = fp.definition if fp else ""
+        term_id = str(ov.get("id") or _slug(term_en) or f"{source_id.lower()}_{ep.label}")
+        type_value = ov.get("type")
+        type_ = str(type_value) if type_value else None
+        cites = list(ov.get("cites") or [])
+        terms.append(
+            DefinedTerm(
+                term_id=term_id,
+                label=ep.label,
+                type=type_,
+                term_en=term_en,
+                term_fr=term_fr,
+                legal_basis=f"{prefix} Art. {definitions_article}(1)({ep.label})",
+                source_id=source_id,
+                celex=celex,
+                level=level,
+                cites=cites,
+                definition_en=definition_en,
+                definition_fr=definition_fr,
+            )
+        )
+    return terms
+
+
+def _definitions_text(
+    html: str, article: str, source_id: str, celex: str | None, language: Language, level: Level
+) -> str:
+    """Texte de l'article de définitions extrait du HTML (réutilise le parseur EUR-Lex)."""
+    units = parse_articles(
+        html,
+        source_id=source_id,
+        celex=celex or "",
+        language=language,
+        title=source_id,
+        level=level,
+        issuer="EU_Parliament_Council",
+        url="",
+        keep={article},
+    )
+    if not units:
+        raise ValueError(f"{source_id}: article {article} introuvable dans le HTML {language}.")
+    return units[0].text

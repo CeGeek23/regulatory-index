@@ -19,17 +19,17 @@ from typing import Any
 
 import polars as pl
 
-from .ingestion.unit_loader import NormativeUnit
-from .linking.citation_extractor import (
+from ..ingestion.unit_loader import NormativeUnit
+from ..linking.citation_extractor import (
     ResolvedCitation,
     UnresolvedCitation,
     resolve_all,
 )
-from .linking.graph_builder import build_relations
-from .schemas.obligation import Obligation
-from .schemas.obligation_builder import build_obligations
-from .schemas.raw import UnitExtraction
-from .schemas.relation import CrossLevelRelation
+from ..linking.graph_builder import build_relations
+from ..schemas.obligation import Obligation
+from ..schemas.raw import UnitExtraction
+from ..schemas.relation import CrossLevelRelation
+from .builder import build_obligations
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Schémas — garde les DataFrames typés même vides (évite les erreurs pivot/select)

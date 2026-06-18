@@ -9,7 +9,7 @@ from typing import Any
 
 import yaml
 
-from .source import Issuer, Language, Level
+from ..schemas.source import Issuer, Language, Level
 
 REGISTRY_PATH = (
     Path(__file__).resolve().parents[3] / "config" / "sources_registry.yaml"

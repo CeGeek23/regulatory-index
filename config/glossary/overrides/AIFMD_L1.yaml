@@ -1,0 +1,52 @@
+# Enrichissement relu à la main du glossaire AIFMD niveau 1 (Directive 2011/61/UE), article 4.
+# Indexé par étiquette de point (a..ao). Chaque clé peut porter :
+#   id    : identifiant snake_case (aligné sur les vocabulaires contrôlés quand le terme y existe)
+#   type  : actor | investor | supervisor | fund | entity | instrument | capital | geography
+#           | activity | concept   (isole les acteurs des concepts, cf. demande client)
+#   cites : autres textes que la définition importe/vise (graphe inter-actes ; renvois d'origine
+#           — pour la version à jour des renvois abrogés, cf. docs/level1_perimeter.md)
+#   term_en / term_fr : à ne renseigner que si la détection automatique se trompe
+#
+# Sans ce fichier, le moissonnage reste générique : type via vocabulaires, cites via alias connus.
+
+a:  {id: aif, type: fund, cites: ["Directive 2009/65/EC (UCITS) Art. 5"]}
+b:  {id: aifm, type: actor}
+c:  {id: branch, type: concept}
+d:  {id: carried_interest, type: concept}
+e:  {id: close_links, type: concept, cites: ["Directive 83/349/EEC Art. 1"]}
+f:  {id: competent_authority, type: supervisor}
+g:  {id: competent_authority_depositary, type: supervisor, cites: ["Directive 2006/48/EC", "Directive 2004/39/EC", "AIFMD Art. 21"]}
+h:  {id: competent_authority_eu_aif, type: supervisor}
+i:  {id: control, type: concept, cites: ["Directive 83/349/EEC Art. 1"]}
+j:  {id: established, type: concept}
+k:  {id: eu_aif, type: fund}
+l:  {id: eu_aifm, type: actor}
+m:  {id: feeder_aif, type: fund}
+n:  {id: financial_instrument, type: instrument, cites: ["Directive 2004/39/EC (MiFID) Annex I Section C"]}
+o:  {id: holding_company, type: entity}
+p:  {id: home_ms_aif, type: geography}
+q:  {id: home_ms_aifm, type: geography}
+r:  {id: host_ms_aifm, type: geography}
+s:  {id: initial_capital, type: capital, cites: ["Directive 2006/48/EC Art. 57"]}
+t:  {id: issuer, type: entity, cites: ["Directive 2004/109/EC Art. 2(1)(d)", "Directive 2004/39/EC Art. 4(1)(14)"]}
+u:  {id: legal_representative, type: actor}
+v:  {id: leverage, type: concept}
+w:  {id: managing_aifs, type: activity, cites: ["AIFMD Annex I point 1(a)/(b)"]}
+x:  {id: marketing, type: activity}
+y:  {id: master_aif, type: fund}
+z:  {id: member_state_of_reference, type: geography, cites: ["AIFMD Art. 37(4)"]}
+aa: {id: non_eu_aif, type: fund}
+ab: {id: non_eu_aifm, type: actor}
+ac: {id: non_listed_company, type: entity, cites: ["Directive 2004/39/EC Art. 4(1)(14)"]}
+ad: {id: own_funds, type: capital, cites: ["Directive 2006/48/EC Art. 56-67"]}
+ae: {id: parent_undertaking, type: entity, cites: ["Directive 83/349/EEC Art. 1-2"]}
+af: {id: prime_broker, type: actor}
+ag: {id: professional_investor, type: investor, cites: ["Directive 2004/39/EC (MiFID) Annex II"]}
+ah: {id: qualifying_holding, type: concept, cites: ["Directive 2004/109/EC Art. 9, 10, 12(4)-(5)"]}
+ai: {id: employees_representatives, type: actor, term_en: "employees' representatives", cites: ["Directive 2002/14/EC Art. 2(e)"]}
+aj: {id: retail_investor, type: investor}
+ak: {id: subsidiary, type: entity, cites: ["Directive 83/349/EEC Art. 1-2"]}
+al: {id: supervisory_authorities_non_eu_aif, type: supervisor}
+am: {id: supervisory_authorities_non_eu_aifm, type: supervisor}
+an: {id: securitisation_spe, type: entity, cites: ["Regulation (EC) No 24/2009 (ECB) Art. 1(2)"]}
+ao: {id: ucits, type: fund, cites: ["Directive 2009/65/EC Art. 5"]}

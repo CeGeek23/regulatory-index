@@ -13,13 +13,17 @@ import typer
 from .eval.metrics import compute, write_report
 from .export.csv_writer import write_csv
 from .export.excel_writer import write_workbook
+from .export.glossary_writer import write_glossary
 from .export.html_graph_writer import write_html_graph
 from .extraction.langextract_runner import RunnerConfig, run
+from .glossary import build_toc, harvest_glossary
 from .ingestion.acquire import MANIFEST_PATH, acquire_all
 from .ingestion.unit_loader import load_units_jsonl
 from .linking.graph_builder import build_graph
 from .materialize import load_unit_extractions_from_dir, materialize
-from .schemas.vocab import load_acronyms, load_all_vocabularies
+from .refdata.sources_registry import load_sources_registry
+from .refdata.vocab import load_acronyms, load_all_vocabularies
+from .schemas.source import Language
 
 app = typer.Typer(no_args_is_help=True, help="Regulatory Index POC for AIFMD.")
 
@@ -162,6 +166,91 @@ def pipeline(
     # valeurs par défaut des appelés (RunnerConfig, noms/délimiteur d'export).
     extract(units=units, out_dir=obligations_dir, model_id=model_id, force=force)
     export(obligations_dir=obligations_dir, out_dir=out_dir)
+
+
+def _largest_cached_html(raw_dir: Path, source_id: str, celex: str, language: str) -> Path | None:
+    """Plus gros HTML en cache pour (source, langue) = le vrai document.
+
+    Confort pour ce dépôt : le coeur du pipeline (glossary.harvest_glossary / build_toc)
+    part directement du HTML, donc il s'intègre à n'importe quelle base d'actes.
+    """
+    candidates = sorted(
+        (raw_dir / source_id).glob(f"{celex}_{language.upper()}_*.html"),
+        key=lambda p: p.stat().st_size,
+        reverse=True,
+    )
+    return candidates[0] if candidates else None
+
+
+@app.command()
+def sommaire(
+    source_id: Annotated[str, typer.Argument(help="Source id présent dans sources_registry.yaml")],
+    language: Annotated[str, typer.Option(help="EN ou FR")] = "EN",
+    raw_dir: Annotated[Path, typer.Option()] = Path("data/raw"),
+    out_dir: Annotated[Path, typer.Option()] = Path("data/exports"),
+) -> None:
+    """Extrait le sommaire d'un acte (chapitres/sections/articles) et repère ses définitions."""
+    entry = load_sources_registry()[source_id]
+    lang: Language = "FR" if language.upper() == "FR" else "EN"
+    html_path = _largest_cached_html(raw_dir, source_id, entry.celex or "", lang)
+    if html_path is None:
+        raise typer.BadParameter(f"Aucun HTML en cache pour {source_id} {lang} dans {raw_dir}")
+    toc = build_toc(html_path.read_text(encoding="utf-8"), source_id=source_id, language=lang)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    json_path = out_dir / f"sommaire_{source_id}_{lang}.json"
+    json_path.write_text(toc.model_dump_json(indent=2), encoding="utf-8")
+    typer.echo(
+        json.dumps(
+            {
+                "source_id": source_id,
+                "language": lang,
+                "sections": len(toc.sections),
+                "articles": toc.article_count,
+                "definitions_article": toc.definitions_article,
+                "out": str(json_path),
+            },
+            indent=2,
+        )
+    )
+
+
+@app.command()
+def glossary(
+    source_id: Annotated[str, typer.Argument(help="Source id présent dans sources_registry.yaml")],
+    raw_dir: Annotated[Path, typer.Option()] = Path("data/raw"),
+    out_dir: Annotated[Path, typer.Option()] = Path("data/exports"),
+    act_label: Annotated[str, typer.Option(help="Préfixe de legal_basis (défaut : avant '_').")] = "",
+    definitions_article: Annotated[str, typer.Option(help="Forcer le n° d'article (sinon auto).")] = "",
+) -> None:
+    """Construit le glossaire des termes définis d'un acte (EN+FR) depuis son HTML EUR-Lex."""
+    entry = load_sources_registry()[source_id]
+    html_en = _largest_cached_html(raw_dir, source_id, entry.celex or "", "EN")
+    html_fr = _largest_cached_html(raw_dir, source_id, entry.celex or "", "FR")
+    if html_en is None:
+        raise typer.BadParameter(f"HTML EN requis en cache pour {source_id} dans {raw_dir}")
+    if html_fr is None:
+        typer.echo(f"# note: pas de HTML FR pour {source_id} — glossaire EN seul", err=True)
+    terms = harvest_glossary(
+        html_en.read_text(encoding="utf-8"),
+        html_fr.read_text(encoding="utf-8") if html_fr is not None else "",
+        source_id=source_id,
+        celex=entry.celex,
+        level=entry.level,
+        act_label=act_label or source_id.split("_")[0],
+        definitions_article=definitions_article or None,
+    )
+    n_actors = sum(1 for t in terms if (t.type or "") in {"actor", "investor", "supervisor"})
+    paths = write_glossary(
+        terms,
+        out_dir,
+        source_id=source_id,
+        title=f"Glossaire {source_id} — {entry.title}",
+        yaml_header=(
+            f"# Glossaire des termes définis — {source_id} ({entry.title}).\n"
+            "# Généré par `regindex glossary` depuis le HTML EUR-Lex. 1 entrée = 1 terme défini.\n\n"
+        ),
+    )
+    typer.echo(json.dumps({"terms": len(terms), "actors": n_actors, **paths}, indent=2))
 
 
 if __name__ == "__main__":

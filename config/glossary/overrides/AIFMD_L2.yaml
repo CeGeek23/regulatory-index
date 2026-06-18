@@ -1,0 +1,9 @@
+# Enrichissement relu du glossaire AIFMD niveau 2 (Règlement délégué (UE) 231/2013), article 1.
+# Indexé par étiquette de point (points numérotés 1..5). Voir overrides/AIFMD_L1.yaml pour le format.
+# Démontre que l'enrichissement se rejoue sur un autre acte par le même mécanisme (un fichier relu).
+
+"1": {id: capital_commitment, type: concept}
+"2": {id: relevant_person, type: actor}
+"3": {id: senior_management, type: actor}
+"4": {id: governing_body, type: actor}
+"5": {id: special_arrangement, type: concept}

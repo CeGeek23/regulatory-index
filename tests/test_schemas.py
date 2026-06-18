@@ -3,16 +3,16 @@ from datetime import UTC, datetime
 import pytest
 from pydantic import ValidationError
 
+from regulatory_index.refdata.vocab import (
+    load_acronyms,
+    load_all_vocabularies,
+    load_vocabulary,
+)
 from regulatory_index.schemas import (
     CrossLevelRelation,
     CrossLevelRelationType,
     Obligation,
     Source,
-)
-from regulatory_index.schemas.vocab import (
-    load_acronyms,
-    load_all_vocabularies,
-    load_vocabulary,
 )
 
 

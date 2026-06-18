@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 from typing import Literal
 
 from regulatory_index.ingestion.unit_loader import NormativeUnit
-from regulatory_index.schemas.obligation_builder import build_obligations, collect_vocab_gaps
+from regulatory_index.materialize.builder import build_obligations, collect_vocab_gaps
 from regulatory_index.schemas.raw import ExtractionMeta, RawObligation, UnitExtraction
 
 

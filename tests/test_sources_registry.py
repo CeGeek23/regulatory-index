@@ -1,4 +1,4 @@
-from regulatory_index.schemas.sources_registry import (
+from regulatory_index.refdata.sources_registry import (
     load_alias_index,
     load_sources_registry,
 )

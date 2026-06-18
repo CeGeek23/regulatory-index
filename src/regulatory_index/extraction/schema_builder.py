@@ -8,7 +8,7 @@ from typing import Literal
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
-from ..schemas.vocab import load_acronyms, load_vocabulary
+from ..refdata.vocab import load_acronyms, load_vocabulary
 
 PROMPTS_DIR = Path(__file__).resolve().parents[3] / "prompts"
 

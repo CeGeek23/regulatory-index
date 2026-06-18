@@ -11,8 +11,8 @@ from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from ..materialize.builder import collect_vocab_gaps
 from ..schemas.obligation import Obligation
-from ..schemas.obligation_builder import collect_vocab_gaps
 from ..schemas.raw import UnitExtraction
 
 

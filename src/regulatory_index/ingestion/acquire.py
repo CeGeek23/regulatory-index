@@ -19,7 +19,7 @@ from typing import Any
 
 import yaml
 
-from ..schemas.sources_registry import load_sources_registry
+from ..refdata.sources_registry import load_sources_registry
 from .amf_fetcher import fetch_to_disk as amf_fetch_to_disk
 from .amf_fetcher import parse_doctrine as amf_parse_doctrine
 from .eurlex_fetcher import fetch_to_disk as eurlex_fetch_to_disk

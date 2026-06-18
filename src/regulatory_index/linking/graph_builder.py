@@ -16,9 +16,9 @@ from dataclasses import dataclass
 
 import networkx as nx
 
+from ..refdata.sources_registry import load_sources_registry
 from ..schemas.obligation import Obligation
 from ..schemas.relation import CrossLevelRelation, CrossLevelRelationType
-from ..schemas.sources_registry import load_sources_registry
 from .citation_extractor import ResolvedCitation, normalize_article
 
 

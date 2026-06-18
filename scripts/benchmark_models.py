@@ -26,7 +26,7 @@ from typing import Any
 
 from regulatory_index.extraction.langextract_runner import RunnerConfig, extract_unit
 from regulatory_index.ingestion.unit_loader import NormativeUnit, load_units_jsonl
-from regulatory_index.schemas.vocab import load_vocabulary
+from regulatory_index.refdata.vocab import load_vocabulary
 
 CORPUS = Path("data/units/corpus.jsonl")
 REPORT = Path("data/exports/model_benchmark.md")

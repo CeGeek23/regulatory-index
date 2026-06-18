@@ -88,6 +88,33 @@ uv run mypy src/ tests/          # No issues
 
 Le manifest (`config/sources_manifest.yaml`) liste les documents à acquérir. Le registry (`config/sources_registry.yaml`) référence les métadonnées de chaque source (CELEX, level, issuer, aliases pour la résolution de citations).
 
+## Glossaire & sommaire (à partir du contenu d'un acte)
+
+Pipeline **autonome** qui part directement du **HTML d'un acte** (pas d'acquisition réseau — il s'intègre à n'importe quelle base d'actes) et produit son sommaire et son glossaire de termes définis. Conçu pour se **répliquer sur tout un corpus d'actes**.
+
+```bash
+# Sommaire (chapitres / sections / articles) + repérage de l'article de définitions
+uv run regindex sommaire AIFMD_L1            # → data/exports/sommaire_AIFMD_L1_EN.json
+
+# Glossaire des termes définis (bilingue EN/FR, acteurs isolés des concepts)
+uv run regindex glossary AIFMD_L1            # → data/exports/{AIFMD_L1_definitions.yaml, glossary_AIFMD_L1.csv/.md}
+```
+
+API librairie (le vrai produit — `html` en entrée, données en sortie) :
+
+```python
+from regulatory_index.glossary import build_toc, harvest_glossary
+
+toc = build_toc(html_en, source_id="AIFMD_L1", language="EN")
+toc.definitions_article          # -> "4"  (détecté via le sous-titre 'Definitions')
+terms = harvest_glossary(html_en, html_fr, source_id="AIFMD_L1", celex="32011L0061")
+# terms: list[DefinedTerm] — term_en/fr, type (actor|concept|...), legal_basis, cites, définitions
+```
+
+**Un seul chemin, sans heuristique.** L'**extraction** est automatique et se rejoue sur n'importe quel acte : article de définitions auto-détecté via le sommaire, points `(a)(b)…` comme `(1)(2)…` découpés de façon déterministe (str, sans regex), FR optionnel → `term_en/fr`, `definition_en/fr`, `legal_basis`. L'**enrichissement** (`type` acteur/concept…, `cites` renvois inter-actes) provient **uniquement** d'un fichier relu par acte (`config/glossary/overrides/{source_id}.yaml`) ; un acte sans override sort avec `type`/`cites` à `null` — **jamais devinés**.
+
+Réplication (vérifiée) : `regindex glossary AIFMD_L2` produit le glossaire du Règl. délégué 231/2013 (définitions à l'**article 1**, points **numérotés**) via le même code, son enrichissement venant de `config/glossary/overrides/AIFMD_L2.yaml`. Le périmètre niveau 1 et le piège « renvois vers des textes abrogés » sont documentés dans `docs/level1_perimeter.md`.
+
 > ℹ️ Dans le manifest livré, seules les sources **EUR-Lex** sont câblées pour un run end-to-end. Les fetchers **AMF** et **Légifrance** sont implémentés et couverts par des tests unitaires, mais pas encore référencés dans `sources_manifest.yaml`. **ESMA** n'a pas de fetcher (PDF) : ses entrées dans le registry servent uniquement de **cibles de citation** (aliases) pour le linkage cross-level.
 
 ## Structure du projet
@@ -96,6 +123,7 @@ Le manifest (`config/sources_manifest.yaml`) liste les documents à acquérir. L
 config/
   vocabularies/        YAML de vocab contrôlé (actors, actions, objects, themes,
                        conditions, acronyms, relation_types) + theme codes
+  glossary/overrides/  Enrichissement relu du glossaire par acte (type, cites)
   sources_manifest.yaml   Documents officiels à acquérir
   sources_registry.yaml   Registry des sources + aliases pour citation matching
 
@@ -110,22 +138,25 @@ data/
                        aifmd_relations.html,
                        quality_report.md
 
-src/regulatory_index/
-  schemas/             Pydantic: Source, Obligation, CrossLevelRelation,
-                       RawObligation, NormativeUnit, vocab, sources_registry,
-                       obligation_builder
+src/regulatory_index/   (chaque paquet expose son API publique via __init__.py)
+  schemas/             modèles de données PURS (Pydantic) : Source, Obligation,
+                       CrossLevelRelation, RawObligation / UnitExtraction
+  refdata/             chargeurs des données de config : vocab (vocabulaires
+                       contrôlés) + sources_registry (registre + alias de citation)
   ingestion/           acquire (orchestrator) + 3 fetchers : eurlex / amf /
-                       legifrance + eurlex_html_parser
+                       legifrance + eurlex_html_parser + unit_loader
+  glossary/            models (DefinedTerm, TableOfContents) + toc (sommaire) +
+                       definitions (termes définis) — part du HTML, déterministe, sans regex
   extraction/          schema_builder, examples_loader, langextract_runner
   linking/             citation_extractor (alias substring matching, no regex)
-                       graph_builder (NetworkX DiGraph)
-  materialize.py       JSON extractions -> Obligations/Relations + Polars
-                       DataFrames + agrégations (remplace l'ancienne couche DuckDB)
-  export/              excel_writer (xlsxwriter multi-sheet),
+                       + graph_builder (NetworkX DiGraph)
+  materialize/         builder (RawObligation -> Obligation) + core (index Polars,
+                       relations cross-level, vues) — JSON extractions -> index
+  export/              excel_writer (xlsxwriter multi-sheet), glossary_writer,
                        csv_writer, graphml_writer, html_graph_writer (pyvis)
   eval/                metrics.py (grounding, latence P50/P95, distributions, vocab gaps → quality_report.md)
   cli.py               Typer CLI : vocab / acquire / extract / link /
-                       export / pipeline
+                       export / pipeline / sommaire / glossary
 
 notebooks/             corpus_acquisition (exploration corpus, sans LLM)
 
