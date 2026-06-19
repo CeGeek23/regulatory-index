@@ -18,6 +18,7 @@ from .export.html_graph_writer import write_html_graph
 from .extraction.langextract_runner import RunnerConfig, run
 from .glossary import build_toc, harvest_glossary
 from .ingestion.acquire import MANIFEST_PATH, acquire_all
+from .ingestion.eurlex_fetcher import fetch_html, latest_consolidated_celex
 from .ingestion.unit_loader import load_units_jsonl
 from .linking.graph_builder import build_graph
 from .materialize import load_unit_extractions_from_dir, materialize
@@ -168,18 +169,24 @@ def pipeline(
     export(obligations_dir=obligations_dir, out_dir=out_dir)
 
 
-def _largest_cached_html(raw_dir: Path, source_id: str, celex: str, language: str) -> Path | None:
-    """Plus gros HTML en cache pour (source, langue) = le vrai document.
+def _largest_cached_html(raw_dir: Path, source_id: str, language: str) -> Path | None:
+    """Plus gros HTML en cache pour (source, langue) ; indépendant du CELEX (un dossier = un acte).
 
-    Confort pour ce dépôt : le coeur du pipeline (glossary.harvest_glossary / build_toc)
-    part directement du HTML, donc il s'intègre à n'importe quelle base d'actes.
+    Permet d'utiliser `sommaire`/`glossary` sur n'importe quel acte présent dans data/raw/,
+    qu'il soit déclaré ou non dans sources_registry.yaml.
     """
     candidates = sorted(
-        (raw_dir / source_id).glob(f"{celex}_{language.upper()}_*.html"),
+        (raw_dir / source_id).glob(f"*_{language.upper()}_*.html"),
         key=lambda p: p.stat().st_size,
         reverse=True,
     )
     return candidates[0] if candidates else None
+
+
+def _celex_from_cache(raw_dir: Path, source_id: str) -> str | None:
+    """Déduit le CELEX de base depuis le nom du HTML EN en cache (data/raw/<id>/<CELEX>_EN_*.html)."""
+    html = _largest_cached_html(raw_dir, source_id, "EN")
+    return html.name.split("_", 1)[0] if html is not None else None
 
 
 @app.command()
@@ -190,9 +197,8 @@ def sommaire(
     out_dir: Annotated[Path, typer.Option()] = Path("data/exports"),
 ) -> None:
     """Extrait le sommaire d'un acte (chapitres/sections/articles) et repère ses définitions."""
-    entry = load_sources_registry()[source_id]
     lang: Language = "FR" if language.upper() == "FR" else "EN"
-    html_path = _largest_cached_html(raw_dir, source_id, entry.celex or "", lang)
+    html_path = _largest_cached_html(raw_dir, source_id, lang)
     if html_path is None:
         raise typer.BadParameter(f"Aucun HTML en cache pour {source_id} {lang} dans {raw_dir}")
     toc = build_toc(html_path.read_text(encoding="utf-8"), source_id=source_id, language=lang)
@@ -221,21 +227,43 @@ def glossary(
     out_dir: Annotated[Path, typer.Option()] = Path("data/exports"),
     act_label: Annotated[str, typer.Option(help="Préfixe de legal_basis (défaut : avant '_').")] = "",
     definitions_article: Annotated[str, typer.Option(help="Forcer le n° d'article (sinon auto).")] = "",
+    consolidated: Annotated[
+        bool, typer.Option(help="Utiliser la dernière version consolidée (à jour) via l'API Cellar.")
+    ] = False,
 ) -> None:
-    """Construit le glossaire des termes définis d'un acte (EN+FR) depuis son HTML EUR-Lex."""
-    entry = load_sources_registry()[source_id]
-    html_en = _largest_cached_html(raw_dir, source_id, entry.celex or "", "EN")
-    html_fr = _largest_cached_html(raw_dir, source_id, entry.celex or "", "FR")
-    if html_en is None:
-        raise typer.BadParameter(f"HTML EN requis en cache pour {source_id} dans {raw_dir}")
-    if html_fr is None:
-        typer.echo(f"# note: pas de HTML FR pour {source_id} — glossaire EN seul", err=True)
+    """Construit le glossaire des termes définis d'un acte (EN+FR) depuis son HTML EUR-Lex.
+
+    Marche pour tout acte présent dans data/raw/ (pas besoin qu'il soit dans le registry) ;
+    le CELEX est repris du registry s'il y figure, sinon déduit du nom du HTML en cache.
+    """
+    entry = load_sources_registry().get(source_id)
+    level = entry.level if entry else 1
+    title = entry.title if entry else source_id
+    if consolidated:
+        base_celex = entry.celex if entry else _celex_from_cache(raw_dir, source_id)
+        if not base_celex:
+            raise typer.BadParameter(f"CELEX de base inconnu pour {source_id} (ni registry ni cache)")
+        celex = latest_consolidated_celex(base_celex)
+        if celex is None:
+            raise typer.BadParameter(f"aucune version consolidée trouvée pour {source_id}")
+        typer.echo(f"# version consolidée : {celex}", err=True)
+        html_en_text, html_fr_text = fetch_html(celex, "EN"), ""
+    else:
+        html_en = _largest_cached_html(raw_dir, source_id, "EN")
+        html_fr = _largest_cached_html(raw_dir, source_id, "FR")
+        if html_en is None:
+            raise typer.BadParameter(f"HTML EN requis en cache pour {source_id} dans {raw_dir}")
+        if html_fr is None:
+            typer.echo(f"# note: pas de HTML FR pour {source_id} — glossaire EN seul", err=True)
+        celex = entry.celex if entry else html_en.name.split("_", 1)[0]
+        html_en_text = html_en.read_text(encoding="utf-8")
+        html_fr_text = html_fr.read_text(encoding="utf-8") if html_fr is not None else ""
     terms = harvest_glossary(
-        html_en.read_text(encoding="utf-8"),
-        html_fr.read_text(encoding="utf-8") if html_fr is not None else "",
+        html_en_text,
+        html_fr_text,
         source_id=source_id,
-        celex=entry.celex,
-        level=entry.level,
+        celex=celex,
+        level=level,
         act_label=act_label or source_id.split("_")[0],
         definitions_article=definitions_article or None,
     )
@@ -244,9 +272,9 @@ def glossary(
         terms,
         out_dir,
         source_id=source_id,
-        title=f"Glossaire {source_id} — {entry.title}",
+        title=f"Glossaire {source_id} — {title}",
         yaml_header=(
-            f"# Glossaire des termes définis — {source_id} ({entry.title}).\n"
+            f"# Glossaire des termes définis — {source_id} ({title}).\n"
             "# Généré par `regindex glossary` depuis le HTML EUR-Lex. 1 entrée = 1 terme défini.\n\n"
         ),
     )
