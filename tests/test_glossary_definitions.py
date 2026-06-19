@@ -94,6 +94,15 @@ def test_harvest_glossary_en_only() -> None:
     assert terms[0].term_fr == ""
 
 
+def test_harvest_glossary_tolerates_unparsable_fr() -> None:
+    """FR illisible (article de définitions absent) : EN seul, jamais d'exception."""
+    html_en = _html("EN", EN_O, EN_C, terms=[("a", "alpha", "means X")])
+    terms = harvest_glossary(html_en, "<html><body><p>rien d'utile</p></body></html>", source_id="TEST")
+    assert len(terms) == 1
+    assert terms[0].term_en == "alpha"
+    assert terms[0].term_fr == ""
+
+
 def test_harvest_glossary_applies_overrides() -> None:
     html_en = _html("EN", EN_O, EN_C, terms=[("a", "alpha", "means X")])
     html_fr = _html("FR", FR_O, FR_C, terms=[("a", "alpha_fr", "signifie X")])

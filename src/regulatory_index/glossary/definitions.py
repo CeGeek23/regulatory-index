@@ -264,9 +264,12 @@ def harvest_glossary(
     en_text = _definitions_text(html_en, definitions_article, source_id, celex, "EN", level)
     en_points = parse_points(en_text, language="EN")
     fr_points: dict[str, ParsedPoint] = {}
-    if html_fr:  # FR optionnel : tous les actes n'ont pas leur version FR sous la main
-        fr_text = _definitions_text(html_fr, definitions_article, source_id, celex, "FR", level)
-        fr_points = {p.label: p for p in parse_points(fr_text, language="FR")}
+    if html_fr:  # FR optionnel et best-effort : ne doit jamais casser l'extraction EN
+        try:
+            fr_text = _definitions_text(html_fr, definitions_article, source_id, celex, "FR", level)
+            fr_points = {p.label: p for p in parse_points(fr_text, language="FR")}
+        except ValueError:
+            fr_points = {}  # article de définitions absent/illisible en FR -> EN seul
 
     terms: list[DefinedTerm] = []
     for ep in en_points:
