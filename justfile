@@ -65,6 +65,10 @@ glossary-l1-cache:
 check-overrides:
     {{uvr}} python scripts/check_overrides.py
 
+# Verse les acteurs du glossaire dans le vocabulaire contrôlé (boucle glossaire -> vocab)
+vocab-sync:
+    {{uvr}} python scripts/vocab_sync.py
+
 # === Pipeline obligations (LM Studio requis) ==============================
 
 # Acquiert le corpus déclaré dans config/sources_manifest.yaml
