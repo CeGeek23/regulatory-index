@@ -165,7 +165,8 @@ src/regulatory_index/   (chaque paquet expose son API publique via __init__.py)
   cli.py               Typer CLI : vocab / acquire / extract / link /
                        export / pipeline / sommaire / glossary
 
-notebooks/             corpus_acquisition (exploration corpus, sans LLM)
+scripts/               build_l1_glossary, vocab_sync, check_overrides,
+                       build_corpus_offline, benchmark_models, run_smoke_e2e
 
 tests/                 pytest (schemas, vocab, sources_registry,
                        examples_loader, schema_builder, unit_loader,

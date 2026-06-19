@@ -48,20 +48,21 @@ dans l'article 4 (et 6) et leur statut actuel :
 ➡️ **Conséquence pour le glossaire** : chaque renvoi doit être re-pointé vers le texte en
 vigueur (colonne de droite). C'est exactement le travail de réconciliation « liste minimale ».
 
-## 3. Périmètre des textes de niveau 1 (à cadrer avec le client)
+## 3. Périmètre des textes de niveau 1
 
-⚠️ **« 15 textes » n'est PAS l'intégralité du niveau 1 UE.** C'est le **périmètre gestion
-d'actifs** que nous avons retenu (AIFMD + les textes que ses définitions visent + les grands
-règlements fonds/marchés). Le niveau 1 au sens large contient bien d'autres textes hors de ce
-périmètre (MAR 596/2014, Prospectus 2017/1129, CSDR 909/2014, Short Selling 236/2012, Benchmarks
-2016/1011, Securitisation 2017/2402, CRA 1060/2009, Solvency II, IDD, DORA…). **Le périmètre est
-donc un choix à trancher**, pas une liste fermée.
+Périmètre retenu = **tout le niveau 1 services financiers (~40 textes)**, énuméré dans
+`L1_PERIMETER` (`scripts/build_l1_glossary.py`) : fonds, marchés, banque/résolution, assurance,
+paiements, durabilité, crypto/numérique, financement participatif, retraite, LCB-FT. (« Niveau 1
+UE » au sens littéral engloberait aussi le droit non-financier — agriculture, environnement… —
+hors de notre scope.)
 
-Périmètre gestion d'actifs (article de définitions de chacun) :
+La table ci-dessous détaille le **noyau gestion d'actifs** (les textes que les définitions d'AIFMD
+visent directement) ; les autres (MAR, Prospectus, CSDR, Short Selling, Benchmarks, Securitisation,
+CRA, Solvency II, IDD, DORA, MiCA, PSD2…) sont **aussi moissonnés** — voir `L1_PERIMETER`.
 
 | Texte | CELEX | Art. définitions | Remarque |
 |---|---|---|---|
-| AIFMD | 32011L0061 (cons. 2024/927) | **Art. 4** | ✅ moissonné |
+| AIFMD | 32011L0061 (cons. 2024/927) | **Art. 4** | directive-cadre AIFM |
 | OPCVM (UCITS) | 32009L0065 | Art. 2 | renvoyé par AIFMD (a, ao) |
 | MiFID II | 32014L0065 | Art. 4 | remplace MiFID I, renvoyé par AIFMD (n, ag) |
 | MiFIR | 32014R0600 | Art. 2 | jumeau règlement de MiFID II |
