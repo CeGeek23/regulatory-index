@@ -72,7 +72,7 @@ Vérification rapide (ou simplement `just check`) :
 just check                       # lint + types + tests (72 tests)
 # équivalents directs :
 uv run --no-sync ruff check src/ tests/ scripts/
-uv run --no-sync mypy src/ tests/
+uv run --no-sync mypy src/ tests/ scripts/
 uv run --no-sync python -m pytest -q
 ```
 

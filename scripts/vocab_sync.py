@@ -53,7 +53,7 @@ def main() -> int:
         )
 
     used_ids = set(actors.ids)
-    new: dict[str, dict[str, str]] = {}
+    new: dict[str, dict[str, object]] = {}  # valeurs mixtes (str + aliases: list)
     for source_id in sorted(p.stem for p in OVERRIDES.glob("*.yaml")):
         html = sorted((RAW / source_id).glob("*_EN_*.html"), key=lambda p: p.stat().st_size, reverse=True)
         if not html:

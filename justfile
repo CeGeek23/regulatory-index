@@ -34,7 +34,7 @@ lint:
 
 # Typage strict (mypy)
 types:
-    {{uvr}} mypy src/ tests/
+    {{uvr}} mypy src/ tests/ scripts/
 
 # Tout vérifier : lint + types + tests
 check: lint types test
