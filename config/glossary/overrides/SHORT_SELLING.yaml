@@ -1,0 +1,37 @@
+# Glossaire SHORT_SELLING — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+a:
+  type: concept
+b:
+  type: concept
+c:
+  type: concept
+d:
+  type: actor
+e:
+  type: concept
+f:
+  type: concept
+g:
+  type: concept
+h:
+  type: concept
+i:
+  type: concept
+j:
+  type: supervisor
+k:
+  type: concept
+l:
+  type: actor
+m:
+  type: actor
+n:
+  type: actor
+o:
+  type: actor
+p:
+  type: concept
+q:
+  type: concept

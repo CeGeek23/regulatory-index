@@ -90,22 +90,26 @@ Au-delà des définitions, on a amorcé l'**extraction des obligations** sur le 
 
 ## 10. Où on en est, concrètement
 
-**Périmètre niveau 1 traité — 15 textes**, leur article de définitions moissonné automatiquement
-(récupérés via l'API officielle de l'Office des publications de l'UE) :
+**Périmètre « tout le niveau 1 services financiers » — ~40 textes**, leur article de définitions
+moissonné automatiquement (API Cellar de l'Office des publications). Couvre : fonds (AIFMD L1/L2,
+UCITS, ELTIF, MMFR, EuVECA, EuSEF), marchés (MiFID II, MiFIR, MAR, MAD II, Prospectus, CSDR,
+Short Selling, Benchmarks, Securitisation, SFTR, EMIR, Transparence, CRA), banque/résolution
+(CRR, CRD IV, BRRD, SRMR, DGSD), assurance (Solvabilité II, IDD), paiements (DSP2, monnaie
+électronique), durabilité (SFDR, Taxonomie), numérique (MiCA, DORA), financement participatif
+(ECSP), retraite (PEPP, IORP II), LCB-FT (LBC-FT), comptable, AEMF/ESMA.
 
-- **AIFMD** (2011/61, art. 4) et son **niveau 2** (231/2013, art. 1) — vérifiés (41/41 termes pour l'art. 4) ;
-- **OPCVM/UCITS** (art. 2), **MiFID II** (art. 4), **MiFIR** (art. 2), **CRR** (art. 4), **CRD IV** (art. 3),
-  **directive comptable** (art. 2), **PRIIPs** (art. 4), **SFDR** (art. 2), **ELTIF** (art. 2),
-  **fonds monétaires/MMFR** (art. 2), **EMIR** (art. 2), **distribution transfrontalière** (art. 4),
-  **Taxonomie** (art. 2).
+**Résultat consolidé :** **1 271 termes définis → 782 termes distincts** (liste minimale
+dédoublonnée) → **214 acteurs isolés**, dont **38 partagés par ≥3 textes** (ex. « credit
+institution », « competent authority »). La dédup relie le même terme entre actes et garde la
+trace de toutes ses bases légales.
 
-**Résultat consolidé :** **511 termes définis → 329 termes distincts** (liste minimale dédoublonnée)
-→ **84 acteurs isolés**, dont **39 partagés** entre plusieurs textes (ex. « credit institution »
-dans 5 textes, « competent authority » dans 5 textes). La dédup relie automatiquement le même
-terme entre actes et garde la trace de toutes ses bases légales.
+**Statut de la classification acteur/concept** : AIFMD L1/L2 sont **relus à la main** ; les
+**~38 autres textes sont classés automatiquement** (extraction fidèle, classification générée et
+**marquée « à RELIRE »** dans chaque override). Couverture FR : 52/214 acteurs (les textes ajoutés
+en masse n'ont été récupérés qu'en EN).
 
-**Méthode validée comme réplicable** : un seul code traite les définitions qu'elles soient en
-(a)(b)(c) ou en (1)(2)(3), avec différents styles de guillemets, en EN seul ou EN+FR.
+**Méthode validée comme réplicable** : un seul code traite les définitions en (a)(b)(c) ou
+(1)(2)(3), plusieurs styles de guillemets, format de base ou consolidé, EN seul ou EN+FR.
 
 ## 11. Ce qui reste à faire
 

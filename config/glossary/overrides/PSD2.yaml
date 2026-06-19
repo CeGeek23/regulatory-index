@@ -1,0 +1,99 @@
+# Glossaire PSD2 — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+'1':
+  type: concept
+'2':
+  type: concept
+'3':
+  type: concept
+'4':
+  type: actor
+'5':
+  type: concept
+'6':
+  type: concept
+'7':
+  type: concept
+'8':
+  type: investor
+'9':
+  type: investor
+'10':
+  type: investor
+'11':
+  type: actor
+'12':
+  type: concept
+'13':
+  type: concept
+'14':
+  type: concept
+'15':
+  type: concept
+'16':
+  type: concept
+'17':
+  type: actor
+'18':
+  type: actor
+'19':
+  type: actor
+'20':
+  type: investor
+'21':
+  type: concept
+'22':
+  type: concept
+'23':
+  type: concept
+'24':
+  type: concept
+'25':
+  type: concept
+'26':
+  type: concept
+'27':
+  type: concept
+'28':
+  type: concept
+'29':
+  type: concept
+'30':
+  type: concept
+'31':
+  type: concept
+'32':
+  type: concept
+'33':
+  type: concept
+'34':
+  type: concept
+'35':
+  type: concept
+'36':
+  type: concept
+'37':
+  type: concept
+'38':
+  type: actor
+'39':
+  type: concept
+'40':
+  type: concept
+'41':
+  type: concept
+'42':
+  type: concept
+'43':
+  type: concept
+'44':
+  type: concept
+'45':
+  type: concept
+'46':
+  type: concept
+'47':
+  type: concept
+'48':
+  type: concept

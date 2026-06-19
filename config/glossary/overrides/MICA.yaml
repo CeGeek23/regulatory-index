@@ -1,0 +1,105 @@
+# Glossaire MICA — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+'1':
+  type: concept
+'2':
+  type: concept
+'3':
+  type: concept
+'4':
+  type: concept
+'5':
+  type: concept
+'6':
+  type: concept
+'7':
+  type: concept
+'8':
+  type: concept
+'9':
+  type: concept
+'10':
+  type: actor
+'11':
+  type: actor
+'12':
+  type: concept
+'13':
+  type: actor
+'14':
+  type: concept
+'15':
+  type: actor
+'16':
+  type: concept
+'17':
+  type: concept
+'18':
+  type: concept
+'19':
+  type: concept
+'20':
+  type: concept
+'21':
+  type: concept
+'22':
+  type: concept
+'23':
+  type: concept
+'24':
+  type: concept
+'25':
+  type: concept
+'26':
+  type: concept
+'27':
+  type: actor
+'28':
+  type: actor
+'29':
+  type: actor
+'30':
+  type: investor
+'31':
+  type: concept
+'32':
+  type: concept
+'33':
+  type: concept
+'34':
+  type: concept
+'35':
+  type: supervisor
+'36':
+  type: concept
+'37':
+  type: investor
+'38':
+  type: concept
+'39':
+  type: investor
+'40':
+  type: concept
+'41':
+  type: concept
+'42':
+  type: actor
+'43':
+  type: actor
+'44':
+  type: concept
+'45':
+  type: concept
+'46':
+  type: actor
+'47':
+  type: actor
+'48':
+  type: actor
+'49':
+  type: concept
+'50':
+  type: concept
+'51':
+  type: concept

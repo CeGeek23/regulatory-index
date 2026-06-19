@@ -1,0 +1,39 @@
+# Glossaire ECSP — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+a:
+  type: concept
+b:
+  type: concept
+c:
+  type: concept
+d:
+  type: concept
+e:
+  type: actor
+f:
+  type: concept
+g:
+  type: investor
+h:
+  type: actor
+i:
+  type: investor
+j:
+  type: investor
+k:
+  type: investor
+l:
+  type: concept
+m:
+  type: concept
+n:
+  type: concept
+o:
+  type: concept
+p:
+  type: concept
+q:
+  type: concept
+r:
+  type: supervisor

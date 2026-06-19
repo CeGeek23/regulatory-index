@@ -1,0 +1,111 @@
+# Glossaire SRMR — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+'1':
+  type: supervisor
+'2':
+  type: supervisor
+'3':
+  type: supervisor
+'4':
+  type: supervisor
+'5':
+  type: concept
+'6':
+  type: concept
+'7':
+  type: concept
+'8':
+  type: concept
+'9':
+  type: concept
+'10':
+  type: concept
+'11':
+  type: concept
+'12':
+  type: concept
+'13':
+  type: actor
+'14':
+  type: actor
+'15':
+  type: actor
+'16':
+  type: concept
+'17':
+  type: concept
+'18':
+  type: concept
+'19':
+  type: concept
+'20':
+  type: concept
+'21':
+  type: concept
+'22':
+  type: concept
+'23':
+  type: concept
+'24':
+  type: concept
+'25':
+  type: concept
+'26':
+  type: supervisor
+'27':
+  type: supervisor
+'28':
+  type: concept
+'29':
+  type: concept
+'30':
+  type: concept
+'31':
+  type: concept
+'32':
+  type: concept
+'33':
+  type: concept
+'34':
+  type: concept
+'35':
+  type: concept
+'36':
+  type: concept
+'37':
+  type: concept
+'38':
+  type: concept
+'39':
+  type: concept
+'40':
+  type: concept
+'41':
+  type: concept
+'42':
+  type: concept
+'43':
+  type: concept
+'44':
+  type: concept
+'45':
+  type: concept
+'46':
+  type: concept
+'47':
+  type: concept
+'48':
+  type: concept
+'49':
+  type: concept
+'50':
+  type: concept
+'51':
+  type: concept
+'52':
+  type: concept
+'53':
+  type: investor
+'54':
+  type: investor

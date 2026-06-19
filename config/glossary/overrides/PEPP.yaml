@@ -1,0 +1,69 @@
+# Glossaire PEPP — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+'1':
+  type: concept
+'2':
+  type: concept
+'3':
+  type: investor
+'4':
+  type: concept
+'5':
+  type: concept
+'6':
+  type: investor
+'7':
+  type: investor
+'8':
+  type: concept
+'9':
+  type: concept
+'10':
+  type: concept
+'11':
+  type: concept
+'12':
+  type: concept
+'13':
+  type: concept
+'14':
+  type: concept
+'15':
+  type: actor
+'16':
+  type: actor
+'17':
+  type: concept
+'18':
+  type: supervisor
+'19':
+  type: concept
+'20':
+  type: concept
+'21':
+  type: concept
+'22':
+  type: concept
+'23':
+  type: concept
+'24':
+  type: concept
+'25':
+  type: concept
+'26':
+  type: actor
+'27':
+  type: concept
+'28':
+  type: concept
+'29':
+  type: concept
+'30':
+  type: concept
+'31':
+  type: concept
+'32':
+  type: concept
+'33':
+  type: concept

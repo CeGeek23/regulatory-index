@@ -1,0 +1,133 @@
+# Glossaire DORA — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+'1':
+  type: concept
+'2':
+  type: concept
+'3':
+  type: concept
+'4':
+  type: concept
+'5':
+  type: concept
+'6':
+  type: concept
+'7':
+  type: concept
+'8':
+  type: concept
+'9':
+  type: concept
+'10':
+  type: concept
+'11':
+  type: concept
+'12':
+  type: concept
+'13':
+  type: concept
+'14':
+  type: concept
+'15':
+  type: concept
+'16':
+  type: concept
+'17':
+  type: concept
+'18':
+  type: concept
+'19':
+  type: actor
+'20':
+  type: actor
+'21':
+  type: concept
+'22':
+  type: concept
+'23':
+  type: actor
+'24':
+  type: actor
+'25':
+  type: concept
+'26':
+  type: concept
+'27':
+  type: concept
+'28':
+  type: actor
+'29':
+  type: concept
+'30':
+  type: actor
+'31':
+  type: actor
+'32':
+  type: actor
+'33':
+  type: actor
+'34':
+  type: actor
+'35':
+  type: actor
+'36':
+  type: actor
+'37':
+  type: actor
+'38':
+  type: actor
+'39':
+  type: actor
+'40':
+  type: actor
+'41':
+  type: actor
+'42':
+  type: actor
+'43':
+  type: concept
+'44':
+  type: actor
+'45':
+  type: actor
+'46':
+  type: actor
+'47':
+  type: actor
+'48':
+  type: actor
+'49':
+  type: actor
+'50':
+  type: actor
+'51':
+  type: actor
+'52':
+  type: actor
+'53':
+  type: actor
+'54':
+  type: actor
+'55':
+  type: actor
+'56':
+  type: actor
+'57':
+  type: actor
+'58':
+  type: actor
+'59':
+  type: actor
+'60':
+  type: actor
+'61':
+  type: supervisor
+'62':
+  type: supervisor
+'63':
+  type: actor
+'64':
+  type: actor
+'65':
+  type: supervisor

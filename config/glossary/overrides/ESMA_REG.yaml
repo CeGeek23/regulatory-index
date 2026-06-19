@@ -1,0 +1,9 @@
+# Glossaire ESMA_REG — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+'1':
+  type: actor
+'2':
+  type: actor
+'3':
+  type: supervisor

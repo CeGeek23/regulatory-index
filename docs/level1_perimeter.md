@@ -12,10 +12,11 @@ Pour chaque texte de niveau 1 :
    liste de tous les termes (acteurs + concepts), bilingue EN/FR, avec base légale et renvois ;
 3. réconcilier les termes communs entre textes (un concept = une entrée — la « liste minimale »).
 
-Statut actuel : **les 15 textes du périmètre sont moissonnés** — **329 termes distincts,
-84 acteurs isolés** (sortie : `data/exports/glossary_L1_minimal.csv` + `glossary_L1_actors.csv` ;
-détail et limites dans `docs/approche_glossaire.md`). Génération de bout en bout :
-`uv run python scripts/build_l1_glossary.py` (auto-fetch via Cellar).
+Statut actuel : **~40 textes du niveau 1 services financiers moissonnés** — **782 termes
+distincts, 214 acteurs isolés** (sortie : `data/exports/glossary_L1_minimal.csv` +
+`glossary_L1_actors.csv` ; détail et limites dans `docs/approche_glossaire.md`). Classification
+acteur/concept relue à la main pour AIFMD, **générée « à relire » pour les autres textes**.
+Génération de bout en bout : `uv run python scripts/build_l1_glossary.py` (auto-fetch via Cellar).
 
 ## 2. Le point « textes les plus à jour » ⚠️
 
@@ -77,10 +78,11 @@ Périmètre gestion d'actifs (article de définitions de chacun) :
 | Distribution transfrontalière (Règl.) | 32019R1156 | Art. 4 | commercialisation/pré-commercialisation FIA & OPCVM |
 | Distribution transfrontalière (Dir.) | 32019L1160 | — | jumeau directive du Règl. 2019/1156 |
 
-**Statut** : **moissonnés** — AIFMD L1/L2, UCITS, MiFID II, MiFIR, CRR, CRD IV, directive
-comptable, PRIIPs, SFDR, ELTIF, MMFR, Taxonomie, EMIR, distribution transfrontalière (règlement
-2019/1156). **Non encore traités** : EuVECA / EuSEF (345/346) et la directive distribution
-2019/1160 — à ajouter si le client veut les inclure.
+**Statut** : le périmètre a été **élargi à tout le niveau 1 services financiers (~40 textes)** —
+la liste exhaustive moissonnée est dans `scripts/build_l1_glossary.py` (`L1_PERIMETER`) : fonds,
+marchés, banque/résolution, assurance, paiements, durabilité, crypto/numérique, etc. **Seul cas
+non moissonné** : la directive distribution transfrontalière **2019/1160** — directive *modificative*
+sans article de définitions propre (rien à extraire).
 
 ## 4. Récupération des textes & ce qui reste
 

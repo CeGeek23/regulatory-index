@@ -1,0 +1,55 @@
+# Glossaire PROSPECTUS — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+a:
+  type: concept
+b:
+  type: concept
+c:
+  type: concept
+d:
+  type: concept
+e:
+  type: investor
+f:
+  type: concept
+g:
+  type: actor
+h:
+  type: actor
+i:
+  type: actor
+j:
+  type: concept
+k:
+  type: concept
+l:
+  type: concept
+m:
+  type: concept
+n:
+  type: concept
+o:
+  type: supervisor
+p:
+  type: concept
+q:
+  type: concept
+r:
+  type: concept
+s:
+  type: concept
+t:
+  type: concept
+u:
+  type: concept
+v:
+  type: concept
+w:
+  type: concept
+x:
+  type: actor
+y:
+  type: concept
+z:
+  type: concept

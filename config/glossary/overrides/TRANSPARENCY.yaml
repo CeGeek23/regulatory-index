@@ -1,0 +1,35 @@
+# Glossaire TRANSPARENCY — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+a:
+  type: concept
+b:
+  type: concept
+c:
+  type: concept
+d:
+  type: actor
+e:
+  type: investor
+f:
+  type: concept
+g:
+  type: concept
+h:
+  type: concept
+i:
+  type: concept
+j:
+  type: concept
+k:
+  type: concept
+l:
+  type: concept
+m:
+  type: actor
+n:
+  type: actor
+o:
+  type: actor
+p:
+  type: concept

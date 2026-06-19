@@ -1,0 +1,61 @@
+# Glossaire BENCHMARKS — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+'1':
+  type: concept
+'2':
+  type: actor
+'3':
+  type: concept
+'4':
+  type: concept
+'5':
+  type: concept
+'6':
+  type: actor
+'7':
+  type: concept
+'8':
+  type: concept
+'9':
+  type: actor
+'10':
+  type: actor
+'11':
+  type: actor
+'12':
+  type: actor
+'13':
+  type: concept
+'14':
+  type: concept
+'15':
+  type: concept
+'16':
+  type: concept
+'17':
+  type: actor
+'18':
+  type: concept
+'19':
+  type: concept
+'20':
+  type: actor
+'21':
+  type: investor
+'22':
+  type: concept
+'23':
+  type: concept
+'24':
+  type: concept
+'25':
+  type: concept
+'26':
+  type: concept
+'27':
+  type: concept
+'28':
+  type: concept
+'29':
+  type: supervisor

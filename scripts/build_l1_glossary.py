@@ -39,11 +39,31 @@ ACTOR_TYPES = {"actor", "investor", "supervisor"}
 # depuis zéro. NB : CELEX de base (texte d'origine) ; les versions consolidées « à jour »
 # ont un CELEX daté distinct (cf. docs/level1_perimeter.md).
 L1_PERIMETER = {
+    # Fonds / gestion d'actifs
     "AIFMD_L1": "32011L0061", "AIFMD_L2": "32013R0231", "UCITS": "32009L0065",
-    "MIFID2": "32014L0065", "MIFIR": "32014R0600", "CRR": "32013R0575",
-    "CRD4": "32013L0036", "ACCOUNTING": "32013L0034", "PRIIPS": "32014R1286",
-    "SFDR": "32019R2088", "ELTIF": "32015R0760", "MMFR": "32017R1131",
-    "TAXONOMY": "32020R0852", "EMIR": "32012R0648", "CBDF": "32019R1156",
+    "ELTIF": "32015R0760", "MMFR": "32017R1131", "EUVECA": "32013R0345",
+    "EUSEF": "32013R0346", "CBDF_REG": "32019R1156", "CBDF_DIR": "32019L1160",
+    # Marchés
+    "MIFID2": "32014L0065", "MIFIR": "32014R0600", "MAR": "32014R0596",
+    "MAD2": "32014L0057", "PROSPECTUS": "32017R1129", "CSDR": "32014R0909",
+    "SHORT_SELLING": "32012R0236", "BENCHMARKS": "32016R1011",
+    "SECURITISATION": "32017R2402", "SFTR": "32015R2365", "EMIR": "32012R0648",
+    "TRANSPARENCY": "32004L0109", "CRA": "32009R1060",
+    # Banque / prudentiel
+    "CRR": "32013R0575", "CRD4": "32013L0036", "BRRD": "32014L0059",
+    "SRMR": "32014R0806", "DGSD": "32014L0049",
+    # Assurance
+    "SOLVENCY2": "32009L0138", "IDD": "32016L0097",
+    # Paiements
+    "PSD2": "32015L2366", "EMONEY2": "32009L0110",
+    # Durabilité
+    "SFDR": "32019R2088", "TAXONOMY": "32020R0852",
+    # Numérique / crypto
+    "MICA": "32023R1114", "DORA": "32022R2554",
+    # Financement participatif / retraite / LBC-FT / comptable / AES
+    "ECSP": "32020R1503", "PEPP": "32019R1238", "IORP2": "32016L2341",
+    "ACCOUNTING": "32013L0034", "AMLD": "32015L0849", "PRIIPS": "32014R1286",
+    "ESMA_REG": "32010R1095",
 }
 
 
