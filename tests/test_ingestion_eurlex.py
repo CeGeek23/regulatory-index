@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-from regulatory_index.ingestion.eurlex_fetcher import eurlex_url
+from regulatory_index.ingestion.eurlex_fetcher import cellar_url, language_code
 from regulatory_index.ingestion.eurlex_html_parser import parse_articles
 
 
-def test_eurlex_url_pattern() -> None:
-    assert eurlex_url("32011L0061", "EN").endswith("CELEX:32011L0061")
-    assert "/EN/" in eurlex_url("32011L0061", "EN")
-    assert "/FR/" in eurlex_url("32011L0061", "fr")
+def test_cellar_url_and_language() -> None:
+    assert cellar_url("32011L0061") == "http://publications.europa.eu/resource/celex/32011L0061"
+    assert "publications.europa.eu" in cellar_url("32011L0061")
+    assert language_code("EN") == "eng"
+    assert language_code("fr") == "fra"
 
 
 _SAMPLE_HTML = """

@@ -27,14 +27,45 @@ config/vocabularies/actors.yaml. Les termes ni typés ni résolus sont listés �
 from __future__ import annotations
 
 import csv
+import sys
 from pathlib import Path
 
 from regulatory_index.glossary import DefinedTerm, harvest_glossary
+from regulatory_index.ingestion.eurlex_fetcher import fetch_to_disk
 from regulatory_index.refdata.vocab import load_vocabulary
 
 RAW = Path("data/raw")
 OUT = Path("data/exports")
 ACTOR_TYPES = {"actor", "investor", "supervisor"}
+
+# Périmètre niveau 1 (source_id -> CELEX de base). Récupéré via l'API Cellar (cf.
+# eurlex_fetcher) pour que `uv run python scripts/build_l1_glossary.py` soit reproductible
+# depuis zéro. NB : CELEX de base (texte d'origine) ; les versions consolidées « à jour »
+# ont un CELEX daté distinct (cf. docs/level1_perimeter.md).
+L1_PERIMETER = {
+    "AIFMD_L1": "32011L0061", "AIFMD_L2": "32013R0231", "UCITS": "32009L0065",
+    "MIFID2": "32014L0065", "MIFIR": "32014R0600", "CRR": "32013R0575",
+    "CRD4": "32013L0036", "ACCOUNTING": "32013L0034", "PRIIPS": "32014R1286",
+    "SFDR": "32019R2088", "ELTIF": "32015R0760", "MMFR": "32017R1131",
+    "TAXONOMY": "32020R0852", "EMIR": "32012R0648", "CBDF": "32019R1156",
+}
+
+
+def _ensure_cached() -> None:
+    """Récupère le HTML EN manquant de chaque texte du périmètre via Cellar (idempotent).
+
+    Best-effort : une source déjà en cache est sautée ; un échec réseau est signalé et
+    n'interrompt pas (on tourne alors sur ce qui est en cache). Désactivable via --no-fetch.
+    """
+    for source_id, celex in L1_PERIMETER.items():
+        folder = RAW / source_id
+        if list(folder.glob("*_EN_*.html")):
+            continue
+        try:
+            path = fetch_to_disk(celex, "EN", folder)
+            print(f"  fetch {source_id} EN: {path.name}")
+        except Exception as exc:  # réseau indisponible / WAF / CELEX inconnu
+            print(f"  fetch {source_id} EN: échec ({type(exc).__name__}) — ignoré")
 
 
 def _largest(folder: Path, lang: str) -> Path | None:
@@ -63,6 +94,10 @@ def main() -> int:
         if objects_vocab.resolve(t.term_en) is not None or objects_vocab.resolve(t.term_fr) is not None:
             return "concept"
         return "untyped"
+
+    if "--no-fetch" not in sys.argv:
+        print("Récupération du périmètre L1 manquant (API Cellar) — --no-fetch pour sauter :")
+        _ensure_cached()
 
     all_terms: list[DefinedTerm] = []
     if not RAW.exists():
