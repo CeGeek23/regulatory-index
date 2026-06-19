@@ -114,6 +114,25 @@ def _first_quoted(text: str, language: str) -> str:
         return text[start + 1 : end].strip()
 
 
+def _parse_unlabelled(lines: list[str], language: str) -> list[ParsedPoint]:
+    """Repli pour les versions CONSOLIDÉES : pas d'étiquette (a)(b), une définition par ligne.
+
+    Dans le rendu consolidé EUR-Lex, chaque définition est une ligne « 'terme' … » sans
+    étiquette de point. On prend chaque ligne commençant par un guillemet ouvrant comme un
+    terme défini, et on synthétise des étiquettes séquentielles (a, b, c, ... — positionnelles).
+    """
+    opens = tuple(open_q for open_q, _ in _QUOTE_PAIRS[language.upper()])
+    labels = _letter_labels()
+    points: list[ParsedPoint] = []
+    for line in lines:
+        if not line.startswith(opens):
+            continue
+        term = _first_quoted(line, language)
+        if term:
+            points.append(ParsedPoint(label=next(labels), term=term, definition=line))
+    return points
+
+
 def _is_paragraph_boundary(line: str) -> bool:
     """Vrai si la ligne ouvre un nouveau paragraphe de premier niveau ('2.', '3.' ...).
 
@@ -144,7 +163,7 @@ def parse_points(text: str, *, language: Language) -> list[ParsedPoint]:
     letters_at = first_index("a")
     numbers_at = first_index("1")
     if letters_at == -1 and numbers_at == -1:
-        return []
+        return _parse_unlabelled(lines, language)  # versions consolidées : pas d'étiquettes
     use_letters = letters_at != -1 and (numbers_at == -1 or letters_at <= numbers_at)
     labels = _letter_labels() if use_letters else _number_labels()
 

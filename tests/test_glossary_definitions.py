@@ -85,6 +85,22 @@ def test_harvest_glossary_bilingual() -> None:
     assert by_label["a"].cites == []
 
 
+def test_parse_points_unlabelled_consolidated() -> None:
+    """Versions consolidées : définitions sans étiquette -> étiquettes synthétiques séquentielles."""
+    text = "\n".join(
+        [
+            "Article 2",
+            "For the purposes of this Directive the following definitions apply:",
+            f"{EN_O}alpha{EN_C} means the first letter;",
+            f"{EN_O}beta{EN_C} means the second letter;",
+            f"{EN_O}gamma{EN_C} means the third letter;",
+        ]
+    )
+    points = parse_points(text, language="EN")
+    assert [p.label for p in points] == ["a", "b", "c"]
+    assert [p.term for p in points] == ["alpha", "beta", "gamma"]
+
+
 def test_harvest_glossary_en_only() -> None:
     """FR optionnel : un acte sans version FR sous la main produit quand même son glossaire."""
     html_en = _html("EN", EN_O, EN_C, terms=[("a", "alpha", "means a body")])

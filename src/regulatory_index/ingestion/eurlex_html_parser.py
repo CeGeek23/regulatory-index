@@ -34,9 +34,23 @@ def _clean_whitespace(s: str) -> str:
     return " ".join(s.split())
 
 
+# Classe du paragraphe de titre d'article : "oj-ti-art" dans le rendu de base, et
+# "title-article-norm" dans les versions CONSOLIDÉES (même structure eli-subdivision,
+# classes renommées). On accepte les deux.
+_ARTICLE_TITLE_CLASSES = ("oj-ti-art", "title-article-norm")
+
+
+def _find_article_title(article_div: Tag) -> Tag | None:
+    for css_class in _ARTICLE_TITLE_CLASSES:
+        title = article_div.find("p", class_=css_class)
+        if isinstance(title, Tag):
+            return title
+    return None
+
+
 def _extract_article_number(article_div: Tag) -> str | None:
-    """Le paragraphe 'oj-ti-art' contient 'Article 15' / 'Article 15 a'."""
-    title = article_div.find("p", class_="oj-ti-art")
+    """Le paragraphe de titre contient 'Article 15' / 'Article 15 a'."""
+    title = _find_article_title(article_div)
     if title is None:
         return None
     text = _clean_whitespace(title.get_text(" "))
@@ -57,7 +71,7 @@ def _extract_article_subtitle(article_div: Tag) -> str | None:
 
 def _extract_article_body(article_div: Tag) -> str:
     """Retourne le texte littéral de l'article sans les paragraphes titre/sous-titre."""
-    title = article_div.find("p", class_="oj-ti-art")
+    title = _find_article_title(article_div)
     subtitle = article_div.find("p", class_="oj-sti-art")
     skip_ids = {id(title), id(subtitle)}
     chunks: list[str] = []

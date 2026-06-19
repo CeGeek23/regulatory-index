@@ -52,6 +52,34 @@ def fetch_html(celex: str, language: str, *, timeout: float = 45.0) -> str:
     return response.text
 
 
+def latest_consolidated_celex(base_celex: str, *, timeout: float = 60.0) -> str | None:
+    """CELEX de la dernière version CONSOLIDÉE (« à jour ») d'un acte, sinon None.
+
+    Lit les métadonnées RDF Cellar de l'acte de base et y cherche les CELEX consolidés
+    (préfixe « 0 » + corps, suffixe -AAAAMMJJ), puis retient la date la plus récente.
+    Ex. base 32009L0065 -> 02009L0065-20240109. Tokenisation `str`, sans regex.
+    """
+    prefix = "0" + base_celex[1:]
+    needle = f"celex/{prefix}-"
+    with httpx.Client(
+        headers={"User-Agent": USER_AGENT, "Accept": "application/rdf+xml"},
+        timeout=timeout,
+        follow_redirects=True,
+    ) as client:
+        rdf = client.get(cellar_url(base_celex)).text
+    dates: set[str] = set()
+    cursor = 0
+    while True:
+        pos = rdf.find(needle, cursor)
+        if pos == -1:
+            break
+        date = rdf[pos + len(needle) : pos + len(needle) + 8]
+        if date.isdigit():
+            dates.add(date)
+        cursor = pos + len(needle)
+    return f"{prefix}-{max(dates)}" if dates else None
+
+
 def fetch_to_disk(celex: str, language: str, out_dir: Path) -> Path:
     """Écrit le HTML brut sur disque. Le nom de fichier est reproductible à partir de (celex, langue, sha256)."""
     return persist_html(fetch_html(celex, language), out_dir, f"{celex}_{language.upper()}")
