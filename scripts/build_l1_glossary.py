@@ -6,22 +6,18 @@ Répond à la demande client :
   - liste de tous les termes + liste minimale (un concept = une entrée) ;
   - isolation de tous les acteurs.
 
-À lancer toi-même :
+    uv run python scripts/build_l1_glossary.py            # auto-fetch du périmètre L1
+    uv run python scripts/build_l1_glossary.py --no-fetch  # n'utilise que le cache data/raw/
 
-    uv run python scripts/build_l1_glossary.py
+Le HTML EN manquant du périmètre L1 (cf. L1_PERIMETER) est récupéré automatiquement via
+l'API Cellar (cf. eurlex_fetcher). L'article de définitions de chaque texte est détecté
+automatiquement (sous-titre « Definitions/Définitions », ou à défaut la phrase d'amorce
+« the following definitions… »).
 
-Prérequis (toi) : déposer le HTML EUR-Lex de chaque texte L1 — idéalement les versions
-CONSOLIDÉES (= les plus à jour) — dans :
-
-    data/raw/<SOURCE_ID>/<CELEX>_<EN|FR>_<hash>.html      (EN requis, FR optionnel)
-
-p. ex. data/raw/UCITS/02009L0065_EN_xxxx.html, data/raw/MIFID2/02014L0065_EN_xxxx.html ...
-L'article de définitions est détecté automatiquement (sous-titre « Definitions/Définitions »).
-
-Règle d'acteur (déterministe, sans heuristique) : un terme est ACTEUR si son `type`
-override vaut actor/investor/supervisor, OU s'il résout dans le vocabulaire contrôlé
-config/vocabularies/actors.yaml. Les termes ni typés ni résolus sont listés à part
-(candidats acteurs/concepts à compléter — c'est la boucle « vocab gaps »).
+Règle d'acteur (déterministe, sans heuristique) : le `type` de l'override relu fait foi
+(acteur ssi actor/investor/supervisor) ; UNIQUEMENT pour un terme NON typé, on tente une
+résolution dans le vocabulaire contrôlé config/vocabularies/actors.yaml ; sinon le terme
+est listé « untyped » (candidat à compléter — boucle « vocab gaps »).
 """
 
 from __future__ import annotations

@@ -7,14 +7,15 @@
 ## 1. Méthode
 
 Pour chaque texte de niveau 1 :
-1. récupérer son **sommaire** (`scripts/harvest_sommaire.py`) → localise l'article de définitions ;
-2. moissonner son **article de définitions** (`scripts/harvest_definitions.py`) → liste de tous
-   les termes (acteurs + concepts), bilingue EN/FR, avec base légale et renvois ;
+1. récupérer son **sommaire** (`regindex sommaire` / `glossary.build_toc`) → localise l'article de définitions ;
+2. moissonner son **article de définitions** (`regindex glossary` / `glossary.harvest_glossary`) →
+   liste de tous les termes (acteurs + concepts), bilingue EN/FR, avec base légale et renvois ;
 3. réconcilier les termes communs entre textes (un concept = une entrée — la « liste minimale »).
 
-Statut actuel : **AIFMD niveau 1 (Directive 2011/61/UE) fait** — 41 termes (article 4),
-voir `data/exports/glossary_aifmd_l1.md`. Les autres textes restent à moissonner
-(nécessite leur HTML EUR-Lex ; voir §4).
+Statut actuel : **les 15 textes du périmètre sont moissonnés** — **329 termes distincts,
+84 acteurs isolés** (sortie : `data/exports/glossary_L1_minimal.csv` + `glossary_L1_actors.csv` ;
+détail et limites dans `docs/approche_glossaire.md`). Génération de bout en bout :
+`uv run python scripts/build_l1_glossary.py` (auto-fetch via Cellar).
 
 ## 2. Le point « textes les plus à jour » ⚠️
 
@@ -69,15 +70,19 @@ Au-delà d'AIFMD, le périmètre « niveau 1 » gestion d'actifs (article de dé
 | Distribution transfrontalière (Règl.) | 32019R1156 | Art. 4 | commercialisation/pré-commercialisation FIA & OPCVM |
 | Distribution transfrontalière (Dir.) | 32019L1160 | — | jumeau directive du Règl. 2019/1156 |
 
-**À trancher avec le client** : périmètre minimal (AIFMD + OPCVM + MiFID II, dont AIFMD dépend
-directement) ou univers complet ci-dessus.
+**Statut** : **moissonnés** — AIFMD L1/L2, UCITS, MiFID II, MiFIR, CRR, CRD IV, directive
+comptable, PRIIPs, SFDR, ELTIF, MMFR, Taxonomie, EMIR, distribution transfrontalière (règlement
+2019/1156). **Non encore traités** : EuVECA / EuSEF (345/346) et la directive distribution
+2019/1160 — à ajouter si le client veut les inclure.
 
-## 4. Ce qu'il faut pour étendre
+## 4. Récupération des textes & ce qui reste
 
-- **HTML EUR-Lex de chaque texte** dans `data/raw/{source_id}/` (versions consolidées). EUR-Lex
-  oppose un WAF aux requêtes automatiques (HTTP 202) → soit le fetcher `regindex acquire`
-  passe, soit on dépose le HTML à la main (méthode hors-ligne documentée dans le README).
-- Ajouter chaque texte à `config/sources_registry.yaml` (avec `level: 1`) et à
-  `config/sources_manifest.yaml` (avec `filter_articles: ["<art. de définitions>"]`).
-- Rejouer `scripts/harvest_sommaire.py` puis `scripts/harvest_definitions.py` (à généraliser
-  par texte : aujourd'hui l'enrichissement type/renvois est spécifique à AIFMD art. 4).
+- **Récupération automatique** : le HTML est tiré de l'**API Cellar** de l'Office des publications
+  (`eurlex_fetcher`), qui contourne le WAF anti-bot d'EUR-Lex (le rendu `legal-content` renvoie
+  HTTP 202). `scripts/build_l1_glossary.py` récupère le périmètre L1 manquant tout seul.
+- **Versions consolidées** : `eurlex_fetcher.latest_consolidated_celex` résout le CELEX consolidé
+  le plus récent via les métadonnées RDF (ex. AIFMD → `02011L0061-20260416`, incluant AIFMD II).
+  Le glossaire actuel est bâti sur les textes **d'origine** ; passer au consolidé = re-fetch +
+  **re-classification** (jeux de termes différents).
+- **Reste à faire** : relire la classification acteur/concept générée pour les 14 textes
+  non-AIFMD ; traiter les faux-amis L3 (AMF/ACPR).
