@@ -67,15 +67,22 @@ uv run regindex export
 uv run regindex pipeline data/units/corpus.jsonl
 ```
 
-Vérification rapide :
+Vérification rapide (ou simplement `just check`) :
 ```bash
-uv run regindex vocab            # liste les vocabs chargés (actors, actions, themes...)
-uv run pytest                    # 63 tests passent
-uv run ruff check src/ tests/    # All checks passed
-uv run mypy src/ tests/          # No issues
+just check                       # lint + types + tests (72 tests)
+# équivalents directs :
+uv run --no-sync ruff check src/ tests/ scripts/
+uv run --no-sync mypy src/ tests/
+uv run --no-sync python -m pytest -q
 ```
 
-> ℹ️ Tout passe par `uv run` (qui cible `.venv`). Si ta session shell a déjà un `VIRTUAL_ENV` actif (pyenv/conda), `uv` l'ignore avec un warning ; en cas de `ModuleNotFoundError: regulatory_index`, relance `uv sync` (ou `deactivate` l'autre env).
+> ⚠️ **Quirk d'install connu sur ce `.venv`** : le re-sync implicite de `uv run` **désinstalle**
+> le paquet `regulatory_index` (la racine éditable de l'`uv.lock` est « checked » mais retombe
+> hors `site-packages`) → `uv run regindex …` lève `ModuleNotFoundError`. **Contournements** :
+> utilise le **`justfile`** (toutes les recettes passent par `uv run --no-sync`, robuste), ou
+> réinstalle avant un appel CLI direct : `uv sync --reinstall-package regulatory-index`.
+> En CI (env neuf), `uv sync` installe correctement la racine — pas de souci.
+> Le `VIRTUAL_ENV` de ta session shell est ignoré par uv (warning bénin, il cible `.venv`).
 
 ## Sources prises en charge
 
