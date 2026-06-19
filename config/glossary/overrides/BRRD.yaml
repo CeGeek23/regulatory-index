@@ -18,9 +18,9 @@
 '8':
   type: concept
 '9':
-  type: actor
+  type: concept
 '10':
-  type: actor
+  type: concept
 '11':
   type: actor
 '12':
@@ -98,7 +98,7 @@
 '48':
   type: concept
 '49':
-  type: concept
+  type: actor
 '50':
   type: concept
 '51':
@@ -208,7 +208,7 @@
 '103':
   type: concept
 '104':
-  type: actor
+  type: investor
 '105':
   type: investor
 '106':
