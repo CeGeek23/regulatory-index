@@ -108,17 +108,28 @@ trace de toutes ses bases légales.
 **marquée « à RELIRE »** dans chaque override). Couverture FR : 52/214 acteurs (les textes ajoutés
 en masse n'ont été récupérés qu'en EN).
 
+**Boucle glossaire → vocabulaire (le point clé)** : les termes du glossaire sont désormais **versés
+dans le vocabulaire de référence du projet** — **228 acteurs** (`actors.yaml`) et **614 concepts/
+objets** (`objects.yaml`). Autrement dit, les objets identifiés dans les définitions **alimentent
+maintenant l'extraction d'obligations** (reconnaissance des termes + normalisation), exactement la
+finalité « les identifier comme objets pour mieux les lier ». Ces entrées sont versées
+automatiquement et **marquées « à relire »**.
+
 **Méthode validée comme réplicable** : un seul code traite les définitions en (a)(b)(c) ou
 (1)(2)(3), plusieurs styles de guillemets, format de base ou consolidé, EN seul ou EN+FR.
 
 ## 11. Ce qui reste à faire
 
 1. **Relire la classification acteur/concept** : pour AIFMD elle est faite à la main ; pour les
-   14 autres textes elle est **générée automatiquement et marquée « à relire »** (validation métier).
-2. **Basculer sur les versions consolidées** (à jour) plutôt que les textes d'origine.
-3. **Réconcilier les renvois abrogés** vers les textes en vigueur, et **traiter les faux-amis L3**
+   **~38 autres textes** elle est **générée automatiquement et marquée « à relire »** (validation
+   métier). C'est aussi ce qui conditionne la qualité du vocabulaire alimenté (voir §10).
+2. **Élaguer le vocabulaire injecté à l'extraction** : 228 acteurs + 614 objets, c'est beaucoup
+   pour un petit modèle local (risque de dilution du prompt) — à arbitrer après relecture.
+3. **Basculer sur les versions consolidées** (à jour) — la capacité est en place (résolution
+   automatique du dernier CELEX consolidé), à généraliser à tout le périmètre.
+4. **Réconcilier les renvois abrogés** vers les textes en vigueur, et **traiter les faux-amis L3**
    (doctrine AMF/ACPR), non encore intégrés.
-4. **Compléter le bilingue** : le FR n'est récupéré que pour une partie des textes pour l'instant.
+5. **Compléter le bilingue** : le FR n'est récupéré que pour une partie des textes pour l'instant.
 
 ---
 
