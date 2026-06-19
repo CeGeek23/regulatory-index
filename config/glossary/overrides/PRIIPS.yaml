@@ -1,0 +1,19 @@
+# Glossaire PRIIPS — classification acteur/concept (générée, à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+'1':
+  type: concept
+'2':
+  type: concept
+'3':
+  type: concept
+'4':
+  type: actor
+'5':
+  type: actor
+'6':
+  type: investor
+'7':
+  type: concept
+'8':
+  type: supervisor

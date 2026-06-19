@@ -1,0 +1,41 @@
+# Glossaire ELTIF — classification acteur/concept (générée, à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+'1':
+  type: concept
+'2':
+  type: investor
+'3':
+  type: investor
+'4':
+  type: concept
+'5':
+  type: concept
+'6':
+  type: concept
+'7':
+  type: actor
+'8':
+  type: concept
+'9':
+  type: actor
+'10':
+  type: supervisor
+'11':
+  type: concept
+'12':
+  type: actor
+'13':
+  type: supervisor
+'14':
+  type: concept
+'15':
+  type: concept
+'16':
+  type: concept
+'17':
+  type: concept
+'18':
+  type: concept
+'19':
+  type: concept

@@ -1,0 +1,39 @@
+# Glossaire UCITS — classification acteur/concept (générée, à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+a:
+  type: actor
+b:
+  type: actor
+c:
+  type: concept
+d:
+  type: concept
+e:
+  type: concept
+f:
+  type: concept
+g:
+  type: concept
+h:
+  type: supervisor
+i:
+  type: concept
+j:
+  type: concept
+k:
+  type: concept
+l:
+  type: concept
+m:
+  type: concept
+n:
+  type: concept
+o:
+  type: concept
+p:
+  type: concept
+q:
+  type: concept
+r:
+  type: concept

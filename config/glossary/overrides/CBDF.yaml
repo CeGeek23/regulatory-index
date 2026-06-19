@@ -1,0 +1,19 @@
+# Glossaire CBDF — classification acteur/concept (générée, à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+a:
+  type: concept
+b:
+  type: actor
+c:
+  type: actor
+d:
+  type: actor
+e:
+  type: supervisor
+f:
+  type: concept
+g:
+  type: concept
+h:
+  type: actor

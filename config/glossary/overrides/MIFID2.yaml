@@ -1,0 +1,129 @@
+# Glossaire MIFID2 — classification acteur/concept (générée, à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+'1':
+  type: actor
+'2':
+  type: concept
+'3':
+  type: concept
+'4':
+  type: concept
+'5':
+  type: concept
+'6':
+  type: concept
+'7':
+  type: actor
+'8':
+  type: concept
+'9':
+  type: actor
+'10':
+  type: investor
+'11':
+  type: investor
+'12':
+  type: concept
+'13':
+  type: concept
+'14':
+  type: concept
+'15':
+  type: concept
+'16':
+  type: concept
+'17':
+  type: concept
+'18':
+  type: actor
+'19':
+  type: concept
+'20':
+  type: actor
+'21':
+  type: concept
+'22':
+  type: concept
+'23':
+  type: concept
+'24':
+  type: concept
+'25':
+  type: concept
+'26':
+  type: supervisor
+'27':
+  type: actor
+'28':
+  type: actor
+'29':
+  type: actor
+'30':
+  type: concept
+'31':
+  type: concept
+'32':
+  type: concept
+'33':
+  type: concept
+'34':
+  type: concept
+'35':
+  type: concept
+'36':
+  type: actor
+'37':
+  type: actor
+'38':
+  type: concept
+'39':
+  type: concept
+'40':
+  type: concept
+'41':
+  type: concept
+'42':
+  type: concept
+'43':
+  type: concept
+'44':
+  type: concept
+'45':
+  type: concept
+'46':
+  type: concept
+'47':
+  type: concept
+'48':
+  type: concept
+'49':
+  type: concept
+'50':
+  type: concept
+'51':
+  type: actor
+'52':
+  type: actor
+'53':
+  type: actor
+'54':
+  type: actor
+'55':
+  type: concept
+'56':
+  type: concept
+'57':
+  type: actor
+'58':
+  type: concept
+'59':
+  type: concept
+'60':
+  type: actor
+'61':
+  type: concept
+'62':
+  type: concept
+'63':
+  type: actor

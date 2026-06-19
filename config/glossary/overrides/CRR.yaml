@@ -1,0 +1,259 @@
+# Glossaire CRR — classification acteur/concept (générée, à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+'1':
+  type: actor
+'2':
+  type: actor
+'3':
+  type: actor
+'4':
+  type: actor
+'5':
+  type: actor
+'6':
+  type: actor
+'7':
+  type: concept
+'8':
+  type: actor
+'9':
+  type: actor
+'10':
+  type: actor
+'11':
+  type: concept
+'12':
+  type: concept
+'13':
+  type: actor
+'14':
+  type: actor
+'15':
+  type: concept
+'16':
+  type: concept
+'17':
+  type: concept
+'18':
+  type: actor
+'19':
+  type: actor
+'20':
+  type: concept
+'21':
+  type: concept
+'22':
+  type: concept
+'23':
+  type: actor
+'24':
+  type: actor
+'25':
+  type: actor
+'26':
+  type: actor
+'27':
+  type: concept
+'28':
+  type: actor
+'29':
+  type: actor
+'30':
+  type: concept
+'31':
+  type: concept
+'32':
+  type: concept
+'33':
+  type: concept
+'34':
+  type: actor
+'35':
+  type: concept
+'36':
+  type: concept
+'37':
+  type: concept
+'38':
+  type: concept
+'39':
+  type: concept
+'40':
+  type: supervisor
+'41':
+  type: supervisor
+'42':
+  type: concept
+'43':
+  type: concept
+'44':
+  type: concept
+'45':
+  type: actor
+'46':
+  type: actor
+'47':
+  type: concept
+'48':
+  type: concept
+'49':
+  type: concept
+'50':
+  type: concept
+'51':
+  type: concept
+'52':
+  type: concept
+'53':
+  type: concept
+'54':
+  type: concept
+'55':
+  type: concept
+'56':
+  type: concept
+'57':
+  type: concept
+'58':
+  type: concept
+'59':
+  type: concept
+'60':
+  type: concept
+'61':
+  type: concept
+'62':
+  type: concept
+'63':
+  type: concept
+'64':
+  type: concept
+'65':
+  type: concept
+'66':
+  type: concept
+'67':
+  type: concept
+'68':
+  type: concept
+'69':
+  type: concept
+'70':
+  type: concept
+'71':
+  type: concept
+'72':
+  type: concept
+'73':
+  type: concept
+'74':
+  type: concept
+'75':
+  type: concept
+'76':
+  type: concept
+'77':
+  type: concept
+'78':
+  type: concept
+'79':
+  type: concept
+'80':
+  type: concept
+'81':
+  type: concept
+'82':
+  type: concept
+'83':
+  type: concept
+'84':
+  type: concept
+'85':
+  type: concept
+'86':
+  type: concept
+'87':
+  type: concept
+'88':
+  type: actor
+'89':
+  type: concept
+'90':
+  type: concept
+'91':
+  type: concept
+'92':
+  type: concept
+'93':
+  type: concept
+'94':
+  type: concept
+'95':
+  type: concept
+'96':
+  type: concept
+'97':
+  type: concept
+'98':
+  type: actor
+'99':
+  type: actor
+'100':
+  type: concept
+'101':
+  type: concept
+'102':
+  type: concept
+'103':
+  type: concept
+'104':
+  type: concept
+'105':
+  type: concept
+'106':
+  type: concept
+'107':
+  type: concept
+'108':
+  type: concept
+'109':
+  type: concept
+'110':
+  type: concept
+'111':
+  type: actor
+'112':
+  type: concept
+'113':
+  type: concept
+'114':
+  type: concept
+'115':
+  type: concept
+'116':
+  type: concept
+'117':
+  type: concept
+'118':
+  type: concept
+'119':
+  type: concept
+'120':
+  type: concept
+'121':
+  type: concept
+'122':
+  type: concept
+'123':
+  type: concept
+'124':
+  type: concept
+'125':
+  type: concept
+'126':
+  type: concept
+'127':
+  type: concept
+'128':
+  type: concept

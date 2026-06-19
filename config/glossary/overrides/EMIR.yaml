@@ -1,0 +1,61 @@
+# Glossaire EMIR — classification acteur/concept (générée, à RELIRE).
+# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+
+'1':
+  type: actor
+'2':
+  type: actor
+'3':
+  type: concept
+'4':
+  type: concept
+'5':
+  type: concept
+'6':
+  type: concept
+'7':
+  type: concept
+'8':
+  type: actor
+'9':
+  type: actor
+'10':
+  type: concept
+'11':
+  type: concept
+'12':
+  type: concept
+'13':
+  type: supervisor
+'14':
+  type: actor
+'15':
+  type: actor
+'16':
+  type: concept
+'17':
+  type: actor
+'18':
+  type: concept
+'19':
+  type: actor
+'20':
+  type: concept
+'21':
+  type: concept
+'22':
+  type: concept
+'23':
+  type: concept
+'24':
+  type: concept
+'25':
+  type: concept
+'26':
+  type: concept
+'27':
+  type: actor
+'28':
+  type: actor
+'29':
+  type: actor

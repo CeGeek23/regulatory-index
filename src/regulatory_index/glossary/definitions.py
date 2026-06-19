@@ -33,11 +33,26 @@ from .toc import build_toc
 
 OVERRIDES_DIR = Path(__file__).resolve().parents[3] / "config" / "glossary" / "overrides"
 
-# Guillemets EUR-Lex par langue (échappés pour lever l'ambiguïté unicode de ruff).
-_QUOTES: dict[str, tuple[str, str]] = {
-    "EN": (chr(0x2018), chr(0x2019)),
-    "FR": (chr(0x00AB), chr(0x00BB)),
+# Délimiteurs de terme rencontrés dans les rendus EUR-Lex, par langue (essayés ensemble ;
+# on retient celui dont l'ouvrant apparaît en premier). EUR-Lex panache les styles :
+# guillemets simples courbes U+2018/U+2019, point U+2027 (ex. CRR), guillemets doubles
+# courbes U+201C/U+201D, et guillemets droits.
+_QUOTE_PAIRS: dict[str, tuple[tuple[str, str], ...]] = {
+    "EN": (
+        (chr(0x2018), chr(0x2019)),
+        (chr(0x2027), chr(0x2027)),
+        (chr(0x201C), chr(0x201D)),
+        ('"', '"'),
+    ),
+    "FR": (
+        (chr(0x00AB), chr(0x00BB)),
+        (chr(0x2018), chr(0x2019)),
+        (chr(0x2027), chr(0x2027)),
+        (chr(0x201C), chr(0x201D)),
+        ('"', '"'),
+    ),
 }
+_POSSESSIVE_CLOSE = chr(0x2019)  # U+2019 sert aussi d'apostrophe possessive (possessif anglais)
 
 
 @dataclass(frozen=True)
@@ -74,15 +89,29 @@ def _fmt(label: str, language: str) -> str:
 
 
 def _first_quoted(text: str, language: str) -> str:
-    """Premier terme entre guillemets de la langue ; '' si absent."""
-    open_q, close_q = _QUOTES[language.upper()]
-    start = text.find(open_q)
-    if start == -1:
+    """Premier terme entre guillemets ; gère les différents styles de guillemets EUR-Lex.
+
+    On retient le délimiteur dont l'ouvrant apparaît en premier (U+2018/U+2019, U+2027,
+    U+201C/U+201D ou guillemets droits). Le fermant U+2019 servant aussi d'apostrophe
+    possessive, on l'ignore quand il est suivi d'une minuscule pour ne pas tronquer le terme.
+    """
+    best: tuple[int, str, str] | None = None
+    for open_q, close_q in _QUOTE_PAIRS[language.upper()]:
+        pos = text.find(open_q)
+        if pos != -1 and (best is None or pos < best[0]):
+            best = (pos, open_q, close_q)
+    if best is None:
         return ""
-    end = text.find(close_q, start + 1)
-    if end == -1:
-        return ""
-    return text[start + 1 : end].strip()
+    start, open_q, close_q = best
+    cursor = start + 1
+    while True:
+        end = text.find(close_q, cursor)
+        if end == -1:
+            return ""
+        if close_q == _POSSESSIVE_CLOSE and text[end + 1 : end + 2].islower():
+            cursor = end + 1  # apostrophe de possessif, pas le vrai fermant
+            continue
+        return text[start + 1 : end].strip()
 
 
 def _is_paragraph_boundary(line: str) -> bool:
@@ -148,6 +177,36 @@ def parse_points(text: str, *, language: Language) -> list[ParsedPoint]:
     return points
 
 
+# Amorces de l'article de définitions, EN + FR (minuscules). Indépendant des sous-titres :
+# certains rendus EUR-Lex (API Cellar) n'ont pas de <p oj-sti-art> ; on repère l'article
+# par la phrase qui ouvre toute liste de définitions.
+_DEF_TRIGGERS = ("the following definitions", "on entend par", "définitions suivantes")
+
+
+def find_definitions_article(html: str, language: Language) -> str | None:
+    """Numéro de l'article de définitions, repéré par sa phrase d'amorce dans le corps.
+
+    Complète la détection par sous-titre (`TableOfContents.definitions_article`) :
+    fonctionne aussi quand le rendu n'a pas de sous-titres d'article.
+    """
+    units = parse_articles(
+        html,
+        source_id="_",
+        celex="",
+        language=language,
+        title="_",
+        level=1,
+        issuer="EU_Parliament_Council",
+        url="",
+        keep=None,
+    )
+    for unit in units:
+        low = unit.text.lower()
+        if any(trigger in low for trigger in _DEF_TRIGGERS):
+            return str(unit.source_meta["article"])
+    return None
+
+
 @cache
 def load_overrides(source_id: str) -> dict[str, dict[str, Any]]:
     """Charge config/glossary/overrides/{source_id}.yaml (enrichissement relu), {} si absent."""
@@ -192,10 +251,10 @@ def harvest_glossary(
     """
     if definitions_article is None:
         toc = build_toc(html_en, source_id=source_id, language="EN")
-        definitions_article = toc.definitions_article
+        definitions_article = toc.definitions_article or find_definitions_article(html_en, "EN")
         if definitions_article is None:
             raise ValueError(
-                f"{source_id}: article de définitions introuvable dans le sommaire ; "
+                f"{source_id}: article de définitions introuvable (ni sous-titre, ni amorce) ; "
                 "passez definitions_article explicitement."
             )
     if overrides is None:
