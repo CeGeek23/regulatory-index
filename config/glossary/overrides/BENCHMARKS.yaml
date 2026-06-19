@@ -1,10 +1,11 @@
-# Glossaire BENCHMARKS — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
-# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+# Glossaire BENCHMARKS — classification acteur/concept générée par scripts/classify_overrides.py
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 '1':
   type: concept
 '2':
-  type: actor
+  type: concept
 '3':
   type: concept
 '4':
@@ -18,7 +19,7 @@
 '8':
   type: concept
 '9':
-  type: actor
+  type: concept
 '10':
   type: actor
 '11':
@@ -42,7 +43,7 @@
 '20':
   type: actor
 '21':
-  type: investor
+  type: actor
 '22':
   type: concept
 '23':

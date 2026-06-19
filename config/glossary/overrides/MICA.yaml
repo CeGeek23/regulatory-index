@@ -1,5 +1,6 @@
-# Glossaire MICA — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
-# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+# Glossaire MICA — classification acteur/concept générée par scripts/classify_overrides.py
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 '1':
   type: concept
@@ -32,27 +33,27 @@
 '15':
   type: actor
 '16':
-  type: concept
+  type: actor
 '17':
-  type: concept
+  type: actor
 '18':
-  type: concept
+  type: actor
 '19':
-  type: concept
+  type: actor
 '20':
   type: concept
 '21':
-  type: concept
+  type: actor
 '22':
   type: concept
 '23':
-  type: concept
+  type: actor
 '24':
-  type: concept
+  type: actor
 '25':
-  type: concept
+  type: actor
 '26':
-  type: concept
+  type: actor
 '27':
   type: actor
 '28':
@@ -100,6 +101,6 @@
 '49':
   type: concept
 '50':
-  type: concept
+  type: actor
 '51':
   type: concept

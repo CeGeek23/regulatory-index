@@ -1,14 +1,15 @@
-# Glossaire CRD4 — classification acteur/concept (générée, à RELIRE).
-# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+# Glossaire CRD4 — classification acteur/concept générée par scripts/classify_overrides.py
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 '1':
   type: actor
 '2':
   type: actor
 '3':
-  type: actor
+  type: concept
 '4':
-  type: actor
+  type: concept
 '5':
   type: actor
 '6':
@@ -16,7 +17,7 @@
 '7':
   type: actor
 '8':
-  type: actor
+  type: supervisor
 '9':
   type: actor
 '10':
@@ -24,9 +25,9 @@
 '11':
   type: concept
 '12':
-  type: actor
+  type: concept
 '13':
-  type: actor
+  type: concept
 '14':
   type: concept
 '15':
@@ -34,7 +35,7 @@
 '16':
   type: concept
 '17':
-  type: actor
+  type: concept
 '18':
   type: actor
 '19':
@@ -46,11 +47,11 @@
 '22':
   type: actor
 '23':
-  type: concept
+  type: actor
 '24':
-  type: actor
+  type: concept
 '25':
-  type: actor
+  type: concept
 '26':
   type: concept
 '27':
@@ -62,7 +63,7 @@
 '30':
   type: actor
 '31':
-  type: actor
+  type: concept
 '32':
   type: concept
 '33':
@@ -82,9 +83,9 @@
 '40':
   type: concept
 '41':
-  type: actor
+  type: supervisor
 '42':
-  type: actor
+  type: concept
 '43':
   type: concept
 '44':
@@ -116,6 +117,6 @@
 '57':
   type: concept
 '58':
-  type: actor
+  type: concept
 '59':
   type: concept

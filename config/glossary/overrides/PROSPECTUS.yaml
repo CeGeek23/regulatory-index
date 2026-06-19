@@ -1,5 +1,6 @@
-# Glossaire PROSPECTUS — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
-# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+# Glossaire PROSPECTUS — classification acteur/concept générée par scripts/classify_overrides.py
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 a:
   type: concept
@@ -16,7 +17,7 @@ f:
 g:
   type: actor
 h:
-  type: actor
+  type: concept
 i:
   type: actor
 j:
@@ -36,7 +37,7 @@ p:
 q:
   type: concept
 r:
-  type: concept
+  type: supervisor
 s:
   type: concept
 t:
@@ -48,7 +49,7 @@ v:
 w:
   type: concept
 x:
-  type: actor
+  type: concept
 y:
   type: concept
 z:

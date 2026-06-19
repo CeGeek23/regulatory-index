@@ -104,26 +104,33 @@ institution », « competent authority »). La dédup relie le même terme entre
 trace de toutes ses bases légales.
 
 **Statut de la classification acteur/concept** : AIFMD L1/L2 sont **relus à la main** ; les
-**~38 autres textes sont classés automatiquement** (extraction fidèle, classification générée et
-**marquée « à RELIRE »** dans chaque override). Couverture FR : 52/214 acteurs (les textes ajoutés
-en masse n'ont été récupérés qu'en EN).
+**~38 autres textes sont classés automatiquement et de façon REPRODUCTIBLE** — un script versionné
+(`scripts/classify_overrides.py`) interroge le modèle local LM Studio en décodage déterministe
+(température 0, graine fixe) et met le résultat en cache, si bien que relancer régénère exactement
+les mêmes overrides. L'extraction du terme et de la définition reste fidèle au texte ; seule la
+catégorie est proposée par le modèle, **marquée « à RELIRE »** (relecture métier à faire). Couverture
+FR : 52/214 acteurs (les textes ajoutés en masse n'ont été récupérés qu'en EN).
 
 **Boucle glossaire → vocabulaire (le point clé)** : les termes du glossaire sont désormais **versés
-dans le vocabulaire de référence du projet** — **228 acteurs** (`actors.yaml`) et **614 concepts/
+dans le vocabulaire de référence du projet** — **234 acteurs** (`actors.yaml`) et **636 concepts/
 objets** (`objects.yaml`). Autrement dit, les objets identifiés dans les définitions **alimentent
 maintenant l'extraction d'obligations** (reconnaissance des termes + normalisation), exactement la
-finalité « les identifier comme objets pour mieux les lier ». Ces entrées sont versées
-automatiquement et **marquées « à relire »**.
+finalité « les identifier comme objets pour mieux les lier ». La promotion est **reproductible et
+idempotente** (`scripts/vocab_sync.py` régénère sa section à chaque run au lieu de l'empiler) ; les
+entrées versées sont **marquées « à relire »**.
 
-**Méthode validée comme réplicable** : un seul code traite les définitions en (a)(b)(c) ou
-(1)(2)(3), plusieurs styles de guillemets, format de base ou consolidé, EN seul ou EN+FR.
+**Méthode validée comme réplicable de bout en bout** : un seul code traite les définitions en
+(a)(b)(c) ou (1)(2)(3), plusieurs styles de guillemets, format de base ou consolidé, EN seul ou
+EN+FR ; et **toute la chaîne est reproductible** — extraction déterministe, classification
+acteur/concept régénérable à l'identique (LM Studio, cache), promotion au vocabulaire idempotente.
 
 ## 11. Ce qui reste à faire
 
 1. **Relire la classification acteur/concept** : pour AIFMD elle est faite à la main ; pour les
-   **~38 autres textes** elle est **générée automatiquement et marquée « à relire »** (validation
-   métier). C'est aussi ce qui conditionne la qualité du vocabulaire alimenté (voir §10).
-2. **Élaguer le vocabulaire injecté à l'extraction** : 228 acteurs + 614 objets, c'est beaucoup
+   **~38 autres textes** elle est **générée de façon reproductible** (`scripts/classify_overrides.py`,
+   LM Studio) et **marquée « à relire »** — il reste la **validation métier**, pas la reproductibilité.
+   C'est aussi ce qui conditionne la qualité du vocabulaire alimenté (voir §10).
+2. **Élaguer le vocabulaire injecté à l'extraction** : 234 acteurs + 636 objets, c'est beaucoup
    pour un petit modèle local (risque de dilution du prompt) — à arbitrer après relecture.
 3. **Basculer sur les versions consolidées** (à jour) — la capacité est en place (résolution
    automatique du dernier CELEX consolidé), à généraliser à tout le périmètre.

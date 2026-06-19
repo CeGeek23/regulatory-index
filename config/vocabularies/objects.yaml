@@ -258,7 +258,6 @@
   aliases: ["liquidity management policy", "politique de gestion de la liquidité"]
   theme_id: liquidity
 
-
 # --- Concepts/objets issus du glossaire niveau 1 (sync auto via scripts/vocab_sync.py — À RELIRE) ---
 - id: public_interest_entities
   canonical_en: public-interest entities
@@ -300,16 +299,6 @@
   canonical_fr: value adjustment
   aliases: []
   legal_basis: ACCOUNTING Art. 2(1)(8)
-- id: parent_undertaking
-  canonical_en: parent undertaking
-  canonical_fr: parent undertaking
-  aliases: []
-  legal_basis: ACCOUNTING Art. 2(1)(9)
-- id: subsidiary_undertaking
-  canonical_en: subsidiary undertaking
-  canonical_fr: subsidiary undertaking
-  aliases: []
-  legal_basis: ACCOUNTING Art. 2(1)(10)
 - id: group
   canonical_en: group
   canonical_fr: group
@@ -320,21 +309,6 @@
   canonical_fr: affiliated undertakings
   aliases: []
   legal_basis: ACCOUNTING Art. 2(1)(12)
-- id: associated_undertaking
-  canonical_en: associated undertaking
-  canonical_fr: associated undertaking
-  aliases: []
-  legal_basis: ACCOUNTING Art. 2(1)(13)
-- id: investment_undertakings
-  canonical_en: investment undertakings
-  canonical_fr: investment undertakings
-  aliases: []
-  legal_basis: ACCOUNTING Art. 2(1)(14)
-- id: financial_holding_undertakings
-  canonical_en: financial holding undertakings
-  canonical_fr: financial holding undertakings
-  aliases: []
-  legal_basis: ACCOUNTING Art. 2(1)(15)
 - id: material
   canonical_en: material
   canonical_fr: material
@@ -445,6 +419,11 @@
   canonical_fr: own funds
   aliases: []
   legal_basis: AIFMD_L1 Art. 4(1)(ad)
+- id: parent_undertaking
+  canonical_en: parent undertaking
+  canonical_fr: parent undertaking
+  aliases: []
+  legal_basis: AIFMD_L1 Art. 4(1)(ae)
 - id: qualifying_holding
   canonical_en: qualifying holding
   canonical_fr: qualifying holding
@@ -485,21 +464,6 @@
   canonical_fr: criminal activity
   aliases: []
   legal_basis: AMLD Art. 3(1)(4)
-- id: beneficial_owner
-  canonical_en: beneficial owner
-  canonical_fr: beneficial owner
-  aliases: []
-  legal_basis: AMLD Art. 3(1)(6)
-- id: correspondent_relationship
-  canonical_en: correspondent relationship
-  canonical_fr: correspondent relationship
-  aliases: []
-  legal_basis: AMLD Art. 3(1)(8)
-- id: politically_exposed_person
-  canonical_en: politically exposed person
-  canonical_fr: politically exposed person
-  aliases: []
-  legal_basis: AMLD Art. 3(1)(9)
 - id: family_members
   canonical_en: family members
   canonical_fr: family members
@@ -515,11 +479,6 @@
   canonical_fr: business relationship
   aliases: []
   legal_basis: AMLD Art. 3(1)(13)
-- id: gambling_services
-  canonical_en: gambling services
-  canonical_fr: gambling services
-  aliases: []
-  legal_basis: AMLD Art. 3(1)(14)
 - id: electronic_money
   canonical_en: electronic money
   canonical_fr: electronic money
@@ -530,6 +489,11 @@
   canonical_fr: index
   aliases: []
   legal_basis: BENCHMARKS Art. 3(1)(1)
+- id: index_provider
+  canonical_en: index provider
+  canonical_fr: index provider
+  aliases: []
+  legal_basis: BENCHMARKS Art. 3(1)(2)
 - id: benchmark
   canonical_en: benchmark
   canonical_fr: benchmark
@@ -555,6 +519,11 @@
   canonical_fr: contribution of input data
   aliases: []
   legal_basis: BENCHMARKS Art. 3(1)(8)
+- id: contributor
+  canonical_en: contributor
+  canonical_fr: contributor
+  aliases: []
+  legal_basis: BENCHMARKS Art. 3(1)(9)
 - id: expert_judgement
   canonical_en: expert judgement
   canonical_fr: expert judgement
@@ -615,11 +584,6 @@
   canonical_fr: located
   aliases: []
   legal_basis: BENCHMARKS Art. 3(1)(28)
-- id: resolution
-  canonical_en: resolution
-  canonical_fr: resolution
-  aliases: []
-  legal_basis: BRRD Art. 2(1)(1)
 - id: consolidated_basis
   canonical_en: consolidated basis
   canonical_fr: consolidated basis
@@ -630,16 +594,16 @@
   canonical_fr: institutional protection scheme
   aliases: []
   legal_basis: BRRD Art. 2(1)(8)
-- id: financial_holding_company
-  canonical_en: financial holding company
-  canonical_fr: financial holding company
-  aliases: []
-  legal_basis: BRRD Art. 2(1)(9)
 - id: mixed_financial_holding_company
   canonical_en: mixed financial holding company
   canonical_fr: mixed financial holding company
   aliases: []
   legal_basis: BRRD Art. 2(1)(10)
+- id: mixed_activity_holding_company
+  canonical_en: mixed-activity holding company
+  canonical_fr: mixed-activity holding company
+  aliases: []
+  legal_basis: BRRD Art. 2(1)(11)
 - id: parent_financial_holding_company_in_a_member_state
   canonical_en: parent financial holding company in a Member State
   canonical_fr: parent financial holding company in a Member State
@@ -675,6 +639,11 @@
   canonical_fr: resolution power
   aliases: []
   legal_basis: BRRD Art. 2(1)(20)
+- id: competent_ministries
+  canonical_en: competent ministries
+  canonical_fr: competent ministries
+  aliases: []
+  legal_basis: BRRD Art. 2(1)(22)
 - id: cross_border_group
   canonical_en: cross-border group
   canonical_fr: cross-border group
@@ -755,6 +724,11 @@
   canonical_fr: group resolution scheme
   aliases: []
   legal_basis: BRRD Art. 2(1)(45)
+- id: resolution_college
+  canonical_en: resolution college
+  canonical_fr: resolution college
+  aliases: []
+  legal_basis: BRRD Art. 2(1)(46)
 - id: normal_insolvency_proceedings
   canonical_en: normal insolvency proceedings
   canonical_fr: normal insolvency proceedings
@@ -765,6 +739,11 @@
   canonical_fr: debt instruments
   aliases: []
   legal_basis: BRRD Art. 2(1)(48)
+- id: parent_institution_in_a_member_state
+  canonical_en: parent institution in a Member State
+  canonical_fr: parent institution in a Member State
+  aliases: []
+  legal_basis: BRRD Art. 2(1)(49)
 - id: union_parent_institution
   canonical_en: Union parent institution
   canonical_fr: Union parent institution
@@ -790,6 +769,11 @@
   canonical_fr: asset separation tool
   aliases: []
   legal_basis: BRRD Art. 2(1)(55)
+- id: asset_management_vehicle
+  canonical_en: asset management vehicle
+  canonical_fr: asset management vehicle
+  aliases: []
+  legal_basis: BRRD Art. 2(1)(56)
 - id: bail_in_tool
   canonical_en: bail-in tool
   canonical_fr: bail-in tool
@@ -800,6 +784,11 @@
   canonical_fr: sale of business tool
   aliases: []
   legal_basis: BRRD Art. 2(1)(58)
+- id: bridge_institution
+  canonical_en: bridge institution
+  canonical_fr: bridge institution
+  aliases: []
+  legal_basis: BRRD Art. 2(1)(59)
 - id: bridge_institution_tool
   canonical_en: bridge institution tool
   canonical_fr: bridge institution tool
@@ -815,6 +804,11 @@
   canonical_fr: transfer powers
   aliases: []
   legal_basis: BRRD Art. 2(1)(63)
+- id: central_counterparty
+  canonical_en: central counterparty
+  canonical_fr: central counterparty
+  aliases: []
+  legal_basis: BRRD Art. 2(1)(64)
 - id: derivative
   canonical_en: derivative
   canonical_fr: derivative
@@ -870,6 +864,16 @@
   canonical_fr: conversion rate
   aliases: []
   legal_basis: BRRD Art. 2(1)(75)
+- id: affected_creditor
+  canonical_en: affected creditor
+  canonical_fr: affected creditor
+  aliases: []
+  legal_basis: BRRD Art. 2(1)(76)
+- id: affected_holder
+  canonical_en: affected holder
+  canonical_fr: affected holder
+  aliases: []
+  legal_basis: BRRD Art. 2(1)(77)
 - id: relevant_parent_institution
   canonical_en: relevant parent institution
   canonical_fr: relevant parent institution
@@ -895,11 +899,11 @@
   canonical_fr: Union parent undertaking
   aliases: []
   legal_basis: BRRD Art. 2(1)(85)
-- id: third_country_parent_undertaking
-  canonical_en: third-country parent undertaking
-  canonical_fr: third-country parent undertaking
+- id: third_country_institution
+  canonical_en: third-country institution
+  canonical_fr: third-country institution
   aliases: []
-  legal_basis: BRRD Art. 2(1)(87)
+  legal_basis: BRRD Art. 2(1)(86)
 - id: third_country_resolution_proceedings
   canonical_en: third-country resolution proceedings
   canonical_fr: third-country resolution proceedings
@@ -975,6 +979,11 @@
   canonical_fr: recovery capacity
   aliases: []
   legal_basis: BRRD Art. 2(1)(103)
+- id: micro_small_and_medium_sized_enterprises
+  canonical_en: micro, small and medium-sized enterprises
+  canonical_fr: micro, small and medium-sized enterprises
+  aliases: []
+  legal_basis: BRRD Art. 2(1)(107)
 - id: regulated_market
   canonical_en: regulated market
   canonical_fr: regulated market
@@ -985,16 +994,26 @@
   canonical_fr: alternative investment funds
   aliases: []
   legal_basis: CBDF_REG Art. 3(1)(a)
-- id: home_member_state
-  canonical_en: home Member State
-  canonical_fr: home Member State
-  aliases: []
-  legal_basis: CBDF_REG Art. 3(1)(f)
 - id: credit_rating
   canonical_en: credit rating
   canonical_fr: credit rating
   aliases: []
   legal_basis: CRA Art. 3(1)(a)
+- id: credit_rating_agency
+  canonical_en: credit rating agency
+  canonical_fr: credit rating agency
+  aliases: []
+  legal_basis: CRA Art. 3(1)(b)
+- id: home_member_state
+  canonical_en: home Member State
+  canonical_fr: home Member State
+  aliases: []
+  legal_basis: CRA Art. 3(1)(c)
+- id: rating_analyst
+  canonical_en: rating analyst
+  canonical_fr: rating analyst
+  aliases: []
+  legal_basis: CRA Art. 3(1)(d)
 - id: regulatory_purposes
   canonical_en: regulatory purposes
   canonical_fr: regulatory purposes
@@ -1020,6 +1039,16 @@
   canonical_fr: credit rating activities
   aliases: []
   legal_basis: CRA Art. 3(1)(o)
+- id: institution
+  canonical_en: institution
+  canonical_fr: institution
+  aliases: []
+  legal_basis: CRD4 Art. 3(1)(3)
+- id: local_firm
+  canonical_en: local firm
+  canonical_fr: local firm
+  aliases: []
+  legal_basis: CRD4 Art. 3(1)(4)
 - id: systemic_risk
   canonical_en: systemic risk
   canonical_fr: systemic risk
@@ -1030,16 +1059,36 @@
   canonical_fr: model risk
   aliases: []
   legal_basis: CRD4 Art. 3(1)(11)
-- id: mixed_activity_holding_company
+- id: originator
+  canonical_en: originator
+  canonical_fr: originator
+  aliases: []
+  legal_basis: CRD4 Art. 3(1)(12)
+- id: sponsor
+  canonical_en: sponsor
+  canonical_fr: sponsor
+  aliases: []
+  legal_basis: CRD4 Art. 3(1)(13)
+- id: ancillary_services_undertaking
+  canonical_en: ancillary services undertaking
+  canonical_fr: ancillary services undertaking
+  aliases: []
+  legal_basis: CRD4 Art. 3(1)(17)
+- id: financial_holding_company
+  canonical_en: financial holding company
+  canonical_fr: financial holding company
+  aliases: []
+  legal_basis: CRD4 Art. 3(1)(19)
+- id: mixed_activity_holding_company_2
   canonical_en: mixed activity holding company
   canonical_fr: mixed activity holding company
   aliases: []
   legal_basis: CRD4 Art. 3(1)(21)
-- id: financial_sector_entity
-  canonical_en: financial sector entity
-  canonical_fr: financial sector entity
+- id: eu_parent_institution
+  canonical_en: EU parent institution
+  canonical_fr: EU parent institution
   aliases: []
-  legal_basis: CRD4 Art. 3(1)(23)
+  legal_basis: CRD4 Art. 3(1)(25)
 - id: eu_parent_financial_holding_company
   canonical_en: EU parent financial holding company
   canonical_fr: EU parent financial holding company
@@ -1065,6 +1114,11 @@
   canonical_fr: host Member State
   aliases: []
   legal_basis: CRD4 Art. 3(1)(40)
+- id: central_banks
+  canonical_en: central banks
+  canonical_fr: central banks
+  aliases: []
+  legal_basis: CRD4 Art. 3(1)(42)
 - id: consolidated_situation
   canonical_en: consolidated situation
   canonical_fr: consolidated situation
@@ -1110,16 +1164,26 @@
   canonical_fr: risk of excessive leverage
   aliases: []
   legal_basis: CRD4 Art. 3(1)(57)
+- id: external_credit_assessment_institution
+  canonical_en: external credit assessment institution
+  canonical_fr: external credit assessment institution
+  aliases: []
+  legal_basis: CRD4 Art. 3(1)(58)
 - id: internal_approaches
   canonical_en: internal approaches
   canonical_fr: internal approaches
   aliases: []
   legal_basis: CRD4 Art. 3(1)(59)
-- id: collective_investment_undertaking
-  canonical_en: collective investment undertaking
-  canonical_fr: collective investment undertaking
+- id: third_country_insurance_undertaking
+  canonical_en: third-country insurance undertaking
+  canonical_fr: third-country insurance undertaking
   aliases: []
-  legal_basis: CRR Art. 4(1)(7)
+  legal_basis: CRR Art. 4(1)(23)
+- id: third_country_reinsurance_undertaking
+  canonical_en: third-country reinsurance undertaking
+  canonical_fr: third-country reinsurance undertaking
+  aliases: []
+  legal_basis: CRR Art. 4(1)(24)
 - id: group_of_connected_clients
   canonical_en: group of connected clients
   canonical_fr: group of connected clients
@@ -1260,16 +1324,16 @@
   canonical_fr: simple repurchase agreement
   aliases: []
   legal_basis: CRR Art. 4(1)(84)
-- id: positions_held_with_trading_intent
-  canonical_en: positions held with trading intent
-  canonical_fr: positions held with trading intent
-  aliases: []
-  legal_basis: CRR Art. 4(1)(85)
 - id: multilateral_trading_facility
   canonical_en: multilateral trading facility
   canonical_fr: multilateral trading facility
   aliases: []
   legal_basis: CRR Art. 4(1)(87)
+- id: qualifying_central_counterparty
+  canonical_en: qualifying central counterparty
+  canonical_fr: qualifying central counterparty
+  aliases: []
+  legal_basis: CRR Art. 4(1)(88)
 - id: default_fund
   canonical_en: default fund
   canonical_fr: default fund
@@ -1300,6 +1364,16 @@
   canonical_fr: reference obligation
   aliases: []
   legal_basis: CRR Art. 4(1)(97)
+- id: ecai
+  canonical_en: ECAI
+  canonical_fr: ECAI
+  aliases: []
+  legal_basis: CRR Art. 4(1)(98)
+- id: nominated_ecai
+  canonical_en: nominated ECAI
+  canonical_fr: nominated ECAI
+  aliases: []
+  legal_basis: CRR Art. 4(1)(99)
 - id: accumulated_other_comprehensive_income
   canonical_en: accumulated other comprehensive income
   canonical_fr: accumulated other comprehensive income
@@ -1435,6 +1509,16 @@
   canonical_fr: distributable items
   aliases: []
   legal_basis: CRR Art. 4(1)(128)
+- id: central_securities_depository
+  canonical_en: central securities depository
+  canonical_fr: central securities depository
+  aliases: []
+  legal_basis: CSDR Art. 2(1)(1)
+- id: third_country_csd
+  canonical_en: third-country CSD
+  canonical_fr: third-country CSD
+  aliases: []
+  legal_basis: CSDR Art. 2(1)(2)
 - id: immobilisation
   canonical_en: immobilisation
   canonical_fr: immobilisation
@@ -1445,6 +1529,16 @@
   canonical_fr: dematerialised form
   aliases: []
   legal_basis: CSDR Art. 2(1)(4)
+- id: receiving_csd
+  canonical_en: receiving CSD
+  canonical_fr: receiving CSD
+  aliases: []
+  legal_basis: CSDR Art. 2(1)(5)
+- id: requesting_csd
+  canonical_en: requesting CSD
+  canonical_fr: requesting CSD
+  aliases: []
+  legal_basis: CSDR Art. 2(1)(6)
 - id: settlement
   canonical_en: settlement
   canonical_fr: settlement
@@ -1555,6 +1649,11 @@
   canonical_fr: trading venue
   aliases: []
   legal_basis: CSDR Art. 2(1)(42)
+- id: settlement_agent
+  canonical_en: settlement agent
+  canonical_fr: settlement agent
+  aliases: []
+  legal_basis: CSDR Art. 2(1)(43)
 - id: sme_growth_market
   canonical_en: SME growth market
   canonical_fr: SME growth market
@@ -1710,26 +1809,66 @@
   canonical_fr: ICT concentration risk
   aliases: []
   legal_basis: DORA Art. 3(1)(29)
-- id: microenterprise
-  canonical_en: microenterprise
-  canonical_fr: microenterprise
+- id: institution_exempted_pursuant_to_directive_2013_36_eu
+  canonical_en: institution exempted pursuant to Directive 2013/36/EU
+  canonical_fr: institution exempted pursuant to Directive 2013/36/EU
   aliases: []
-  legal_basis: DORA Art. 3(1)(60)
-- id: crowdfunding_service
-  canonical_en: crowdfunding service
-  canonical_fr: crowdfunding service
+  legal_basis: DORA Art. 3(1)(32)
+- id: payment_institution_exempted_pursuant_to_directive_eu_2015_2366
+  canonical_en: payment institution exempted pursuant to Directive (EU) 2015/2366
+  canonical_fr: payment institution exempted pursuant to Directive (EU) 2015/2366
   aliases: []
-  legal_basis: ECSP Art. 2(1)(a)
-- id: loan
-  canonical_en: loan
-  canonical_fr: loan
+  legal_basis: DORA Art. 3(1)(36)
+- id: electronic_money_institution_exempted_pursuant_to_directive_2009_110_ec
+  canonical_en: electronic money institution exempted pursuant to Directive 2009/110/EC
+  canonical_fr: electronic money institution exempted pursuant to Directive 2009/110/EC
   aliases: []
-  legal_basis: ECSP Art. 2(1)(b)
-- id: individual_portfolio_management_of_loans
-  canonical_en: individual portfolio management of loans
-  canonical_fr: individual portfolio management of loans
+  legal_basis: DORA Art. 3(1)(39)
+- id: trade_repository
+  canonical_en: trade repository
+  canonical_fr: trade repository
   aliases: []
-  legal_basis: ECSP Art. 2(1)(c)
+  legal_basis: DORA Art. 3(1)(41)
+- id: ancillary_insurance_intermediary
+  canonical_en: ancillary insurance intermediary
+  canonical_fr: ancillary insurance intermediary
+  aliases: []
+  legal_basis: DORA Art. 3(1)(50)
+- id: institution_for_occupational_retirement_provision
+  canonical_en: institution for occupational retirement provision
+  canonical_fr: institution for occupational retirement provision
+  aliases: []
+  legal_basis: DORA Art. 3(1)(52)
+- id: issuer_of_asset_referenced_tokens
+  canonical_en: issuer of asset-referenced tokens
+  canonical_fr: issuer of asset-referenced tokens
+  aliases: []
+  legal_basis: DORA Art. 3(1)(56)
+- id: administrator_of_critical_benchmarks
+  canonical_en: administrator of critical benchmarks
+  canonical_fr: administrator of critical benchmarks
+  aliases: []
+  legal_basis: DORA Art. 3(1)(57)
+- id: securitisation_repository
+  canonical_en: securitisation repository
+  canonical_fr: securitisation repository
+  aliases: []
+  legal_basis: DORA Art. 3(1)(59)
+- id: joint_committee
+  canonical_en: Joint Committee
+  canonical_fr: Joint Committee
+  aliases: []
+  legal_basis: DORA Art. 3(1)(62)
+- id: small_enterprise
+  canonical_en: small enterprise
+  canonical_fr: small enterprise
+  aliases: []
+  legal_basis: DORA Art. 3(1)(63)
+- id: medium_sized_enterprise
+  canonical_en: medium-sized enterprise
+  canonical_fr: medium-sized enterprise
+  aliases: []
+  legal_basis: DORA Art. 3(1)(64)
 - id: crowdfunding_platform
   canonical_en: crowdfunding platform
   canonical_fr: crowdfunding platform
@@ -1785,6 +1924,11 @@
   canonical_fr: real asset
   aliases: []
   legal_basis: ELTIF Art. 2(1)(6)
+- id: eu_aifm
+  canonical_en: EU AIFM
+  canonical_fr: EU AIFM
+  aliases: []
+  legal_basis: ELTIF Art. 2(1)(9)
 - id: home_member_state_of_the_eltif
   canonical_en: home Member State of the ELTIF
   canonical_fr: home Member State of the ELTIF
@@ -1815,11 +1959,6 @@
   canonical_fr: OTC derivative
   aliases: []
   legal_basis: EMIR Art. 2(1)(7)
-- id: pension_scheme_arrangement
-  canonical_en: pension scheme arrangement
-  canonical_fr: pension scheme arrangement
-  aliases: []
-  legal_basis: EMIR Art. 2(1)(10)
 - id: counterparty_credit_risk
   canonical_en: counterparty credit risk
   canonical_fr: counterparty credit risk
@@ -1840,6 +1979,11 @@
   canonical_fr: average outstanding electronic money
   aliases: []
   legal_basis: EMONEY2 Art. 2(1)(d)
+- id: collective_investment_undertaking
+  canonical_en: collective investment undertaking
+  canonical_fr: collective investment undertaking
+  aliases: []
+  legal_basis: EUSEF Art. 3(1)(a)
 - id: qualifying_social_entrepreneurship_fund
   canonical_en: qualifying social entrepreneurship fund
   canonical_fr: qualifying social entrepreneurship fund
@@ -1865,21 +2009,6 @@
   canonical_fr: committed capital
   aliases: []
   legal_basis: EUSEF Art. 3(1)(j)
-- id: qualifying_venture_capital_fund
-  canonical_en: qualifying venture capital fund
-  canonical_fr: qualifying venture capital fund
-  aliases: []
-  legal_basis: EUVECA Art. 3(1)(b)
-- id: insurance_distribution
-  canonical_en: insurance distribution
-  canonical_fr: insurance distribution
-  aliases: []
-  legal_basis: IDD Art. 2(1)(1)
-- id: reinsurance_distribution
-  canonical_en: reinsurance distribution
-  canonical_fr: reinsurance distribution
-  aliases: []
-  legal_basis: IDD Art. 2(1)(2)
 - id: remuneration
   canonical_en: remuneration
   canonical_fr: remuneration
@@ -1915,11 +2044,26 @@
   canonical_fr: retirement benefits
   aliases: []
   legal_basis: IORP2 Art. 6(1)(4)
+- id: beneficiary
+  canonical_en: beneficiary
+  canonical_fr: beneficiary
+  aliases: []
+  legal_basis: IORP2 Art. 6(1)(6)
+- id: prospective_member
+  canonical_en: prospective member
+  canonical_fr: prospective member
+  aliases: []
+  legal_basis: IORP2 Art. 6(1)(7)
 - id: biometric_risks
   canonical_en: biometric risks
   canonical_fr: biometric risks
   aliases: []
   legal_basis: IORP2 Art. 6(1)(9)
+- id: transferring_iorp
+  canonical_en: transferring IORP
+  canonical_fr: transferring IORP
+  aliases: []
+  legal_basis: IORP2 Art. 6(1)(12)
 - id: organised_trading_facility
   canonical_en: organised trading facility
   canonical_fr: organised trading facility
@@ -1965,11 +2109,11 @@
   canonical_fr: wholesale energy product
   aliases: []
   legal_basis: MAD2 Art. 2(1)(13)
-- id: person
-  canonical_en: person
-  canonical_fr: person
+- id: issuer
+  canonical_en: issuer
+  canonical_fr: issuer
   aliases: []
-  legal_basis: MAR Art. 3(1)(13)
+  legal_basis: MAD2 Art. 2(1)(14)
 - id: commodity
   canonical_en: commodity
   canonical_fr: commodity
@@ -1990,11 +2134,6 @@
   canonical_fr: commodity derivatives
   aliases: []
   legal_basis: MAR Art. 3(1)(24)
-- id: person_closely_associated
-  canonical_en: person closely associated
-  canonical_fr: person closely associated
-  aliases: []
-  legal_basis: MAR Art. 3(1)(26)
 - id: data_traffic_records
   canonical_en: data traffic records
   canonical_fr: data traffic records
@@ -2075,61 +2214,16 @@
   canonical_fr: funds
   aliases: []
   legal_basis: MICA Art. 3(1)(14)
-- id: crypto_asset_service
-  canonical_en: crypto-asset service
-  canonical_fr: crypto-asset service
-  aliases: []
-  legal_basis: MICA Art. 3(1)(16)
-- id: providing_custody_and_administration_of_crypto_assets_on_behalf_of_clients
-  canonical_en: providing custody and administration of crypto-assets on behalf of clients
-  canonical_fr: providing custody and administration of crypto-assets on behalf of clients
-  aliases: []
-  legal_basis: MICA Art. 3(1)(17)
-- id: operation_of_a_trading_platform_for_crypto_assets
-  canonical_en: operation of a trading platform for crypto-assets
-  canonical_fr: operation of a trading platform for crypto-assets
-  aliases: []
-  legal_basis: MICA Art. 3(1)(18)
-- id: exchange_of_crypto_assets_for_funds
-  canonical_en: exchange of crypto-assets for funds
-  canonical_fr: exchange of crypto-assets for funds
-  aliases: []
-  legal_basis: MICA Art. 3(1)(19)
 - id: exchange_of_crypto_assets_for_other_crypto_assets
   canonical_en: exchange of crypto-assets for other crypto-assets
   canonical_fr: exchange of crypto-assets for other crypto-assets
   aliases: []
   legal_basis: MICA Art. 3(1)(20)
-- id: execution_of_orders_for_crypto_assets_on_behalf_of_clients
-  canonical_en: execution of orders for crypto-assets on behalf of clients
-  canonical_fr: execution of orders for crypto-assets on behalf of clients
-  aliases: []
-  legal_basis: MICA Art. 3(1)(21)
 - id: placing_of_crypto_assets
   canonical_en: placing of crypto-assets
   canonical_fr: placing of crypto-assets
   aliases: []
   legal_basis: MICA Art. 3(1)(22)
-- id: reception_and_transmission_of_orders_for_crypto_assets_on_behalf_of_clients
-  canonical_en: reception and transmission of orders for crypto-assets on behalf of clients
-  canonical_fr: reception and transmission of orders for crypto-assets on behalf of clients
-  aliases: []
-  legal_basis: MICA Art. 3(1)(23)
-- id: providing_advice_on_crypto_assets
-  canonical_en: providing advice on crypto-assets
-  canonical_fr: providing advice on crypto-assets
-  aliases: []
-  legal_basis: MICA Art. 3(1)(24)
-- id: providing_portfolio_management_of_crypto_assets
-  canonical_en: providing portfolio management of crypto-assets
-  canonical_fr: providing portfolio management of crypto-assets
-  aliases: []
-  legal_basis: MICA Art. 3(1)(25)
-- id: providing_transfer_services_for_crypto_assets_on_behalf_of_clients
-  canonical_en: providing transfer services for crypto-assets on behalf of clients
-  canonical_fr: providing transfer services for crypto-assets on behalf of clients
-  aliases: []
-  legal_basis: MICA Art. 3(1)(26)
 - id: reserve_of_assets
   canonical_en: reserve of assets
   canonical_fr: reserve of assets
@@ -2175,21 +2269,11 @@
   canonical_fr: investment advice
   aliases: []
   legal_basis: MIFID2 Art. 4(1)(4)
-- id: execution_of_orders_on_behalf_of_clients
-  canonical_en: execution of orders on behalf of clients
-  canonical_fr: execution of orders on behalf of clients
-  aliases: []
-  legal_basis: MIFID2 Art. 4(1)(5)
 - id: dealing_on_own_account
   canonical_en: dealing on own account
   canonical_fr: dealing on own account
   aliases: []
   legal_basis: MIFID2 Art. 4(1)(6)
-- id: portfolio_management
-  canonical_en: portfolio management
-  canonical_fr: portfolio management
-  aliases: []
-  legal_basis: MIFID2 Art. 4(1)(8)
 - id: small_and_medium_sized_enterprises
   canonical_en: small and medium-sized enterprises
   canonical_fr: small and medium-sized enterprises
@@ -2255,6 +2339,21 @@
   canonical_fr: derivatives
   aliases: []
   legal_basis: MIFID2 Art. 4(1)(49)
+- id: ccp
+  canonical_en: CCP
+  canonical_fr: CCP
+  aliases: []
+  legal_basis: MIFID2 Art. 4(1)(51)
+- id: approved_publication_arrangement
+  canonical_en: approved publication arrangement
+  canonical_fr: approved publication arrangement
+  aliases: []
+  legal_basis: MIFID2 Art. 4(1)(52)
+- id: approved_reporting_mechanism
+  canonical_en: approved reporting mechanism
+  canonical_fr: approved reporting mechanism
+  aliases: []
+  legal_basis: MIFID2 Art. 4(1)(54)
 - id: agricultural_commodity_derivatives
   canonical_en: agricultural commodity derivatives
   canonical_fr: agricultural commodity derivatives
@@ -2265,6 +2364,11 @@
   canonical_fr: sovereign debt
   aliases: []
   legal_basis: MIFID2 Art. 4(1)(61)
+- id: systematic_internaliser
+  canonical_en: systematic internaliser
+  canonical_fr: systematic internaliser
+  aliases: []
+  legal_basis: MIFIR Art. 2(1)(12)
 - id: exchange_traded_derivative
   canonical_en: exchange-traded derivative
   canonical_fr: exchange-traded derivative
@@ -2275,6 +2379,11 @@
   canonical_fr: actionable indication of interest
   aliases: []
   legal_basis: MIFIR Art. 2(1)(33)
+- id: consolidated_tape_provider
+  canonical_en: consolidated tape provider
+  canonical_fr: consolidated tape provider
+  aliases: []
+  legal_basis: MIFIR Art. 2(1)(35)
 - id: liquidity_fragmentation
   canonical_en: liquidity fragmentation
   canonical_fr: liquidity fragmentation
@@ -2385,11 +2494,6 @@
   canonical_fr: PEPP account
   aliases: []
   legal_basis: PEPP Art. 2(1)(5)
-- id: pepp_distribution
-  canonical_en: PEPP distribution
-  canonical_fr: PEPP distribution
-  aliases: []
-  legal_basis: PEPP Art. 2(1)(8)
 - id: pepp_retirement_benefits
   canonical_en: PEPP retirement benefits
   canonical_fr: PEPP retirement benefits
@@ -2425,16 +2529,6 @@
   canonical_fr: home Member State of the PEPP provider
   aliases: []
   legal_basis: PEPP Art. 2(1)(19)
-- id: home_member_state_of_the_pepp_distributor
-  canonical_en: home Member State of the PEPP distributor
-  canonical_fr: home Member State of the PEPP distributor
-  aliases: []
-  legal_basis: PEPP Art. 2(1)(20)
-- id: host_member_state_of_the_pepp_provider
-  canonical_en: host Member State of the PEPP provider
-  canonical_fr: host Member State of the PEPP provider
-  aliases: []
-  legal_basis: PEPP Art. 2(1)(21)
 - id: host_member_state_of_the_pepp_distributor
   canonical_en: host Member State of the PEPP distributor
   canonical_fr: host Member State of the PEPP distributor
@@ -2520,11 +2614,6 @@
   canonical_fr: units of a collective investment undertaking
   aliases: []
   legal_basis: PROSPECTUS Art. 2(1)(q)
-- id: approval
-  canonical_en: approval
-  canonical_fr: approval
-  aliases: []
-  legal_basis: PROSPECTUS Art. 2(1)(r)
 - id: base_prospectus
   canonical_en: base prospectus
   canonical_fr: base prospectus
@@ -2535,6 +2624,11 @@
   canonical_fr: working days
   aliases: []
   legal_basis: PROSPECTUS Art. 2(1)(t)
+- id: third_country_issuer
+  canonical_en: third country issuer
+  canonical_fr: third country issuer
+  aliases: []
+  legal_basis: PROSPECTUS Art. 2(1)(x)
 - id: offer_period
   canonical_en: offer period
   canonical_fr: offer period
@@ -2650,6 +2744,11 @@
   canonical_fr: means of distance communication
   aliases: []
   legal_basis: PSD2 Art. 4(1)(34)
+- id: microenterprise
+  canonical_en: microenterprise
+  canonical_fr: microenterprise
+  aliases: []
+  legal_basis: PSD2 Art. 4(1)(36)
 - id: electronic_communications_network
   canonical_en: electronic communications network
   canonical_fr: electronic communications network
@@ -2750,6 +2849,11 @@
   canonical_fr: insurance‐based investment product
   aliases: []
   legal_basis: SFDR Art. 2(1)(3)
+- id: portfolio_management
+  canonical_en: portfolio management
+  canonical_fr: portfolio management
+  aliases: []
+  legal_basis: SFDR Art. 2(1)(6)
 - id: pension_product
   canonical_en: pension product
   canonical_fr: pension product
@@ -2860,11 +2964,11 @@
   canonical_fr: issued share capital
   aliases: []
   legal_basis: SHORT_SELLING Art. 2(1)(h)
-- id: market_making_activities
-  canonical_en: market making activities
-  canonical_fr: market making activities
+- id: principal_venue
+  canonical_en: principal venue
+  canonical_fr: principal venue
   aliases: []
-  legal_basis: SHORT_SELLING Art. 2(1)(k)
+  legal_basis: SHORT_SELLING Art. 2(1)(m)
 - id: trading_day
   canonical_en: trading day
   canonical_fr: trading day
@@ -2875,16 +2979,16 @@
   canonical_fr: turnover
   aliases: []
   legal_basis: SHORT_SELLING Art. 2(1)(q)
+- id: captive_insurance_undertaking
+  canonical_en: captive insurance undertaking
+  canonical_fr: captive insurance undertaking
+  aliases: []
+  legal_basis: SOLVENCY2 Art. 13(1)(2)
 - id: reinsurance
   canonical_en: reinsurance
   canonical_fr: reinsurance
   aliases: []
   legal_basis: SOLVENCY2 Art. 13(1)(7)
-- id: establishment
-  canonical_en: establishment
-  canonical_fr: establishment
-  aliases: []
-  legal_basis: SOLVENCY2 Art. 13(1)(12)
 - id: member_state_in_which_the_risk_is_situated
   canonical_en: Member State in which the risk is situated
   canonical_fr: Member State in which the risk is situated
@@ -2900,6 +3004,16 @@
   canonical_fr: intra-group transaction
   aliases: []
   legal_basis: SOLVENCY2 Art. 13(1)(19)
+- id: national_bureau
+  canonical_en: national bureau
+  canonical_fr: national bureau
+  aliases: []
+  legal_basis: SOLVENCY2 Art. 13(1)(23)
+- id: national_guarantee_fund
+  canonical_en: national guarantee fund
+  canonical_fr: national guarantee fund
+  aliases: []
+  legal_basis: SOLVENCY2 Art. 13(1)(24)
 - id: outsourcing
   canonical_en: outsourcing
   canonical_fr: outsourcing
@@ -2950,6 +3064,11 @@
   canonical_fr: risk measure
   aliases: []
   legal_basis: SOLVENCY2 Art. 13(1)(39)
+- id: institution_under_resolution
+  canonical_en: institution under resolution
+  canonical_fr: institution under resolution
+  aliases: []
+  legal_basis: SRMR Art. 3(1)(14)
 - id: agreement
   canonical_en: Agreement
   canonical_fr: Agreement
@@ -3065,11 +3184,6 @@
   canonical_fr: debt securities
   aliases: []
   legal_basis: TRANSPARENCY Art. 2(1)(b)
-- id: controlled_undertaking
-  canonical_en: controlled undertaking
-  canonical_fr: controlled undertaking
-  aliases: []
-  legal_basis: TRANSPARENCY Art. 2(1)(f)
 - id: electronic_means
   canonical_en: electronic means
   canonical_fr: electronic means
@@ -3085,11 +3199,6 @@
   canonical_fr: management company’s home Member State
   aliases: []
   legal_basis: UCITS Art. 2(1)(c)
-- id: management_company_s_host_member_state
-  canonical_en: management company’s host Member State
-  canonical_fr: management company’s host Member State
-  aliases: []
-  legal_basis: UCITS Art. 2(1)(d)
 - id: ucits_home_member_state
   canonical_en: UCITS home Member State
   canonical_fr: UCITS home Member State

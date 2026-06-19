@@ -61,6 +61,10 @@ glossary-l1:
 glossary-l1-cache:
     {{uvr}} python scripts/build_l1_glossary.py --no-fetch
 
+# Classe acteur/concept tous les overrides via LM Studio (reproductible : temp=0, seed=0, cache)
+classify-overrides *ACTS:
+    {{uvr}} python scripts/classify_overrides.py {{ACTS}}
+
 # Contrôle de complétude des overrides (termes extraits vs entrées de classification)
 check-overrides:
     {{uvr}} python scripts/check_overrides.py

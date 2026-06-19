@@ -8,9 +8,9 @@ artefact parallèle.
 - termes typés actor/investor/supervisor → `config/vocabularies/actors.yaml`
 - autres termes (concepts/objets)        → `config/vocabularies/objects.yaml`
 
-Dédup contre l'existant (forme exacte, alias, ou singulier). Nouvelles entrées rassemblées dans
-une section clairement marquée « issu du glossaire, À RELIRE ». Idempotent (au run suivant les
-entrées ajoutées résolvent → ignorées).
+Dédup contre la partie relue à la main (forme exacte, alias, ou singulier). La section « issu du
+glossaire, À RELIRE » est RÉGÉNÉRÉE à chaque run (toute section auto antérieure est retirée avant
+réécriture) : reproductible et idempotent — relancer produit le même fichier au bit près.
 
 Usage : uv run python scripts/vocab_sync.py
 """
@@ -22,7 +22,6 @@ from pathlib import Path
 import yaml
 
 from regulatory_index.glossary import DefinedTerm, harvest_glossary
-from regulatory_index.refdata.vocab import load_vocabulary
 
 ACTOR_TYPES = {"actor", "investor", "supervisor"}
 RAW = Path("data/raw")
@@ -63,16 +62,42 @@ def _glossary_terms() -> list[DefinedTerm]:
     return terms
 
 
+def _index(entries: list[dict[str, object]]) -> tuple[set[str], set[str]]:
+    """À partir d'entrées de vocab brutes : (surfaces normalisées pour dédup, ids déjà utilisés)."""
+    surfaces: set[str] = set()
+    ids: set[str] = set()
+    for e in entries:
+        ident = str(e.get("id") or "")
+        if ident:
+            ids.add(ident)
+        aliases = e.get("aliases")
+        keys: list[object] = [e.get("canonical_en"), e.get("canonical_fr"), e.get("id")]
+        if isinstance(aliases, list):
+            keys.extend(aliases)
+        for key in keys:
+            if key:
+                surfaces.add(str(key).strip().lower())
+    return surfaces, ids
+
+
 def _promote(terms: list[DefinedTerm], vocab_name: str, *, actors_wanted: bool) -> tuple[int, int]:
-    """Ajoute à `{vocab_name}.yaml` les termes (acteurs ou concepts) absents du vocab. Renvoie (avant, ajoutés)."""
-    vocab = load_vocabulary(vocab_name)
+    """Régénère la section glossaire de `{vocab_name}.yaml`. Renvoie (entrées relues, entrées du glossaire).
+
+    La partie relue à la main = tout ce qui précède le marqueur de section auto ; toute section auto
+    antérieure est retirée puis réécrite à neuf → reproductible (relancer donne le même fichier).
+    """
+    path = VOCAB / f"{vocab_name}.yaml"
+    text = path.read_text(encoding="utf-8")
+    marker = SECTION[vocab_name]
+    idx = text.find(marker)
+    base_text = (text[:idx] if idx != -1 else text).rstrip()
+    base_entries: list[dict[str, object]] = yaml.safe_load(base_text) or []
+    surfaces, used_ids = _index(base_entries)
 
     def known(term: str) -> bool:
-        return vocab.resolve(term) is not None or (
-            term.endswith("s") and vocab.resolve(term[:-1]) is not None
-        )
+        t = term.strip().lower()
+        return t in surfaces or (t.endswith("s") and t[:-1] in surfaces)
 
-    used_ids = set(vocab.ids)
     new: dict[str, dict[str, object]] = {}
     for t in terms:
         if not t.term_en.strip():
@@ -97,23 +122,21 @@ def _promote(terms: list[DefinedTerm], vocab_name: str, *, actors_wanted: bool) 
             "legal_basis": t.legal_basis,
         }
 
+    out = base_text + "\n"
     if new:
-        path = VOCAB / f"{vocab_name}.yaml"
-        block = "\n\n" + SECTION[vocab_name] + "\n" + yaml.safe_dump(
+        out += "\n" + marker + "\n" + yaml.safe_dump(
             list(new.values()), allow_unicode=True, sort_keys=False, width=100
         )
-        path.write_text(path.read_text(encoding="utf-8").rstrip() + "\n" + block, encoding="utf-8")
-    return len(vocab.entries), len(new)
+    path.write_text(out, encoding="utf-8")
+    return len(base_entries), len(new)
 
 
 def main() -> int:
     terms = _glossary_terms()
-    a_before, a_new = _promote(terms, "actors", actors_wanted=True)
-    o_before, o_new = _promote(terms, "objects", actors_wanted=False)
-    print(f"actors  : +{a_new:>3} → {a_before + a_new} entrées")
-    print(f"objects : +{o_new:>3} → {o_before + o_new} entrées")
-    if not (a_new or o_new):
-        print("Vocab déjà à jour — rien à ajouter.")
+    a_base, a_new = _promote(terms, "actors", actors_wanted=True)
+    o_base, o_new = _promote(terms, "objects", actors_wanted=False)
+    print(f"actors  : {a_base} relus + {a_new} du glossaire (régénérés) → {a_base + a_new} entrées")
+    print(f"objects : {o_base} relus + {o_new} du glossaire (régénérés) → {o_base + o_new} entrées")
     return 0
 
 

@@ -118,9 +118,11 @@ terms = harvest_glossary(html_en, html_fr, source_id="AIFMD_L1", celex="32011L00
 # terms: list[DefinedTerm] — term_en/fr, type (actor|concept|...), legal_basis, cites, définitions
 ```
 
-**Un seul chemin, sans heuristique.** L'**extraction** est automatique et se rejoue sur n'importe quel acte : article de définitions auto-détecté via le sommaire, points `(a)(b)…` comme `(1)(2)…` découpés de façon déterministe (str, sans regex), FR optionnel → `term_en/fr`, `definition_en/fr`, `legal_basis`. L'**enrichissement** (`type` acteur/concept…, `cites` renvois inter-actes) provient **uniquement** d'un fichier relu par acte (`config/glossary/overrides/{source_id}.yaml`) ; un acte sans override sort avec `type`/`cites` à `null` — **jamais devinés**.
+**Un seul chemin, sans heuristique.** L'**extraction** est automatique et se rejoue sur n'importe quel acte : article de définitions auto-détecté via le sommaire, points `(a)(b)…` comme `(1)(2)…` découpés de façon déterministe (str, sans regex), FR optionnel → `term_en/fr`, `definition_en/fr`, `legal_basis`. L'**enrichissement** (`type` acteur/concept…, `cites` renvois inter-actes) provient d'un fichier par acte (`config/glossary/overrides/{source_id}.yaml`) ; un acte sans override sort avec `type`/`cites` à `null` — **jamais devinés**.
 
-Réplication (vérifiée) : `regindex glossary AIFMD_L2` produit le glossaire du Règl. délégué 231/2013 (définitions à l'**article 1**, points **numérotés**) via le même code, son enrichissement venant de `config/glossary/overrides/AIFMD_L2.yaml`. Le périmètre niveau 1 et le piège « renvois vers des textes abrogés » sont documentés dans `docs/level1_perimeter.md`.
+**Classification acteur/concept reproductible.** Le `type` des overrides est soit **relu à la main** (AIFMD L1/L2), soit **généré de façon reproductible** par `scripts/classify_overrides.py` (`just classify-overrides`) : le modèle local LM Studio est interrogé en décodage déterministe (température 0, graine fixe) avec mise en cache, donc relancer régénère les mêmes fichiers **à l'identique**. Ces `type` sont marqués « à RELIRE » (relecture métier à faire) ; les `cites` restent issus de la relecture. La promotion au vocabulaire contrôlé (`scripts/vocab_sync.py`, `just vocab-sync`) **régénère** sa section de façon **idempotente** (plus d'empilement). Toute la chaîne définitions → classification → vocabulaire est ainsi rejouable sans dérive.
+
+Réplication (vérifiée) : `regindex glossary AIFMD_L2` produit le glossaire du Règl. délégué 231/2013 (définitions à l'**article 1**, points **numérotés**) via le même code, son enrichissement venant de `config/glossary/overrides/AIFMD_L2.yaml`. Le périmètre niveau 1 et le piège « renvois vers des textes abrogés » sont documentés dans `docs/level1_perimeter.md`. La **cartographie des ~40 textes par domaine métier** (niveaux Lamfalussy, volumétrie réelle termes/acteurs par texte) est dans `docs/niveau1_cartographie.md`.
 
 > ℹ️ Dans le manifest livré, seules les sources **EUR-Lex** sont câblées pour un run end-to-end. Les fetchers **AMF** et **Légifrance** sont implémentés et couverts par des tests unitaires, mais pas encore référencés dans `sources_manifest.yaml`. **ESMA** n'a pas de fetcher (PDF) : ses entrées dans le registry servent uniquement de **cibles de citation** (aliases) pour le linkage cross-level.
 
@@ -167,8 +169,9 @@ src/regulatory_index/   (chaque paquet expose son API publique via __init__.py)
   cli.py               Typer CLI : vocab / acquire / extract / link /
                        export / pipeline / sommaire / glossary
 
-scripts/               build_l1_glossary, vocab_sync, check_overrides,
-                       build_corpus_offline, benchmark_models, run_smoke_e2e
+scripts/               build_l1_glossary, classify_overrides, vocab_sync,
+                       check_overrides, build_corpus_offline, benchmark_models,
+                       run_smoke_e2e
 
 tests/                 pytest (schemas, vocab, sources_registry,
                        examples_loader, schema_builder, unit_loader,

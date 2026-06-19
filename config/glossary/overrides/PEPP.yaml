@@ -1,5 +1,6 @@
-# Glossaire PEPP — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
-# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+# Glossaire PEPP — classification acteur/concept générée par scripts/classify_overrides.py
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 '1':
   type: concept
@@ -12,11 +13,11 @@
 '5':
   type: concept
 '6':
-  type: investor
+  type: actor
 '7':
-  type: investor
+  type: actor
 '8':
-  type: concept
+  type: actor
 '9':
   type: concept
 '10':
@@ -40,9 +41,9 @@
 '19':
   type: concept
 '20':
-  type: concept
+  type: actor
 '21':
-  type: concept
+  type: actor
 '22':
   type: concept
 '23':

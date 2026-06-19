@@ -1,18 +1,19 @@
-# Glossaire CSDR — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
-# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+# Glossaire CSDR — classification acteur/concept générée par scripts/classify_overrides.py
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 '1':
-  type: actor
+  type: concept
 '2':
-  type: actor
+  type: concept
 '3':
   type: concept
 '4':
   type: concept
 '5':
-  type: actor
+  type: concept
 '6':
-  type: actor
+  type: concept
 '7':
   type: concept
 '8':
@@ -32,7 +33,7 @@
 '15':
   type: concept
 '16':
-  type: actor
+  type: concept
 '17':
   type: supervisor
 '18':
@@ -50,7 +51,7 @@
 '24':
   type: concept
 '25':
-  type: concept
+  type: actor
 '26':
   type: concept
 '27':
@@ -86,7 +87,7 @@
 '42':
   type: concept
 '43':
-  type: actor
+  type: concept
 '44':
   type: concept
 '45':

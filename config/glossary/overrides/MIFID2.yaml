@@ -1,5 +1,6 @@
-# Glossaire MIFID2 — classification acteur/concept (générée, à RELIRE).
-# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+# Glossaire MIFID2 — classification acteur/concept générée par scripts/classify_overrides.py
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 '1':
   type: actor
@@ -10,13 +11,13 @@
 '4':
   type: concept
 '5':
-  type: concept
+  type: actor
 '6':
   type: concept
 '7':
   type: actor
 '8':
-  type: concept
+  type: actor
 '9':
   type: actor
 '10':
@@ -60,11 +61,11 @@
 '29':
   type: actor
 '30':
-  type: concept
+  type: actor
 '31':
   type: concept
 '32':
-  type: concept
+  type: actor
 '33':
   type: concept
 '34':
@@ -102,13 +103,13 @@
 '50':
   type: concept
 '51':
-  type: actor
+  type: concept
 '52':
-  type: actor
+  type: concept
 '53':
   type: actor
 '54':
-  type: actor
+  type: concept
 '55':
   type: concept
 '56':

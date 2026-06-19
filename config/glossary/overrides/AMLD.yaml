@@ -1,5 +1,6 @@
-# Glossaire AMLD — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
-# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+# Glossaire AMLD — classification acteur/concept générée par scripts/classify_overrides.py
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 '1':
   type: actor
@@ -12,13 +13,13 @@
 '5':
   type: supervisor
 '6':
-  type: concept
+  type: actor
 '7':
   type: actor
 '8':
-  type: concept
+  type: actor
 '9':
-  type: concept
+  type: actor
 '10':
   type: concept
 '11':
@@ -28,7 +29,7 @@
 '13':
   type: concept
 '14':
-  type: concept
+  type: actor
 '15':
   type: concept
 '16':

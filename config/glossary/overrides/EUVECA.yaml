@@ -1,10 +1,11 @@
-# Glossaire EUVECA — classification acteur/concept GÉNÉRÉE par IA (à RELIRE).
-# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+# Glossaire EUVECA — classification acteur/concept générée par scripts/classify_overrides.py
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 a:
   type: concept
 b:
-  type: concept
+  type: actor
 c:
   type: actor
 d:
@@ -18,12 +19,12 @@ g:
 h:
   type: concept
 i:
-  type: concept
+  type: actor
 j:
   type: concept
 k:
-  type: concept
+  type: actor
 l:
-  type: concept
+  type: actor
 m:
   type: supervisor

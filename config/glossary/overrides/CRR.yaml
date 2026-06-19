@@ -1,5 +1,6 @@
-# Glossaire CRR — classification acteur/concept (générée, à RELIRE).
-# type: actor|investor|supervisor|concept. Indexé par étiquette de point.
+# Glossaire CRR — classification acteur/concept générée par scripts/classify_overrides.py
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 '1':
   type: actor
@@ -14,7 +15,7 @@
 '6':
   type: actor
 '7':
-  type: concept
+  type: actor
 '8':
   type: actor
 '9':
@@ -30,45 +31,45 @@
 '14':
   type: actor
 '15':
-  type: concept
+  type: actor
 '16':
   type: concept
 '17':
-  type: concept
+  type: actor
 '18':
   type: actor
 '19':
   type: actor
 '20':
-  type: concept
+  type: actor
 '21':
   type: concept
 '22':
   type: concept
 '23':
-  type: actor
+  type: concept
 '24':
-  type: actor
+  type: concept
 '25':
   type: actor
 '26':
   type: actor
 '27':
-  type: concept
-'28':
   type: actor
+'28':
+  type: concept
 '29':
   type: actor
 '30':
   type: concept
 '31':
-  type: concept
+  type: actor
 '32':
   type: concept
 '33':
   type: concept
 '34':
-  type: actor
+  type: concept
 '35':
   type: concept
 '36':
@@ -90,9 +91,9 @@
 '44':
   type: concept
 '45':
-  type: actor
+  type: supervisor
 '46':
-  type: actor
+  type: concept
 '47':
   type: concept
 '48':
@@ -170,13 +171,13 @@
 '84':
   type: concept
 '85':
-  type: concept
+  type: actor
 '86':
   type: concept
 '87':
   type: concept
 '88':
-  type: actor
+  type: concept
 '89':
   type: concept
 '90':
@@ -196,9 +197,9 @@
 '97':
   type: concept
 '98':
-  type: actor
+  type: concept
 '99':
-  type: actor
+  type: concept
 '100':
   type: concept
 '101':
