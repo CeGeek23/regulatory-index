@@ -47,9 +47,16 @@ dans l'article 4 (et 6) et leur statut actuel :
 ➡️ **Conséquence pour le glossaire** : chaque renvoi doit être re-pointé vers le texte en
 vigueur (colonne de droite). C'est exactement le travail de réconciliation « liste minimale ».
 
-## 3. Univers des textes de niveau 1 à confirmer avec le client
+## 3. Périmètre des textes de niveau 1 (à cadrer avec le client)
 
-Au-delà d'AIFMD, le périmètre « niveau 1 » gestion d'actifs (article de définitions de chacun) :
+⚠️ **« 15 textes » n'est PAS l'intégralité du niveau 1 UE.** C'est le **périmètre gestion
+d'actifs** que nous avons retenu (AIFMD + les textes que ses définitions visent + les grands
+règlements fonds/marchés). Le niveau 1 au sens large contient bien d'autres textes hors de ce
+périmètre (MAR 596/2014, Prospectus 2017/1129, CSDR 909/2014, Short Selling 236/2012, Benchmarks
+2016/1011, Securitisation 2017/2402, CRA 1060/2009, Solvency II, IDD, DORA…). **Le périmètre est
+donc un choix à trancher**, pas une liste fermée.
+
+Périmètre gestion d'actifs (article de définitions de chacun) :
 
 | Texte | CELEX | Art. définitions | Remarque |
 |---|---|---|---|
