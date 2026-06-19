@@ -114,15 +114,16 @@ def export(
     GraphML (Gephi/yEd) n'est pas produit par défaut ; le writer
     `export.graphml_writer.write_graphml` reste dispo pour l'analyse de graphe.
     """
-    out_dir.mkdir(parents=True, exist_ok=True)
+    dest = out_dir / "obligations"  # exports d'obligations regroupés
+    dest.mkdir(parents=True, exist_ok=True)
 
     unit_extractions = load_unit_extractions_from_dir(obligations_dir)
     materialized = materialize(unit_extractions)
 
-    excel_counts = write_workbook(materialized, out_dir / excel_name)
-    csv_counts = write_csv(materialized, out_dir, delimiter=csv_delimiter)
+    excel_counts = write_workbook(materialized, dest / excel_name)
+    csv_counts = write_csv(materialized, dest, delimiter=csv_delimiter)
     graph, stats = build_graph(materialized.obligations, materialized.relations)
-    html_graph_path = write_html_graph(graph, out_dir / "aifmd_relations.html")
+    html_graph_path = write_html_graph(graph, dest / "aifmd_relations.html")
 
     failed_log = obligations_dir / "_failed.jsonl"
     failed_count = 0
@@ -132,7 +133,7 @@ def export(
         )
 
     report = compute(unit_extractions, materialized.obligations, failed_count)
-    write_report(report, out_dir / "quality_report.md")
+    write_report(report, dest / "quality_report.md")
 
     typer.echo(
         json.dumps(
@@ -147,7 +148,7 @@ def export(
                     "edges_by_type": stats.edges_by_type,
                 },
                 "unresolved_citations": len(materialized.unresolved_citations),
-                "quality_report": str(out_dir / "quality_report.md"),
+                "quality_report": str(dest / "quality_report.md"),
             },
             indent=2,
         )
@@ -202,8 +203,9 @@ def sommaire(
     if html_path is None:
         raise typer.BadParameter(f"Aucun HTML en cache pour {source_id} {lang} dans {raw_dir}")
     toc = build_toc(html_path.read_text(encoding="utf-8"), source_id=source_id, language=lang)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    json_path = out_dir / f"sommaire_{source_id}_{lang}.json"
+    dest = out_dir / "sommaire"
+    dest.mkdir(parents=True, exist_ok=True)
+    json_path = dest / f"sommaire_{source_id}_{lang}.json"
     json_path.write_text(toc.model_dump_json(indent=2), encoding="utf-8")
     typer.echo(
         json.dumps(
@@ -270,7 +272,7 @@ def glossary(
     n_actors = sum(1 for t in terms if (t.type or "") in {"actor", "investor", "supervisor"})
     paths = write_glossary(
         terms,
-        out_dir,
+        out_dir / "glossary",
         source_id=source_id,
         title=f"Glossaire {source_id} — {title}",
         yaml_header=(

@@ -12,7 +12,7 @@ Chaque modèle est chargé au contexte CTX (16384) via `lms` avant son tour (com
 Usage:
     uv run python scripts/benchmark_models.py "qwen2.5-7b-instruct" "google/gemma-4-e4b"
 
-Sortie: récap console + rapport markdown dans data/exports/model_benchmark.md
+Sortie: récap console + rapport markdown dans data/exports/obligations/model_benchmark.md
 """
 
 from __future__ import annotations
@@ -29,8 +29,8 @@ from regulatory_index.ingestion.unit_loader import NormativeUnit, load_units_jso
 from regulatory_index.refdata.vocab import load_vocabulary
 
 CORPUS = Path("data/units/corpus.jsonl")
-REPORT = Path("data/exports/model_benchmark.md")
-BENCH_RAW = Path("data/exports/_bench_raw.json")  # cache reprenable (1 entrée par modèle)
+REPORT = Path("data/exports/obligations/model_benchmark.md")
+BENCH_RAW = Path("data/exports/obligations/_bench_raw.json")  # cache reprenable (1 entrée par modèle)
 CTX = 16384  # contexte chargé pour chaque modèle (le prompt vocab + few-shots + schéma est gros)
 SUBSET = [
     "AIFMD_L1#en#art_15",   # EN L1 — gestion des risques (dense)

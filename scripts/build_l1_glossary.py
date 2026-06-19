@@ -31,7 +31,7 @@ from regulatory_index.ingestion.eurlex_fetcher import fetch_to_disk
 from regulatory_index.refdata.vocab import load_vocabulary
 
 RAW = Path("data/raw")
-OUT = Path("data/exports")
+OUT = Path("data/exports/glossary")
 ACTOR_TYPES = {"actor", "investor", "supervisor"}
 
 # Périmètre niveau 1 (source_id -> CELEX de base). Récupéré via l'API Cellar (cf.

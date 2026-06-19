@@ -101,10 +101,10 @@ Pipeline **autonome** qui part directement du **HTML d'un acte** (pas d'acquisit
 
 ```bash
 # Sommaire (chapitres / sections / articles) + repérage de l'article de définitions
-uv run regindex sommaire AIFMD_L1            # → data/exports/sommaire_AIFMD_L1_EN.json
+uv run regindex sommaire AIFMD_L1            # → data/exports/sommaire/sommaire_AIFMD_L1_EN.json
 
 # Glossaire des termes définis (bilingue EN/FR, acteurs isolés des concepts)
-uv run regindex glossary AIFMD_L1            # → data/exports/{AIFMD_L1_definitions.yaml, glossary_AIFMD_L1.csv/.md}
+uv run regindex glossary AIFMD_L1            # → data/exports/glossary/{AIFMD_L1_definitions.yaml, glossary_AIFMD_L1.csv/.md}
 ```
 
 API librairie (le vrai produit — `html` en entrée, données en sortie) :
@@ -141,9 +141,11 @@ data/
   units/               JSONL d'unités normatives (1 ligne = 1 article)
   obligations/         Extractions JSONL (1 fichier par unit, idempotent)
                        + _failed.jsonl si échec (réinitialisé à chaque run)
-  exports/             aifmd_index.xlsx, obligations.csv, relations.csv,
-                       aifmd_relations.html,
-                       quality_report.md
+  exports/             sorties classées par type :
+    glossary/            *_definitions.yaml, glossary_*.csv/.md, glossary_L1_minimal/actors
+    sommaire/            sommaire_*.json (tables des matières)
+    obligations/         aifmd_index.xlsx, obligations.csv, relations.csv,
+                         aifmd_relations.html, quality_report.md
 
 src/regulatory_index/   (chaque paquet expose son API publique via __init__.py)
   schemas/             modèles de données PURS (Pydantic) : Source, Obligation,
@@ -199,7 +201,7 @@ tests/                 pytest (schemas, vocab, sources_registry,
 
 8 unités acquises (AIFMD Directive Art. 15-16 EN+FR, Délégué 231/2013 Art. 38-40, 44, 47 EN) → **58 obligations** extraites (100% grounded), **3 relations cross-level `operationalizes`** captées (L2 → L1).
 
-> ⚠️ Chiffres **illustratifs** d'un ancien run local one-off (petit LLM local, non déterministe) — non committés et non reproductibles à l'identique. `data/` est gitignoré : régénère le rapport via `uv run regindex pipeline data/units/corpus.jsonl` puis `uv run regindex export` (→ `data/exports/quality_report.md`).
+> ⚠️ Chiffres **illustratifs** d'un ancien run local one-off (petit LLM local, non déterministe) — non committés et non reproductibles à l'identique. `data/` est gitignoré : régénère le rapport via `uv run regindex pipeline data/units/corpus.jsonl` puis `uv run regindex export` (→ `data/exports/obligations/quality_report.md`).
 
 ## Limitations connues
 
