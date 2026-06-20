@@ -27,6 +27,7 @@ ACTOR_TYPES = {"actor", "investor", "supervisor"}
 RAW = Path("data/raw")
 OVERRIDES = Path("config/glossary/overrides")
 VOCAB = Path("config/vocabularies")
+PRUNE = Path("config/glossary/prune.yaml")  # élagage versionné (drop/merge), réduit la dilution
 SECTION = {
     "actors": "# --- Acteurs issus du glossaire niveau 1 (sync auto via scripts/vocab_sync.py — À RELIRE) ---",
     "objects": "# --- Concepts/objets issus du glossaire niveau 1 (sync auto via scripts/vocab_sync.py — À RELIRE) ---",
@@ -62,6 +63,25 @@ def _glossary_terms() -> list[DefinedTerm]:
             )
         )
     return terms
+
+
+def _norm(term: str) -> str:
+    return " ".join(term.lower().split())
+
+
+def _load_prune(vocab_name: str) -> tuple[set[str], dict[str, str]]:
+    """Décisions d'élagage versionnées pour `{vocab_name}` (actors/objects), appliquées à la promotion.
+
+    `drop` retire un terme du vocab promu ; `merge` replie une variante sur un terme canonique
+    (sa forme devient un alias du canonique). Reproductible : même prune.yaml → même vocab.
+    """
+    if not PRUNE.exists():
+        return set(), {}
+    raw = yaml.safe_load(PRUNE.read_text(encoding="utf-8")) or {}
+    section = raw.get(vocab_name) or {}
+    drop = {_norm(str(x)) for x in (section.get("drop") or [])}
+    merge = {_norm(str(k)): _norm(str(v)) for k, v in (section.get("merge") or {}).items()}
+    return drop, merge
 
 
 def _index(entries: list[dict[str, object]]) -> tuple[set[str], set[str]]:
@@ -100,6 +120,8 @@ def _promote(terms: list[DefinedTerm], vocab_name: str, *, actors_wanted: bool) 
         t = term.strip().lower()
         return t in surfaces or (t.endswith("s") and t[:-1] in surfaces)
 
+    drop, merge = _load_prune(vocab_name)
+    pending_alias: list[tuple[str, str, str]] = []  # (cible normalisée, surface EN, surface FR)
     new: dict[str, dict[str, object]] = {}
     for t in terms:
         if not t.term_en.strip():
@@ -108,7 +130,12 @@ def _promote(terms: list[DefinedTerm], vocab_name: str, *, actors_wanted: bool) 
             continue
         if known(t.term_en) or (t.term_fr and known(t.term_fr)):
             continue
-        key = " ".join(t.term_en.lower().split())
+        key = _norm(t.term_en)
+        if key in drop:
+            continue
+        if key in merge:
+            pending_alias.append((merge[key], t.term_en, t.term_fr))
+            continue
         if key in new:
             continue
         base = _slug(t.term_en) or _slug(t.term_fr) or "term"
@@ -123,6 +150,17 @@ def _promote(terms: list[DefinedTerm], vocab_name: str, *, actors_wanted: bool) 
             "aliases": [],
             "legal_basis": t.legal_basis,
         }
+
+    # Fusions : la variante devient un alias du canonique (si celui-ci est promu ; sinon retirée).
+    for target, surface_en, surface_fr in pending_alias:
+        entry = new.get(target)
+        if entry is None:
+            continue
+        aliases = entry["aliases"]
+        assert isinstance(aliases, list)
+        for surface in (surface_en, surface_fr):
+            if surface and surface not in (entry["canonical_en"], entry["canonical_fr"]) and surface not in aliases:
+                aliases.append(surface)
 
     out = base_text + "\n"
     if new:

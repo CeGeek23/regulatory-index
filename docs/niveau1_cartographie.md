@@ -214,7 +214,7 @@ C'est exactement à quoi servent les **articles de définition** : ils fixent, p
 | Classer acteur/concept (reproductible) | `scripts/classify_overrides.py` (LM Studio, temp 0/seed fixe, cache) + harmonisation + `tie_breaks.yaml` | `config/glossary/overrides/*.yaml` |
 | Isoler acteurs / concepts | override + `refdata/vocab.py` | acteur · concept · *à classer* |
 | Construire la carte ci-dessus | `scripts/build_l1_glossary.py` (`L1_PERIMETER`) | `data/exports/glossary/` |
-| Alimenter le vocabulaire (idempotent) | `scripts/vocab_sync.py` | `config/vocabularies/*.yaml` |
+| Alimenter le vocabulaire (idempotent, élagage `prune.yaml`) | `scripts/vocab_sync.py` | `config/vocabularies/*.yaml` |
 
 Le **périmètre** (la liste des ~40 textes et leur CELEX) est défini une seule fois dans
 `L1_PERIMETER` ([scripts/build_l1_glossary.py](../scripts/build_l1_glossary.py)). Ajouter un texte =
@@ -231,7 +231,7 @@ une base d'actes**.
   étant tranchées par `config/glossary/tie_breaks.yaml` (décisions versionnées). Ce qui reste, c'est
   la **validation métier** (confirmer ces décisions) — pas la reproductibilité. L'extraction du terme
   et de sa définition est, elle, fidèle au texte.
-- **Bilingue** : les **42/42 textes** sont récupérés en EN + FR ; **148/226 acteurs** du vocabulaire
+- **Bilingue** : les **42/42 textes** sont récupérés en EN + FR ; **147/225 acteurs** du vocabulaire
   ont un libellé FR officiel distinct (le reste partage EN/FR ou attend la relecture).
 - **Versions de base, pas consolidées** : la carte utilise les CELEX d'origine. Les versions « à
   jour » (consolidées) ont un CELEX daté distinct ; la résolution automatique existe

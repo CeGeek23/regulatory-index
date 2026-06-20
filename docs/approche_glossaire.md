@@ -115,10 +115,10 @@ donc reproductibles : c'est là que la relecture humaine se pose une fois pour t
 du terme et de la définition reste fidèle au texte ; les catégories restent **marquées « à RELIRE »**.
 
 **Bilingue** : les **42/42 textes** sont désormais récupérés en **EN + FR** (versions officielles),
-et **148/226 acteurs** du vocabulaire portent un libellé **FR** distinct.
+et **147/225 acteurs** du vocabulaire portent un libellé **FR** distinct.
 
 **Boucle glossaire → vocabulaire (le point clé)** : les termes du glossaire sont désormais **versés
-dans le vocabulaire de référence du projet** — **226 acteurs** (`actors.yaml`) et **619 concepts/
+dans le vocabulaire de référence du projet** — **225 acteurs** (`actors.yaml`) et **612 concepts/
 objets** (`objects.yaml`). Autrement dit, les objets identifiés dans les définitions **alimentent
 maintenant l'extraction d'obligations** (reconnaissance des termes + normalisation), exactement la
 finalité « les identifier comme objets pour mieux les lier ». La promotion est **reproductible et
@@ -137,9 +137,12 @@ acteur/concept régénérable à l'identique (LM Studio, cache), promotion au vo
    et les **14 égalités tranchées par des propositions** dans `config/glossary/tie_breaks.yaml`
    (lecture des définitions + vérif croisée). Il reste à **confirmer/ajuster** ces décisions — une
    ligne à éditer, le générateur ré-applique. L'ensemble reste **marqué « à relire »**.
-2. **Élaguer le vocabulaire injecté à l'extraction** : 226 acteurs + 619 objets, c'est beaucoup
-   pour un petit modèle local (risque de dilution du prompt). Candidats listés dans
-   `data/exports/glossary/review_pruning.md` (quasi-doublons, mono-source longs) — à arbitrer.
+2. **Élaguer le vocabulaire injecté à l'extraction** : 225 acteurs + 612 objets, c'est beaucoup
+   pour un petit modèle local (risque de dilution du prompt). Mécanisme en place et reproductible —
+   `config/glossary/prune.yaml` (drop/merge appliqués par `vocab_sync`) ; 8 fusions de variantes
+   purement morphologiques déjà validées. Reste à arbitrer les autres candidats listés dans
+   `data/exports/glossary/review_pruning.md` (quasi-doublons juridiquement distincts à NE pas fusionner,
+   mono-source longs).
 3. **Basculer sur les versions consolidées** (à jour) — la capacité est en place (résolution
    automatique du dernier CELEX consolidé), à généraliser à tout le périmètre. *Choix de méthode
    (texte d'origine vs consolidé), pas une étape mécanique : à décider, pas à appliquer en aveugle.*

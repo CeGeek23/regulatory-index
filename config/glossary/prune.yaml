@@ -1,0 +1,27 @@
+# Élagage du vocabulaire promu — réduit la dilution du prompt d'extraction. Appliqué par
+# scripts/vocab_sync.py À CHAQUE régénération de la section « issu du glossaire » ; ne touche JAMAIS
+# la partie relue à la main. Reproductible : même prune.yaml → même vocabulaire.
+#
+#   drop:   termes (EN) retirés du vocab promu (bruit / hyper-spécifique).
+#   merge:  { "variante (EN)": "terme canonique (EN)" } — la variante devient un ALIAS du canonique
+#           (reste reconnue), si le canonique est promu ; sinon elle est retirée.
+#
+# Les fusions ci-dessous sont des variantes PUREMENT morphologiques/typographiques (pluriel, tiret,
+# dash unicode), validées une par une (un agent/famille). Les « quasi-doublons » juridiquement
+# DISTINCTS (EU/non-EU, X/parent X, service/prestataire…) ont été délibérément NON fusionnés.
+# Détail des candidats : data/exports/glossary/review_pruning.md
+
+actors:
+  drop: []
+  merge:
+    data reporting service provider: data reporting services provider
+objects:
+  drop: []
+  merge:
+    securitisation special purpose entities: securitisation special purpose entity
+    title transfer collateral arrangement: title transfer financial collateral arrangement
+    units of a collective investment undertaking: units in collective investment undertakings
+    money-market instruments: money market instruments
+    insurance‐based investment product: insurance-based investment product
+    pan‐European Personal Pension Product: pan-European Personal Pension Product
+    risk-mitigation techniques: risk mitigation techniques
