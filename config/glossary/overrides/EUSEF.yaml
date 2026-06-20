@@ -23,8 +23,8 @@ i:
 j:
   type: concept
 k:
-  type: actor
+  type: concept
 l:
-  type: actor
+  type: concept
 m:
   type: supervisor

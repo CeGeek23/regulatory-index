@@ -171,11 +171,11 @@ Colonnes : **CELEX** (identifiant EUR-Lex), **type** (Directive/Règlement, lu d
 | Textes moissonnés | **~40** | 42 entrées dont 1 purement modificative (0 terme) |
 | Termes définis **bruts** | **1 271** | somme par texte (un terme compté autant de fois qu'il est défini) |
 | Termes **distincts** | **782** | après déduplication inter-textes (liste minimale) |
-| **Acteurs isolés** | **214** | dont **38 partagés par ≥3 textes** (ex. *credit institution*, *competent authority*) |
+| **Acteurs isolés** | **209** | partagés entre textes pour beaucoup (ex. *credit institution*, *competent authority*) |
 
 > **À lire ainsi** : 1 271 entrées brutes → on dédoublonne (un même *« investisseur professionnel »*
 > défini dans 10 textes = 1 ligne, avec la trace de ses 10 bases légales) → **782 termes distincts**,
-> dont **214 acteurs**. C'est la « liste minimale » : le vocabulaire de référence du projet.
+> dont **209 acteurs**. C'est la « liste minimale » : le vocabulaire de référence du projet.
 
 **Lecture des volumes** : le poids n'est pas uniforme. La **banque** (CRR 128, BRRD 108) et les
 **marchés** (MiFID II 63) concentrent les définitions ; à l'inverse certains textes sont quasi muets
@@ -227,10 +227,11 @@ une base d'actes**.
 
 - **Classification acteur/concept** : relue à la main pour AIFMD L1/L2 ; pour les ~38 autres textes
   elle est **générée de façon reproductible** (`scripts/classify_overrides.py` via LM Studio, décodage
-  déterministe + cache) et **marquée « à RELIRE »**. Ce qui reste, c'est la **validation métier** —
+  déterministe + cache) puis **harmonisée** entre textes (un terme = un type partout) et **marquée
+  « à RELIRE »**. Ce qui reste, c'est la **validation métier** (dont 14 termes à égalité à trancher) —
   pas la reproductibilité. L'extraction du terme et de sa définition est, elle, fidèle au texte.
-- **Bilingue partiel** : le FR n'est récupéré que pour une partie des textes (52/214 acteurs ont leur
-  libellé FR).
+- **Bilingue** : les **42/42 textes** sont récupérés en EN + FR ; **151/228 acteurs** du vocabulaire
+  ont un libellé FR officiel distinct (le reste partage EN/FR ou attend la relecture).
 - **Versions de base, pas consolidées** : la carte utilise les CELEX d'origine. Les versions « à
   jour » (consolidées) ont un CELEX daté distinct ; la résolution automatique existe
   (`--consolidated`) mais n'est pas généralisée à tout le périmètre.

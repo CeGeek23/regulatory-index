@@ -3,9 +3,9 @@
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 '1':
-  type: actor
+  type: concept
 '2':
-  type: actor
+  type: concept
 '3':
   type: concept
 '4':

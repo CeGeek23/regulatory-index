@@ -12,10 +12,11 @@ Pour chaque texte de niveau 1 :
    liste de tous les termes (acteurs + concepts), bilingue EN/FR, avec base légale et renvois ;
 3. réconcilier les termes communs entre textes (un concept = une entrée — la « liste minimale »).
 
-Statut actuel : **~40 textes du niveau 1 services financiers moissonnés** — **782 termes
-distincts, 214 acteurs isolés** (sortie : `data/exports/glossary_L1_minimal.csv` +
+Statut actuel : **~40 textes du niveau 1 services financiers moissonnés en EN + FR** — **782 termes
+distincts, 209 acteurs isolés** (sortie : `data/exports/glossary_L1_minimal.csv` +
 `glossary_L1_actors.csv` ; détail et limites dans `docs/approche_glossaire.md`). Classification
-acteur/concept relue à la main pour AIFMD, **générée « à relire » pour les autres textes**.
+acteur/concept relue à la main pour AIFMD, **générée de façon reproductible (LM Studio) puis
+harmonisée, « à relire », pour les autres textes**.
 Génération de bout en bout : `uv run python scripts/build_l1_glossary.py` (auto-fetch via Cellar).
 
 ## 2. Le point « textes les plus à jour » ⚠️

@@ -47,16 +47,18 @@ def _slug(text: str) -> str:
 
 
 def _glossary_terms() -> list[DefinedTerm]:
-    """Tous les termes définis du glossaire (chaque acte ayant un override)."""
+    """Tous les termes définis du glossaire (chaque acte ayant un override), EN + FR si dispo."""
     terms: list[DefinedTerm] = []
     for source_id in sorted(p.stem for p in OVERRIDES.glob("*.yaml")):
-        html = sorted((RAW / source_id).glob("*_EN_*.html"), key=lambda p: p.stat().st_size, reverse=True)
-        if not html:
+        en = sorted((RAW / source_id).glob("*_EN_*.html"), key=lambda p: p.stat().st_size, reverse=True)
+        if not en:
             continue
+        fr = sorted((RAW / source_id).glob("*_FR_*.html"), key=lambda p: p.stat().st_size, reverse=True)
         terms.extend(
             harvest_glossary(
-                html[0].read_text(encoding="utf-8"), source_id=source_id,
-                celex=html[0].name.split("_")[0], level=1,
+                en[0].read_text(encoding="utf-8"),
+                fr[0].read_text(encoding="utf-8") if fr else "",
+                source_id=source_id, celex=en[0].name.split("_")[0], level=1,
             )
         )
     return terms

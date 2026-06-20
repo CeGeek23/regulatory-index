@@ -68,20 +68,22 @@ L1_PERIMETER = {
 
 
 def _ensure_cached() -> None:
-    """Récupère le HTML EN manquant de chaque texte du périmètre via Cellar (idempotent).
+    """Récupère le HTML EN **et FR** manquant de chaque texte du périmètre via Cellar (idempotent).
 
-    Best-effort : une source déjà en cache est sautée ; un échec réseau est signalé et
+    Best-effort : une langue déjà en cache est sautée ; un échec réseau est signalé et
     n'interrompt pas (on tourne alors sur ce qui est en cache). Désactivable via --no-fetch.
+    Le bilingue est ainsi acquis de façon reproductible (et non plus EN seul).
     """
     for source_id, celex in L1_PERIMETER.items():
         folder = RAW / source_id
-        if list(folder.glob("*_EN_*.html")):
-            continue
-        try:
-            path = fetch_to_disk(celex, "EN", folder)
-            print(f"  fetch {source_id} EN: {path.name}")
-        except Exception as exc:  # réseau indisponible / WAF / CELEX inconnu
-            print(f"  fetch {source_id} EN: échec ({type(exc).__name__}) — ignoré")
+        for lang in ("EN", "FR"):
+            if list(folder.glob(f"*_{lang}_*.html")):
+                continue
+            try:
+                path = fetch_to_disk(celex, lang, folder)
+                print(f"  fetch {source_id} {lang}: {path.name}")
+            except Exception as exc:  # réseau indisponible / WAF / CELEX inconnu
+                print(f"  fetch {source_id} {lang}: échec ({type(exc).__name__}) — ignoré")
 
 
 def _largest(folder: Path, lang: str) -> Path | None:
