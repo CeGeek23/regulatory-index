@@ -99,7 +99,7 @@ Short Selling, Benchmarks, Securitisation, SFTR, EMIR, Transparence, CRA), banqu
 (ECSP), retraite (PEPP, IORP II), LCB-FT (LBC-FT), comptable, AEMF/ESMA.
 
 **Résultat consolidé :** **1 271 termes définis → 782 termes distincts** (liste minimale
-dédoublonnée) → **209 acteurs isolés**, dont une part partagée par plusieurs textes (ex. « credit
+dédoublonnée) → **207 acteurs isolés**, dont une part partagée par plusieurs textes (ex. « credit
 institution », « competent authority »). La dédup relie le même terme entre actes et garde la
 trace de toutes ses bases légales.
 
@@ -108,15 +108,17 @@ trace de toutes ses bases légales.
 (`scripts/classify_overrides.py`) interroge le modèle local LM Studio en décodage déterministe
 (température 0, graine fixe) et met le résultat en cache, si bien que relancer régénère exactement
 les mêmes overrides. Une **passe d'harmonisation déterministe** aligne ensuite un même terme sur
-**un seul type dans tout le corpus** (vote majoritaire ; les égalités sont signalées, à trancher).
-L'extraction du terme et de la définition reste fidèle au texte ; seule la catégorie est proposée
-par le modèle, **marquée « à RELIRE »** (relecture métier à faire).
+**un seul type dans tout le corpus** (vote majoritaire ; les égalités sont signalées). Les **14
+égalités résiduelles** (le modèle hésite à parts égales) sont tranchées par
+`config/glossary/tie_breaks.yaml` — des **décisions métier versionnées**, appliquées en dernier et
+donc reproductibles : c'est là que la relecture humaine se pose une fois pour toutes. L'extraction
+du terme et de la définition reste fidèle au texte ; les catégories restent **marquées « à RELIRE »**.
 
 **Bilingue** : les **42/42 textes** sont désormais récupérés en **EN + FR** (versions officielles),
-et **151/228 acteurs** du vocabulaire portent un libellé **FR** distinct.
+et **148/226 acteurs** du vocabulaire portent un libellé **FR** distinct.
 
 **Boucle glossaire → vocabulaire (le point clé)** : les termes du glossaire sont désormais **versés
-dans le vocabulaire de référence du projet** — **228 acteurs** (`actors.yaml`) et **630 concepts/
+dans le vocabulaire de référence du projet** — **226 acteurs** (`actors.yaml`) et **619 concepts/
 objets** (`objects.yaml`). Autrement dit, les objets identifiés dans les définitions **alimentent
 maintenant l'extraction d'obligations** (reconnaissance des termes + normalisation), exactement la
 finalité « les identifier comme objets pour mieux les lier ». La promotion est **reproductible et
@@ -130,12 +132,14 @@ acteur/concept régénérable à l'identique (LM Studio, cache), promotion au vo
 
 ## 11. Ce qui reste à faire
 
-1. **Relire la classification acteur/concept** (seul point réellement manuel restant) : générée de
-   façon **reproductible** (`scripts/classify_overrides.py`, LM Studio) puis **harmonisée** entre
-   textes, et **marquée « à relire »**. Il reste la **validation métier** — surtout les **14 termes
-   à égalité** (le modèle hésite à parts égales, ex. *issuer*, *investor*) à trancher à la main.
-2. **Élaguer le vocabulaire injecté à l'extraction** : 228 acteurs + 630 objets, c'est beaucoup
-   pour un petit modèle local (risque de dilution du prompt) — à arbitrer après relecture.
+1. **Valider la classification acteur/concept** (seul point réellement manuel restant) : générée de
+   façon **reproductible** (`scripts/classify_overrides.py`, LM Studio), **harmonisée** entre textes,
+   et les **14 égalités tranchées par des propositions** dans `config/glossary/tie_breaks.yaml`
+   (lecture des définitions + vérif croisée). Il reste à **confirmer/ajuster** ces décisions — une
+   ligne à éditer, le générateur ré-applique. L'ensemble reste **marqué « à relire »**.
+2. **Élaguer le vocabulaire injecté à l'extraction** : 226 acteurs + 619 objets, c'est beaucoup
+   pour un petit modèle local (risque de dilution du prompt). Candidats listés dans
+   `data/exports/glossary/review_pruning.md` (quasi-doublons, mono-source longs) — à arbitrer.
 3. **Basculer sur les versions consolidées** (à jour) — la capacité est en place (résolution
    automatique du dernier CELEX consolidé), à généraliser à tout le périmètre. *Choix de méthode
    (texte d'origine vs consolidé), pas une étape mécanique : à décider, pas à appliquer en aveugle.*

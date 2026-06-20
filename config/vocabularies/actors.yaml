@@ -444,6 +444,11 @@
   canonical_fr: tiers lié
   aliases: []
   legal_basis: CRA Art. 3(1)(i)
+- id: local_firm
+  canonical_en: local firm
+  canonical_fr: local firm
+  aliases: []
+  legal_basis: CRD4 Art. 3(1)(4)
 - id: insurance_undertaking
   canonical_en: insurance undertaking
   canonical_fr: insurance undertaking
@@ -484,6 +489,16 @@
   canonical_fr: financial sector entity
   aliases: []
   legal_basis: CRD4 Art. 3(1)(23)
+- id: eu_parent_institution
+  canonical_en: EU parent institution
+  canonical_fr: EU parent institution
+  aliases: []
+  legal_basis: CRD4 Art. 3(1)(25)
+- id: eu_parent_financial_holding_company
+  canonical_en: EU parent financial holding company
+  canonical_fr: EU parent financial holding company
+  aliases: []
+  legal_basis: CRD4 Art. 3(1)(27)
 - id: systemically_important_institution
   canonical_en: systemically important institution
   canonical_fr: systemically important institution
@@ -494,31 +509,21 @@
   canonical_fr: ESCB central banks
   aliases: []
   legal_basis: CRD4 Art. 3(1)(41)
-- id: local_firm
-  canonical_en: local firm
-  canonical_fr: local firm
-  aliases: []
-  legal_basis: CRR Art. 4(1)(4)
 - id: public_sector_entity
   canonical_en: public sector entity
   canonical_fr: public sector entity
   aliases: []
   legal_basis: CRR Art. 4(1)(8)
+- id: third_country_insurance_undertaking
+  canonical_en: third-country insurance undertaking
+  canonical_fr: third-country insurance undertaking
+  aliases: []
+  legal_basis: CRR Art. 4(1)(23)
 - id: recognised_third_country_investment_firm
   canonical_en: recognised third-country investment firm
   canonical_fr: recognised third-country investment firm
   aliases: []
   legal_basis: CRR Art. 4(1)(25)
-- id: eu_parent_institution
-  canonical_en: EU parent institution
-  canonical_fr: EU parent institution
-  aliases: []
-  legal_basis: CRR Art. 4(1)(29)
-- id: eu_parent_financial_holding_company
-  canonical_en: EU parent financial holding company
-  canonical_fr: EU parent financial holding company
-  aliases: []
-  legal_basis: CRR Art. 4(1)(31)
 - id: positions_held_with_trading_intent
   canonical_en: positions held with trading intent
   canonical_fr: positions held with trading intent
@@ -614,6 +619,11 @@
   canonical_fr: intermédiaire d’assurance
   aliases: []
   legal_basis: DORA Art. 3(1)(49)
+- id: ancillary_insurance_intermediary
+  canonical_en: ancillary insurance intermediary
+  canonical_fr: intermédiaire d’assurance à titre accessoire
+  aliases: []
+  legal_basis: DORA Art. 3(1)(50)
 - id: reinsurance_intermediary
   canonical_en: reinsurance intermediary
   canonical_fr: intermédiaire de réassurance
@@ -684,6 +694,11 @@
   canonical_fr: investisseur non averti
   aliases: []
   legal_basis: ECSP Art. 2(1)(k)
+- id: special_purpose_vehicle
+  canonical_en: special purpose vehicle
+  canonical_fr: entité ad hoc
+  aliases: []
+  legal_basis: ECSP Art. 2(1)(q)
 - id: competent_authority_of_the_eltif
   canonical_en: competent authority of the ELTIF
   canonical_fr: competent authority of the ELTIF
@@ -769,11 +784,6 @@
   canonical_fr: distribution de réassurances
   aliases: []
   legal_basis: IDD Art. 2(1)(2)
-- id: ancillary_insurance_intermediary
-  canonical_en: ancillary insurance intermediary
-  canonical_fr: intermédiaire d’assurance à titre accessoire
-  aliases: []
-  legal_basis: IDD Art. 2(1)(4)
 - id: insurance_distributor
   canonical_en: insurance distributor
   canonical_fr: distributeur de produits d’assurance
@@ -909,21 +919,11 @@
   canonical_fr: prestataire de services de paiement
   aliases: []
   legal_basis: MICA Art. 3(1)(42)
-- id: deposit
-  canonical_en: deposit
-  canonical_fr: dépôt
-  aliases: []
-  legal_basis: MICA Art. 3(1)(50)
 - id: execution_of_orders_on_behalf_of_clients
   canonical_en: execution of orders on behalf of clients
   canonical_fr: exécution d’ordres pour le compte de clients
   aliases: []
   legal_basis: MIFID2 Art. 4(1)(5)
-- id: portfolio_management
-  canonical_en: portfolio management
-  canonical_fr: gestion de portefeuille
-  aliases: []
-  legal_basis: MIFID2 Art. 4(1)(8)
 - id: retail_client
   canonical_en: retail client
   canonical_fr: client de détail
@@ -1104,11 +1104,6 @@
   canonical_fr: authorised primary dealer
   aliases: []
   legal_basis: SHORT_SELLING Art. 2(1)(n)
-- id: third_country_insurance_undertaking
-  canonical_en: third-country insurance undertaking
-  canonical_fr: entreprise d'assurance d'un pays tiers
-  aliases: []
-  legal_basis: SOLVENCY2 Art. 13(1)(3)
 - id: captive_reinsurance_undertaking
   canonical_en: captive reinsurance undertaking
   canonical_fr: entreprise captive de réassurance
@@ -1124,11 +1119,6 @@
   canonical_fr: établissement
   aliases: []
   legal_basis: SOLVENCY2 Art. 13(1)(12)
-- id: special_purpose_vehicle
-  canonical_en: special purpose vehicle
-  canonical_fr: véhicule de titrisation
-  aliases: []
-  legal_basis: SOLVENCY2 Art. 13(1)(26)
 - id: national_resolution_authority
   canonical_en: national resolution authority
   canonical_fr: national resolution authority

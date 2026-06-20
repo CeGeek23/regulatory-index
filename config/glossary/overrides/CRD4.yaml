@@ -9,7 +9,7 @@
 '3':
   type: actor
 '4':
-  type: concept
+  type: actor
 '5':
   type: actor
 '6':
@@ -51,11 +51,11 @@
 '24':
   type: concept
 '25':
-  type: concept
+  type: actor
 '26':
   type: concept
 '27':
-  type: concept
+  type: actor
 '28':
   type: concept
 '29':

@@ -1039,11 +1039,6 @@
   canonical_fr: activités de notation de crédit
   aliases: []
   legal_basis: CRA Art. 3(1)(o)
-- id: local_firm
-  canonical_en: local firm
-  canonical_fr: local firm
-  aliases: []
-  legal_basis: CRD4 Art. 3(1)(4)
 - id: systemic_risk
   canonical_en: systemic risk
   canonical_fr: systemic risk
@@ -1059,16 +1054,6 @@
   canonical_fr: mixed activity holding company
   aliases: []
   legal_basis: CRD4 Art. 3(1)(21)
-- id: eu_parent_institution
-  canonical_en: EU parent institution
-  canonical_fr: EU parent institution
-  aliases: []
-  legal_basis: CRD4 Art. 3(1)(25)
-- id: eu_parent_financial_holding_company
-  canonical_en: EU parent financial holding company
-  canonical_fr: EU parent financial holding company
-  aliases: []
-  legal_basis: CRD4 Art. 3(1)(27)
 - id: eu_parent_mixed_financial_holding_company
   canonical_en: EU parent mixed financial holding company
   canonical_fr: EU parent mixed financial holding company
@@ -1154,11 +1139,6 @@
   canonical_fr: collective investment undertaking
   aliases: []
   legal_basis: CRR Art. 4(1)(7)
-- id: third_country_insurance_undertaking
-  canonical_en: third-country insurance undertaking
-  canonical_fr: third-country insurance undertaking
-  aliases: []
-  legal_basis: CRR Art. 4(1)(23)
 - id: third_country_reinsurance_undertaking
   canonical_en: third-country reinsurance undertaking
   canonical_fr: third-country reinsurance undertaking
@@ -1809,11 +1789,6 @@
   canonical_fr: référentiel central
   aliases: []
   legal_basis: DORA Art. 3(1)(41)
-- id: ancillary_insurance_intermediary
-  canonical_en: ancillary insurance intermediary
-  canonical_fr: intermédiaire d’assurance à titre accessoire
-  aliases: []
-  legal_basis: DORA Art. 3(1)(50)
 - id: issuer_of_asset_referenced_tokens
   canonical_en: issuer of asset-referenced tokens
   canonical_fr: émetteur de jetons se référant à un ou des actifs
@@ -1874,11 +1849,6 @@
   canonical_fr: support durable
   aliases: []
   legal_basis: ECSP Art. 2(1)(p)
-- id: special_purpose_vehicle
-  canonical_en: special purpose vehicle
-  canonical_fr: entité ad hoc
-  aliases: []
-  legal_basis: ECSP Art. 2(1)(q)
 - id: capital
   canonical_en: capital
   canonical_fr: capital
@@ -2084,11 +2054,6 @@
   canonical_fr: produit énergétique de gros
   aliases: []
   legal_basis: MAD2 Art. 2(1)(13)
-- id: issuer
-  canonical_en: issuer
-  canonical_fr: émetteur
-  aliases: []
-  legal_basis: MAD2 Art. 2(1)(14)
 - id: commodity
   canonical_en: commodity
   canonical_fr: commodity
@@ -2249,6 +2214,11 @@
   canonical_fr: négociation pour compte propre
   aliases: []
   legal_basis: MIFID2 Art. 4(1)(6)
+- id: portfolio_management
+  canonical_en: portfolio management
+  canonical_fr: gestion de portefeuille
+  aliases: []
+  legal_basis: MIFID2 Art. 4(1)(8)
 - id: small_and_medium_sized_enterprises
   canonical_en: small and medium-sized enterprises
   canonical_fr: petites et moyennes entreprises
@@ -2334,11 +2304,6 @@
   canonical_fr: dette souveraine
   aliases: []
   legal_basis: MIFID2 Art. 4(1)(61)
-- id: systematic_internaliser
-  canonical_en: systematic internaliser
-  canonical_fr: systematic internaliser
-  aliases: []
-  legal_basis: MIFIR Art. 2(1)(12)
 - id: exchange_traded_derivative
   canonical_en: exchange-traded derivative
   canonical_fr: exchange-traded derivative
@@ -2349,11 +2314,6 @@
   canonical_fr: actionable indication of interest
   aliases: []
   legal_basis: MIFIR Art. 2(1)(33)
-- id: consolidated_tape_provider
-  canonical_en: consolidated tape provider
-  canonical_fr: consolidated tape provider
-  aliases: []
-  legal_basis: MIFIR Art. 2(1)(35)
 - id: liquidity_fragmentation
   canonical_en: liquidity fragmentation
   canonical_fr: liquidity fragmentation
@@ -2714,11 +2674,6 @@
   canonical_fr: moyen de communication à distance
   aliases: []
   legal_basis: PSD2 Art. 4(1)(34)
-- id: microenterprise
-  canonical_en: microenterprise
-  canonical_fr: microentreprise
-  aliases: []
-  legal_basis: PSD2 Art. 4(1)(36)
 - id: electronic_communications_network
   canonical_en: electronic communications network
   canonical_fr: réseau de communications électroniques
@@ -2819,11 +2774,6 @@
   canonical_fr: produit d’investissement fondé sur l’assurance
   aliases: []
   legal_basis: SFDR Art. 2(1)(3)
-- id: portfolio_management
-  canonical_en: portfolio management
-  canonical_fr: gestion de portefeuille
-  aliases: []
-  legal_basis: SFDR Art. 2(1)(6)
 - id: pension_product
   canonical_en: pension product
   canonical_fr: produit de retraite
@@ -3034,11 +2984,6 @@
   canonical_fr: mesure de risque
   aliases: []
   legal_basis: SOLVENCY2 Art. 13(1)(39)
-- id: institution_under_resolution
-  canonical_en: institution under resolution
-  canonical_fr: institution under resolution
-  aliases: []
-  legal_basis: SRMR Art. 3(1)(14)
 - id: agreement
   canonical_en: Agreement
   canonical_fr: Agreement

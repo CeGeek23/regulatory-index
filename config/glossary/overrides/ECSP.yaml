@@ -19,7 +19,7 @@ g:
 h:
   type: actor
 i:
-  type: actor
+  type: investor
 j:
   type: actor
 k:
@@ -35,6 +35,6 @@ o:
 p:
   type: concept
 q:
-  type: concept
+  type: actor
 r:
   type: supervisor

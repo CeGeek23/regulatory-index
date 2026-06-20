@@ -49,6 +49,7 @@ from regulatory_index.glossary import DefinedTerm, harvest_glossary
 
 RAW = Path("data/raw")
 OVERRIDES = Path("config/glossary/overrides")
+TIE_BREAKS = Path("config/glossary/tie_breaks.yaml")  # décisions métier (terme→type), autoritaires
 CACHE = Path("data/classification_cache.json")
 ALLOWED = ("actor", "investor", "supervisor", "concept")
 PROTECTED = {"AIFMD_L1", "AIFMD_L2"}  # relus à la main — jamais écrasés (ceinture + bretelles)
@@ -170,6 +171,18 @@ def _harmonize(docs: dict[str, _Doc]) -> tuple[int, list[str]]:
     return changes, sorted(ties)
 
 
+def _load_tie_breaks() -> dict[str, str]:
+    """Décisions métier terme→type (relecture humaine), appliquées APRÈS l'harmonisation.
+
+    C'est le seul endroit où une décision manuelle se pose : elle est versionnée et fait foi,
+    donc elle survit à toute régénération (le générateur la ré-applique à l'identique).
+    """
+    if not TIE_BREAKS.exists():
+        return {}
+    raw = yaml.safe_load(TIE_BREAKS.read_text(encoding="utf-8")) or {}
+    return {_norm(str(k)): str(v) for k, v in raw.items()}
+
+
 def _write_override(sid: str, model: str, types: dict[str, str]) -> None:
     header = (
         f"# Glossaire {sid} — classification acteur/concept générée par scripts/classify_overrides.py\n"
@@ -270,6 +283,16 @@ def main() -> int:
     harmonize = not targets  # l'harmonisation n'a de sens que sur le corpus complet
     changes, ties = _harmonize(docs) if harmonize else (0, [])
 
+    # Décisions métier (tie_breaks.yaml) : appliquées en dernier, elles font foi sur tout.
+    tie_breaks = _load_tie_breaks()
+    tb_applied = 0
+    for doc in docs.values():
+        for label, term in doc.labels:
+            forced = tie_breaks.get(term)
+            if forced and doc.types[label] != forced:
+                doc.types[label] = forced
+                tb_applied += 1
+
     for sid, doc in docs.items():
         _write_override(sid, model, doc.types)
 
@@ -288,6 +311,8 @@ def main() -> int:
               f"{'…' if len(ties) > 8 else ''}")
     else:
         print("Harmonisation non appliquée (run ciblé) — relance sans argument pour ré-harmoniser le corpus.")
+    if tie_breaks:
+        print(f"Décisions métier (tie_breaks.yaml) : {len(tie_breaks)} terme(s) cadré(s), {tb_applied} type(s) forcé(s).")
     print(f"Cache : {CACHE}  (supprimer ou --no-cache pour reclasser)")
     return 0
 
