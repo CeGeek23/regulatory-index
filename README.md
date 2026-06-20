@@ -132,7 +132,9 @@ Réplication (vérifiée) : `regindex glossary AIFMD_L2` produit le glossaire du
 config/
   vocabularies/        YAML de vocab contrôlé (actors, actions, objects, themes,
                        conditions, acronyms, relation_types) + theme codes
-  glossary/overrides/  Enrichissement relu du glossaire par acte (type, cites)
+  glossary/            overrides/ (classification acteur/concept par acte : AIFMD relu, reste
+                       généré+harmonisé, reproductible) + tie_breaks.yaml (décisions métier
+                       terme→type) + prune.yaml (élagage du vocab : drop/merge)
   sources_manifest.yaml   Documents officiels à acquérir
   sources_registry.yaml   Registry des sources + aliases pour citation matching
 
@@ -144,7 +146,8 @@ data/
   obligations/         Extractions JSONL (1 fichier par unit, idempotent)
                        + _failed.jsonl si échec (réinitialisé à chaque run)
   exports/             sorties classées par type :
-    glossary/            *_definitions.yaml, glossary_*.csv/.md, glossary_L1_minimal/actors
+    glossary/            *_definitions.yaml, glossary_*.csv/.md, glossary_L1_minimal/actors,
+                         review_ties.md + review_pruning.md (aides de relecture)
     sommaire/            sommaire_*.json (tables des matières)
     obligations/         aifmd_index.xlsx, obligations.csv, relations.csv,
                          aifmd_relations.html, quality_report.md

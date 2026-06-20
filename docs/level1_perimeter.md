@@ -13,7 +13,7 @@ Pour chaque texte de niveau 1 :
 3. réconcilier les termes communs entre textes (un concept = une entrée — la « liste minimale »).
 
 Statut actuel : **~40 textes du niveau 1 services financiers moissonnés en EN + FR** — **782 termes
-distincts, 207 acteurs isolés** (sortie : `data/exports/glossary_L1_minimal.csv` +
+distincts, 207 acteurs isolés** (sortie : `data/exports/glossary/glossary_L1_minimal.csv` +
 `glossary_L1_actors.csv` ; détail et limites dans `docs/approche_glossaire.md`). Classification
 acteur/concept relue à la main pour AIFMD, **générée de façon reproductible (LM Studio) puis
 harmonisée, « à relire », pour les autres textes**.
@@ -95,5 +95,7 @@ sans article de définitions propre (rien à extraire).
   le plus récent via les métadonnées RDF (ex. AIFMD → `02011L0061-20260416`, incluant AIFMD II).
   Le glossaire actuel est bâti sur les textes **d'origine** ; passer au consolidé = re-fetch +
   **re-classification** (jeux de termes différents).
-- **Reste à faire** : relire la classification acteur/concept générée pour les 14 textes
-  non-AIFMD ; traiter les faux-amis L3 (AMF/ACPR).
+- **Reste à faire** : confirmer la classification acteur/concept (générée + harmonisée, « à relire »)
+  pour les ~38 textes non-AIFMD — en particulier les **14 décisions** consignées dans
+  `config/glossary/tie_breaks.yaml` ; arbitrer l'élagage du vocab (`config/glossary/prune.yaml`) ;
+  traiter les faux-amis L3 (AMF/ACPR, sans fetcher à ce jour).
