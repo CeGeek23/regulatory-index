@@ -59,6 +59,17 @@ UNIT_COLUMNS: list[str] = [
 # ──────────────────────────────────────────────────────────────────────────────
 
 
+def _clean(df: pd.DataFrame) -> pd.DataFrame:
+    """Remplace les valeurs manquantes (NaN/NA pandas) par None.
+
+    Invariant attendu en aval : les writers testent `is not None` et xlsxwriter REJETTE NaN.
+    En pandas, une colonne de chaînes optionnelle mêlant valeurs et manquants devient un dtype
+    dont le manquant est `float('nan')` (≠ None) — d'où ce nettoyage à la construction.
+    """
+    cleaned: pd.DataFrame = df.astype(object).where(df.notna(), None)
+    return cleaned
+
+
 def load_unit_extractions_from_dir(obligations_dir: Path) -> list[UnitExtraction]:
     """Lit chaque `{source_id}/{unit_id}.json` produit par le runner."""
     out: list[UnitExtraction] = []
@@ -102,7 +113,7 @@ def obligations_to_df(obligations: list[Obligation]) -> pd.DataFrame:
         }
         for o in obligations
     ]
-    return pd.DataFrame(rows, columns=OBLIGATION_COLUMNS)
+    return _clean(pd.DataFrame(rows, columns=OBLIGATION_COLUMNS))
 
 
 def relations_to_df(relations: list[CrossLevelRelation]) -> pd.DataFrame:
@@ -119,7 +130,7 @@ def relations_to_df(relations: list[CrossLevelRelation]) -> pd.DataFrame:
         }
         for r in relations
     ]
-    return pd.DataFrame(rows, columns=RELATION_COLUMNS)
+    return _clean(pd.DataFrame(rows, columns=RELATION_COLUMNS))
 
 
 def units_to_df(units: Iterable[NormativeUnit]) -> pd.DataFrame:
@@ -141,7 +152,7 @@ def units_to_df(units: Iterable[NormativeUnit]) -> pd.DataFrame:
                 ),
             }
         )
-    return pd.DataFrame(rows, columns=UNIT_COLUMNS)
+    return _clean(pd.DataFrame(rows, columns=UNIT_COLUMNS))
 
 
 # ──────────────────────────────────────────────────────────────────────────────

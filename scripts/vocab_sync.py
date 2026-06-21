@@ -51,17 +51,19 @@ def _glossary_terms() -> list[DefinedTerm]:
     """Tous les termes définis du glossaire (chaque acte ayant un override), EN + FR si dispo."""
     terms: list[DefinedTerm] = []
     for source_id in sorted(p.stem for p in OVERRIDES.glob("*.yaml")):
-        en = sorted((RAW / source_id).glob("*_EN_*.html"), key=lambda p: p.stat().st_size, reverse=True)
+        en = sorted((RAW / source_id).glob("*_EN_*.html"), key=lambda p: (-p.stat().st_size, p.name))
         if not en:
             continue
-        fr = sorted((RAW / source_id).glob("*_FR_*.html"), key=lambda p: p.stat().st_size, reverse=True)
-        terms.extend(
-            harvest_glossary(
+        fr = sorted((RAW / source_id).glob("*_FR_*.html"), key=lambda p: (-p.stat().st_size, p.name))
+        try:
+            harvested = harvest_glossary(
                 en[0].read_text(encoding="utf-8"),
                 fr[0].read_text(encoding="utf-8") if fr else "",
                 source_id=source_id, celex=en[0].name.split("_")[0], level=1,
             )
-        )
+        except ValueError:
+            continue  # acte avec override mais sans article de définitions détectable
+        terms.extend(harvested)
     return terms
 
 

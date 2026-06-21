@@ -90,6 +90,23 @@ def test_full_export_pipeline(tmp_path: Path) -> None:
     assert graphml_path.exists() and graphml_path.stat().st_size > 0
 
 
+def test_excel_export_with_mixed_optional_fields(tmp_path: Path) -> None:
+    # Régression : un champ optionnel (condition) rempli sur une ligne, None sur l'autre.
+    # En pandas la colonne mêle valeur et NaN -> xlsxwriter rejetait le NaN (TypeError).
+    o1 = _make_obligation("AIFMD-RISK-0001").model_copy(update={"condition": "annually"})
+    o2 = _make_obligation("AIFMD-RISK-0002")  # condition = None
+    obligations = [o1, o2]
+    materialized = MaterializedIndex(
+        obligations=obligations, relations=[], resolved_citations=[], unresolved_citations=[],
+        obligations_df=obligations_to_df(obligations),
+        relations_df=relations_to_df([]), units_df=units_to_df([]),
+    )
+    out = tmp_path / "mixed.xlsx"
+    counts = write_workbook(materialized, out)  # ne doit PAS lever
+    assert out.exists() and out.stat().st_size > 0
+    assert counts["Obligations"] == 2
+
+
 def test_by_theme_merges_across_languages() -> None:
     # Meme theme canonique pour des obligations EN et FR -> une seule ligne agregee.
     obligations = [

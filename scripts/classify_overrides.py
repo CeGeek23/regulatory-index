@@ -87,7 +87,7 @@ def _norm(term: str) -> str:
 
 
 def _largest_en(source_id: str) -> Path | None:
-    files = sorted((RAW / source_id).glob("*_EN_*.html"), key=lambda p: p.stat().st_size, reverse=True)
+    files = sorted((RAW / source_id).glob("*_EN_*.html"), key=lambda p: (-p.stat().st_size, p.name))
     return files[0] if files else None
 
 
