@@ -96,6 +96,5 @@ sans article de définitions propre (rien à extraire).
   Le glossaire actuel est bâti sur les textes **d'origine** ; passer au consolidé = re-fetch +
   **re-classification** (jeux de termes différents).
 - **Reste à faire** : confirmer la classification acteur/concept (générée + harmonisée, « à relire »)
-  pour les ~38 textes non-AIFMD — en particulier les **14 décisions** consignées dans
-  `config/glossary/tie_breaks.yaml` ; arbitrer l'élagage du vocab (`config/glossary/prune.yaml`) ;
-  traiter les faux-amis L3 (AMF/ACPR, sans fetcher à ce jour).
+  pour les ~38 textes non-AIFMD — les ambiguïtés étant tranchées par la **définition de référence**
+  (règle générale, sans liste) ; traiter les faux-amis L3 (AMF/ACPR, sans fetcher à ce jour).

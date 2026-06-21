@@ -609,6 +609,11 @@
   canonical_fr: société de gestion
   aliases: []
   legal_basis: DORA Art. 3(1)(45)
+- id: data_reporting_service_provider
+  canonical_en: data reporting service provider
+  canonical_fr: prestataire de services de communication de données
+  aliases: []
+  legal_basis: DORA Art. 3(1)(46)
 - id: insurance_intermediary
   canonical_en: insurance intermediary
   canonical_fr: intermédiaire d’assurance
@@ -919,6 +924,11 @@
   canonical_fr: exécution d’ordres pour le compte de clients
   aliases: []
   legal_basis: MIFID2 Art. 4(1)(5)
+- id: portfolio_management
+  canonical_en: portfolio management
+  canonical_fr: gestion de portefeuille
+  aliases: []
+  legal_basis: MIFID2 Art. 4(1)(8)
 - id: retail_client
   canonical_en: retail client
   canonical_fr: client de détail
@@ -952,8 +962,7 @@
 - id: data_reporting_services_provider
   canonical_en: data reporting services provider
   canonical_fr: prestataire de services de communication de données
-  aliases:
-  - data reporting service provider
+  aliases: []
   legal_basis: MIFID2 Art. 4(1)(63)
 - id: professional_client
   canonical_en: professional client

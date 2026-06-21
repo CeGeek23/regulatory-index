@@ -434,6 +434,11 @@
   canonical_fr: filiale
   aliases: []
   legal_basis: AIFMD_L1 Art. 4(1)(ak)
+- id: securitisation_special_purpose_entities
+  canonical_en: securitisation special purpose entities
+  canonical_fr: structures de titrisation ad hoc
+  aliases: []
+  legal_basis: AIFMD_L1 Art. 4(1)(an)
 - id: ucits
   canonical_en: UCITS
   canonical_fr: OPCVM
@@ -942,9 +947,7 @@
 - id: title_transfer_financial_collateral_arrangement
   canonical_en: title transfer financial collateral arrangement
   canonical_fr: title transfer financial collateral arrangement
-  aliases:
-  - title transfer collateral arrangement
-  - contrat de garantie avec transfert de propriété
+  aliases: []
   legal_basis: BRRD Art. 2(1)(97)
 - id: netting_arrangement
   canonical_en: netting arrangement
@@ -1046,11 +1049,6 @@
   canonical_fr: model risk
   aliases: []
   legal_basis: CRD4 Art. 3(1)(11)
-- id: mixed_activity_holding_company_2
-  canonical_en: mixed activity holding company
-  canonical_fr: mixed activity holding company
-  aliases: []
-  legal_basis: CRD4 Art. 3(1)(21)
 - id: eu_parent_mixed_financial_holding_company
   canonical_en: EU parent mixed financial holding company
   canonical_fr: EU parent mixed financial holding company
@@ -1104,9 +1102,7 @@
 - id: securitisation_special_purpose_entity
   canonical_en: securitisation special purpose entity
   canonical_fr: securitisation special purpose entity
-  aliases:
-  - securitisation special purpose entities
-  - structures de titrisation ad hoc
+  aliases: []
   legal_basis: CRD4 Art. 3(1)(52)
 - id: discretionary_pension_benefits
   canonical_en: discretionary pension benefits
@@ -1588,13 +1584,15 @@
   canonical_fr: actions
   aliases: []
   legal_basis: CSDR Art. 2(1)(36)
+- id: money_market_instruments
+  canonical_en: money-market instruments
+  canonical_fr: instruments du marché monétaire
+  aliases: []
+  legal_basis: CSDR Art. 2(1)(37)
 - id: units_in_collective_investment_undertakings
   canonical_en: units in collective investment undertakings
   canonical_fr: parts d’organismes de placement collectif
-  aliases:
-  - units of a collective investment undertaking
-  - parts d’un organisme de placement collectif
-  - parts d'un organisme de placement collectif
+  aliases: []
   legal_basis: CSDR Art. 2(1)(38)
 - id: emission_allowance
   canonical_en: emission allowance
@@ -1974,8 +1972,7 @@
 - id: insurance_based_investment_product
   canonical_en: insurance-based investment product
   canonical_fr: produit d’investissement fondé sur l’assurance
-  aliases:
-  - insurance‐based investment product
+  aliases: []
   legal_basis: IDD Art. 2(1)(17)
 - id: pension_scheme
   canonical_en: pension scheme
@@ -2212,11 +2209,6 @@
   canonical_fr: négociation pour compte propre
   aliases: []
   legal_basis: MIFID2 Art. 4(1)(6)
-- id: portfolio_management
-  canonical_en: portfolio management
-  canonical_fr: gestion de portefeuille
-  aliases: []
-  legal_basis: MIFID2 Art. 4(1)(8)
 - id: small_and_medium_sized_enterprises
   canonical_en: small and medium-sized enterprises
   canonical_fr: petites et moyennes entreprises
@@ -2327,13 +2319,6 @@
   canonical_fr: short-term assets
   aliases: []
   legal_basis: MMFR Art. 2(1)(1)
-- id: money_market_instruments
-  canonical_en: money market instruments
-  canonical_fr: money market instruments
-  aliases:
-  - money-market instruments
-  - instruments du marché monétaire
-  legal_basis: MMFR Art. 2(1)(2)
 - id: reverse_repurchase_agreement
   canonical_en: reverse repurchase agreement
   canonical_fr: reverse repurchase agreement
@@ -2412,8 +2397,7 @@
 - id: pan_european_personal_pension_product
   canonical_en: pan-European Personal Pension Product
   canonical_fr: produit paneuropéen d’épargne-retraite individuelle
-  aliases:
-  - pan‐European Personal Pension Product
+  aliases: []
   legal_basis: PEPP Art. 2(1)(2)
 - id: pepp_contract
   canonical_en: PEPP contract
@@ -2478,9 +2462,7 @@
 - id: risk_mitigation_techniques
   canonical_en: risk mitigation techniques
   canonical_fr: techniques d’atténuation des risques
-  aliases:
-  - risk-mitigation techniques
-  - techniques d'atténuation du risque
+  aliases: []
   legal_basis: PEPP Art. 2(1)(28)
 - id: switching_provider
   canonical_en: switching provider
@@ -2542,6 +2524,11 @@
   canonical_fr: organisme de placement collectif autre que ceux du type fermé
   aliases: []
   legal_basis: PROSPECTUS Art. 2(1)(p)
+- id: units_of_a_collective_investment_undertaking
+  canonical_en: units of a collective investment undertaking
+  canonical_fr: parts d’un organisme de placement collectif
+  aliases: []
+  legal_basis: PROSPECTUS Art. 2(1)(q)
 - id: base_prospectus
   canonical_en: base prospectus
   canonical_fr: prospectus de base
@@ -2832,6 +2819,11 @@
   canonical_fr: réutilisation
   aliases: []
   legal_basis: SFTR Art. 3(1)(12)
+- id: title_transfer_collateral_arrangement
+  canonical_en: title transfer collateral arrangement
+  canonical_fr: contrat de garantie avec transfert de propriété
+  aliases: []
+  legal_basis: SFTR Art. 3(1)(13)
 - id: security_collateral_arrangement
   canonical_en: security collateral arrangement
   canonical_fr: contrat de garantie avec constitution de sûreté

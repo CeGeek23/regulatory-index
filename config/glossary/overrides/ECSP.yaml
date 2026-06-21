@@ -19,7 +19,7 @@ g:
 h:
   type: actor
 i:
-  type: investor
+  type: actor
 j:
   type: actor
 k:

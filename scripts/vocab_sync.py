@@ -8,9 +8,10 @@ artefact parallèle.
 - termes typés actor/investor/supervisor → `config/vocabularies/actors.yaml`
 - autres termes (concepts/objets)        → `config/vocabularies/objects.yaml`
 
-Dédup contre la partie relue à la main (forme exacte, alias, ou singulier). La section « issu du
-glossaire, À RELIRE » est RÉGÉNÉRÉE à chaque run (toute section auto antérieure est retirée avant
-réécriture) : reproductible et idempotent — relancer produit le même fichier au bit près.
+Dédup contre la partie relue à la main : la comparaison unifie casse, espaces, variantes de
+tiret/trait d'union et le singulier (cf. `_norm`), donc les variantes purement typographiques
+fusionnent d'office — sans table de correspondance à maintenir. La section « issu du glossaire,
+À RELIRE » est RÉGÉNÉRÉE à chaque run : reproductible et idempotent (même fichier au bit près).
 
 Usage : uv run python scripts/vocab_sync.py
 """
@@ -27,7 +28,6 @@ ACTOR_TYPES = {"actor", "investor", "supervisor"}
 RAW = Path("data/raw")
 OVERRIDES = Path("config/glossary/overrides")
 VOCAB = Path("config/vocabularies")
-PRUNE = Path("config/glossary/prune.yaml")  # élagage versionné (drop/merge), réduit la dilution
 SECTION = {
     "actors": "# --- Acteurs issus du glossaire niveau 1 (sync auto via scripts/vocab_sync.py — À RELIRE) ---",
     "objects": "# --- Concepts/objets issus du glossaire niveau 1 (sync auto via scripts/vocab_sync.py — À RELIRE) ---",
@@ -65,23 +65,20 @@ def _glossary_terms() -> list[DefinedTerm]:
     return terms
 
 
+# Variantes Unicode de tiret/trait d'union (U+2010..U+2015, U+2212), normalisées vers '-'.
+_DASHES = "".join(chr(c) for c in (0x2010, 0x2011, 0x2012, 0x2013, 0x2014, 0x2015, 0x2212))
+
+
 def _norm(term: str) -> str:
-    return " ".join(term.lower().split())
+    """Clé de comparaison générale : casse, espaces et tirets/traits d'union unifiés.
 
-
-def _load_prune(vocab_name: str) -> tuple[set[str], dict[str, str]]:
-    """Décisions d'élagage versionnées pour `{vocab_name}` (actors/objects), appliquées à la promotion.
-
-    `drop` retire un terme du vocab promu ; `merge` replie une variante sur un terme canonique
-    (sa forme devient un alias du canonique). Reproductible : même prune.yaml → même vocab.
+    Fait fusionner d'office les variantes purement typographiques (« money-market » = « money
+    market », tiret Unicode = trait d'union ASCII) — sans table de correspondance à maintenir.
     """
-    if not PRUNE.exists():
-        return set(), {}
-    raw = yaml.safe_load(PRUNE.read_text(encoding="utf-8")) or {}
-    section = raw.get(vocab_name) or {}
-    drop = {_norm(str(x)) for x in (section.get("drop") or [])}
-    merge = {_norm(str(k)): _norm(str(v)) for k, v in (section.get("merge") or {}).items()}
-    return drop, merge
+    t = term.lower()
+    for dash in _DASHES:
+        t = t.replace(dash, "-")
+    return " ".join(t.replace("-", " ").split())
 
 
 def _index(entries: list[dict[str, object]]) -> tuple[set[str], set[str]]:
@@ -98,21 +95,8 @@ def _index(entries: list[dict[str, object]]) -> tuple[set[str], set[str]]:
             keys.extend(aliases)
         for key in keys:
             if key:
-                surfaces.add(str(key).strip().lower())
+                surfaces.add(_norm(str(key)))
     return surfaces, ids
-
-
-def _fold_aliases(new: dict[str, dict[str, object]], pending: list[tuple[str, str, str]]) -> None:
-    """Replie chaque variante (fusion) en alias de son canonique promu (si présent ; sinon ignorée)."""
-    for target, surface_en, surface_fr in pending:
-        entry = new.get(target)
-        if entry is None:
-            continue
-        aliases = entry["aliases"]
-        assert isinstance(aliases, list)
-        for surface in (surface_en, surface_fr):
-            if surface and surface not in (entry["canonical_en"], entry["canonical_fr"]) and surface not in aliases:
-                aliases.append(surface)
 
 
 def _promote(terms: list[DefinedTerm], vocab_name: str, *, actors_wanted: bool) -> tuple[int, int]:
@@ -130,11 +114,9 @@ def _promote(terms: list[DefinedTerm], vocab_name: str, *, actors_wanted: bool) 
     surfaces, used_ids = _index(base_entries)
 
     def known(term: str) -> bool:
-        t = term.strip().lower()
+        t = _norm(term)
         return t in surfaces or (t.endswith("s") and t[:-1] in surfaces)
 
-    drop, merge = _load_prune(vocab_name)
-    pending_alias: list[tuple[str, str, str]] = []  # (cible normalisée, surface EN, surface FR)
     new: dict[str, dict[str, object]] = {}
     for t in terms:
         if not t.term_en.strip():
@@ -144,11 +126,6 @@ def _promote(terms: list[DefinedTerm], vocab_name: str, *, actors_wanted: bool) 
         if known(t.term_en) or (t.term_fr and known(t.term_fr)):
             continue
         key = _norm(t.term_en)
-        if key in drop:
-            continue
-        if key in merge:
-            pending_alias.append((merge[key], t.term_en, t.term_fr))
-            continue
         if key in new:
             continue
         base = _slug(t.term_en) or _slug(t.term_fr) or "term"
@@ -163,8 +140,6 @@ def _promote(terms: list[DefinedTerm], vocab_name: str, *, actors_wanted: bool) 
             "aliases": [],
             "legal_basis": t.legal_basis,
         }
-
-    _fold_aliases(new, pending_alias)
 
     out = base_text + "\n"
     if new:

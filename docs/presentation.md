@@ -73,7 +73,7 @@ Au lieu d'une pile de 40 textes, on obtient une bibliothèque organisée :
 | Textes de niveau 1 traités | **~40** |
 | Termes définis récupérés (bruts) | **1 271** |
 | Termes **distincts** après dédoublonnage (la « liste minimale ») | **782** |
-| **Acteurs** isolés des concepts | **207** |
+| **Acteurs** isolés des concepts | **208** |
 | Langues officielles (anglais + français) | **42/42 textes** |
 
 > Beaucoup d'acteurs sont **partagés** par plusieurs textes (ex. *établissement de crédit*,
@@ -141,7 +141,7 @@ toutes** dans un fichier dédié, et **ré-appliquée automatiquement** à chaqu
 | Liste minimale + acteurs isolés | ✅ **fait** |
 | Caractère **reproductible / réplicable** de toute la chaîne | ✅ **vérifié** |
 | Classification **acteur / concept** | ⚠️ **proposée automatiquement, « à relire »** — à confirmer par un expert |
-| 14 termes vraiment ambigus (le même terme penche des deux côtés selon le texte) | ⚠️ **décisions proposées, à confirmer** (ex. *issuer* → acteur, *deposit* → concept) |
+| 14 termes vraiment ambigus (le même terme penche des deux côtés selon le texte) | ⚠️ **tranchés par une règle générale** (la définition de référence), à confirmer en relecture |
 | Versions **consolidées** (droit le plus à jour) | ⏳ capacité prête — **choix de méthode** à décider |
 | Niveau 3 (doctrine AMF/ACPR) et faux-amis | ⏳ pas encore intégré |
 

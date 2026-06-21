@@ -171,11 +171,11 @@ Colonnes : **CELEX** (identifiant EUR-Lex), **type** (Directive/Règlement, lu d
 | Textes moissonnés | **~40** | 42 entrées dont 1 purement modificative (0 terme) |
 | Termes définis **bruts** | **1 271** | somme par texte (un terme compté autant de fois qu'il est défini) |
 | Termes **distincts** | **782** | après déduplication inter-textes (liste minimale) |
-| **Acteurs isolés** | **207** | partagés entre textes pour beaucoup (ex. *credit institution*, *competent authority*) |
+| **Acteurs isolés** | **208** | partagés entre textes pour beaucoup (ex. *credit institution*, *competent authority*) |
 
 > **À lire ainsi** : 1 271 entrées brutes → on dédoublonne (un même *« investisseur professionnel »*
 > défini dans 10 textes = 1 ligne, avec la trace de ses 10 bases légales) → **782 termes distincts**,
-> dont **207 acteurs**. C'est la « liste minimale » : le glossaire de référence, dédoublonné (il
+> dont **208 acteurs**. C'est la « liste minimale » : le glossaire de référence, dédoublonné (il
 > alimente ensuite le vocabulaire de référence du projet — cf. compteurs distincts).
 
 **Lecture des volumes** : le poids n'est pas uniforme. La **banque** (CRR 128, BRRD 108) et les
@@ -212,10 +212,10 @@ C'est exactement à quoi servent les **articles de définition** : ils fixent, p
 | Récupérer un texte (par CELEX) | `ingestion/eurlex_fetcher.py` (API Cellar) | HTML EN/FR dans `data/raw/<ID>/` |
 | Lire la structure (sommaire) | `glossary/toc.py` | sommaire chapitres/articles |
 | Moissonner l'article de définitions | `glossary/definitions.py` | termes (EN/FR, base légale) |
-| Classer acteur/concept (reproductible) | `scripts/classify_overrides.py` (LM Studio, temp 0/seed fixe, cache) + harmonisation + `tie_breaks.yaml` | `config/glossary/overrides/*.yaml` |
+| Classer acteur/concept (reproductible) | `scripts/classify_overrides.py` (LM Studio, temp 0/seed fixe, cache) + harmonisation (déf. de référence) | `config/glossary/overrides/*.yaml` |
 | Isoler acteurs / concepts | override + `refdata/vocab.py` | acteur · concept · *à classer* |
 | Construire la carte ci-dessus | `scripts/build_l1_glossary.py` (`L1_PERIMETER`) | `data/exports/glossary/` |
-| Alimenter le vocabulaire (idempotent, élagage `prune.yaml`) | `scripts/vocab_sync.py` | `config/vocabularies/*.yaml` |
+| Alimenter le vocabulaire (idempotent, dédup normalisée) | `scripts/vocab_sync.py` | `config/vocabularies/*.yaml` |
 
 Le **périmètre** (la liste des ~40 textes et leur CELEX) est défini une seule fois dans
 `L1_PERIMETER` ([scripts/build_l1_glossary.py](../scripts/build_l1_glossary.py)). Ajouter un texte =
@@ -228,11 +228,11 @@ une base d'actes**.
 
 - **Classification acteur/concept** : relue à la main pour AIFMD L1/L2 ; pour les ~38 autres textes
   elle est **générée de façon reproductible** (`scripts/classify_overrides.py` via LM Studio, décodage
-  déterministe + cache) puis **harmonisée** entre textes (un terme = un type partout), les 14 égalités
-  étant tranchées par `config/glossary/tie_breaks.yaml` (décisions versionnées). Ce qui reste, c'est
+  déterministe + cache) puis **harmonisée** entre textes (un terme = un type partout), les égalités
+  étant tranchées par la **définition de référence** (règle générale, sans liste). Ce qui reste, c'est
   la **validation métier** (confirmer ces décisions) — pas la reproductibilité. L'extraction du terme
   et de sa définition est, elle, fidèle au texte.
-- **Bilingue** : les **42/42 textes** sont récupérés en EN + FR ; **147/225 acteurs** du vocabulaire
+- **Bilingue** : les **42/42 textes** sont récupérés en EN + FR ; **149/227 acteurs** du vocabulaire
   ont un libellé FR officiel distinct (le reste partage EN/FR ou attend la relecture).
 - **Versions de base, pas consolidées** : la carte utilise les CELEX d'origine. Les versions « à
   jour » (consolidées) ont un CELEX daté distinct ; la résolution automatique existe

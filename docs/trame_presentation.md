@@ -44,7 +44,7 @@ durabilité, numérique, et un transverse. Chaque texte est un livre ; son artic
 est le **glossaire en fin de livre**.
 
 En chiffres : sur les quarante textes, j'ai relevé **1 271 termes définis**, ramenés à **782 termes
-distincts** après dédoublonnage, dont **207 acteurs** isolés des concepts. Et tout est récupéré en
+distincts** après dédoublonnage, dont **208 acteurs** isolés des concepts. Et tout est récupéré en
 **anglais et français officiels**. »
 
 ### ⑤ La rigueur — *« le texte vs notre analyse »* 🔑 *(~45 s)*
@@ -81,7 +81,7 @@ de tout le niveau 1**. »
 « Pour finir, en toute transparence. **Solide et vérifiable** : l'extraction des termes, la liste
 des acteurs, le caractère reproductible. **Ce qui attend une validation d'expert** : la
 classification acteur/concept — proposée automatiquement, marquée « à relire » — en particulier
-**14 termes vraiment ambigus** pour lesquels j'ai une **proposition à confirmer**. Et deux
+**14 termes vraiment ambigus**, tranchés par une **règle générale** (la définition de référence) et à confirmer. Et deux
 prochaines étapes : passer aux **versions consolidées** les plus à jour, et intégrer le **niveau 3**
 (doctrine AMF / ACPR). »
 
@@ -98,7 +98,7 @@ questions. »
 
 | Si on te demande… | Réponse courte |
 |---|---|
-| **« 207 ou 225 acteurs ? »** | **207** = acteurs distincts *issus des définitions*. **225** = taille du *vocabulaire de référence* une fois ces acteurs ajoutés au fonds déjà présent. Deux compteurs, deux notions. |
+| **« 208 ou 227 acteurs ? »** | **208** = acteurs distincts *issus des définitions*. **227** = taille du *vocabulaire de référence* une fois ces acteurs ajoutés au fonds déjà présent. Deux compteurs, deux notions. |
 | **« Comment garantissez-vous la fidélité au texte ? »** | Terme et définition **repris mot pour mot**, avec la **base légale exacte** ; aucune reformulation, **vérifiable** contre le texte officiel. |
 | **« Qui a classé acteur vs concept ? »** | AIFMD : **relu à la main**. Les autres : **proposé automatiquement, marqué « à relire »**, et **harmonisé** (un même terme = un même type partout). Les décisions humaines sont **consignées une fois pour toutes** et ré-appliquées. |
 | **« Et si le texte n'est pas à jour ? »** | La **table des renvois abrogés** vers les textes en vigueur est établie ; la bascule vers les **versions consolidées** est prête — c'est un **choix de méthode** à décider. |

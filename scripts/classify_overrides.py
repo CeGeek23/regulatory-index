@@ -18,8 +18,9 @@ Reproductibilité :
     supprimer le cache (ou --no-cache) pour reclasser de zéro ;
   - en-tête de fichier UNIQUE et déterministe (un seul libellé, fin des variantes manuelles) ;
   - HARMONISATION inter-textes déterministe (sur un run complet, sans cible) : un même terme
-    (libellé EN normalisé) reçoit le même type partout, par vote majoritaire strict ; les
-    égalités sont laissées telles quelles et signalées (à trancher en relecture métier) ;
+    (libellé EN normalisé) reçoit le même type partout, par vote majoritaire ; en cas d'égalité,
+    on tranche par la définition SUBSTANTIELLE (la plus longue — pas un simple renvoi « as defined
+    in… »), règle GÉNÉRALE et reproductible (aucune liste de décisions à maintenir) ;
   - N'ÉCRASE JAMAIS un override relu à la main (en-tête « relu » : AIFMD_L1/L2).
 
 Le `type` reste marqué « à RELIRE » : c'est une proposition automatique, à valider en relecture
@@ -49,7 +50,6 @@ from regulatory_index.glossary import DefinedTerm, harvest_glossary
 
 RAW = Path("data/raw")
 OVERRIDES = Path("config/glossary/overrides")
-TIE_BREAKS = Path("config/glossary/tie_breaks.yaml")  # décisions métier (terme→type), autoritaires
 CACHE = Path("data/classification_cache.json")
 ALLOWED = ("actor", "investor", "supervisor", "concept")
 PROTECTED = {"AIFMD_L1", "AIFMD_L2"}  # relus à la main — jamais écrasés (ceinture + bretelles)
@@ -140,59 +140,37 @@ def _pick_model(client: OpenAI, requested: str | None) -> str:
     return ids[0]
 
 
-def _harmonize(docs: dict[str, _Doc]) -> tuple[int, list[str]]:
-    """Force un même terme (EN normalisé) au même type partout, par vote majoritaire STRICT.
+def _harmonize(docs: dict[str, _Doc], longest: dict[str, tuple[int, str]]) -> tuple[int, int]:
+    """Force un même terme (EN normalisé) au même type partout. Déterministe, reproductible.
 
-    Déterministe (donc reproductible) : ne dépend que des types déjà attribués. Les termes à
-    égalité de votes sont laissés tels quels et renvoyés pour signalement (relecture métier).
-    Renvoie (nombre de types modifiés, termes à égalité).
+    Règle GÉNÉRALE (aucune liste de décisions à maintenir) : vote majoritaire ; en cas d'ÉGALITÉ,
+    on tranche par la définition SUBSTANTIELLE — le type issu de la plus longue définition du terme
+    (un simple renvoi « as defined in… » est court et peu informatif ; la vraie définition est
+    longue). `longest` = {terme normalisé: (longueur de définition, type)}.
+    Renvoie (nombre de types modifiés, nombre d'égalités tranchées).
     """
     tally: dict[str, Counter[str]] = defaultdict(Counter)
     for doc in docs.values():
         for label, term in doc.labels:
             tally[term][doc.types[label]] += 1
 
-    majority: dict[str, str] = {}
-    ties: list[str] = []
+    winner_of: dict[str, str] = {}
+    tie_resolved = 0
     for term, counts in tally.items():
         ranked = counts.most_common()
         if len(ranked) > 1 and ranked[0][1] == ranked[1][1]:
-            ties.append(term)  # pas de majorité stricte — on ne tranche pas
+            winner_of[term] = longest[term][1]  # égalité → définition substantielle
+            tie_resolved += 1
         else:
-            majority[term] = ranked[0][0]
+            winner_of[term] = ranked[0][0]
 
     changes = 0
     for doc in docs.values():
         for label, term in doc.labels:
-            winner = majority.get(term)
-            if winner and doc.types[label] != winner:
-                doc.types[label] = winner
+            if doc.types[label] != winner_of[term]:
+                doc.types[label] = winner_of[term]
                 changes += 1
-    return changes, sorted(ties)
-
-
-def _load_tie_breaks() -> dict[str, str]:
-    """Décisions métier terme→type (relecture humaine), appliquées APRÈS l'harmonisation.
-
-    C'est le seul endroit où une décision manuelle se pose : elle est versionnée et fait foi,
-    donc elle survit à toute régénération (le générateur la ré-applique à l'identique).
-    """
-    if not TIE_BREAKS.exists():
-        return {}
-    raw = yaml.safe_load(TIE_BREAKS.read_text(encoding="utf-8")) or {}
-    return {_norm(str(k)): str(v) for k, v in raw.items()}
-
-
-def _apply_tie_breaks(docs: dict[str, _Doc], tie_breaks: dict[str, str]) -> int:
-    """Force le type décidé (tie_breaks) sur tout terme concerné, partout. Renvoie le nb de changements."""
-    applied = 0
-    for doc in docs.values():
-        for label, term in doc.labels:
-            forced = tie_breaks.get(term)
-            if forced and doc.types[label] != forced:
-                doc.types[label] = forced
-                applied += 1
-    return applied
+    return changes, tie_resolved
 
 
 def _write_override(sid: str, model: str, types: dict[str, str]) -> None:
@@ -248,6 +226,7 @@ def main() -> int:
 
     OVERRIDES.mkdir(parents=True, exist_ok=True)
     docs: dict[str, _Doc] = {}
+    longest: dict[str, tuple[int, str]] = {}  # terme normalisé -> (longueur de déf., type) la plus longue
     skipped = llm_calls = 0
     for sid in source_ids:
         path = OVERRIDES / f"{sid}.yaml"
@@ -286,18 +265,18 @@ def main() -> int:
                     typ = "concept"  # proposition par défaut (tout le fichier est « à RELIRE »)
                     doc.n_unres += 1
                 cache[cache_key] = typ
+            term_norm = _norm(t.term_en) or _norm(t.term_fr)
             doc.types[t.label] = typ
-            doc.labels.append((t.label, _norm(t.term_en) or _norm(t.term_fr)))
+            doc.labels.append((t.label, term_norm))
+            dlen = len((t.definition_en or "").strip())
+            if term_norm not in longest or dlen > longest[term_norm][0]:
+                longest[term_norm] = (dlen, typ)  # garde le type de la définition la plus longue
         docs[sid] = doc
         flag = f"  ({doc.n_unres} indécis → concept)" if doc.n_unres else ""
         print(f"  {sid:16} {len(doc.types):>3} termes classés{flag}")
 
     harmonize = not targets  # l'harmonisation n'a de sens que sur le corpus complet
-    changes, ties = _harmonize(docs) if harmonize else (0, [])
-
-    # Décisions métier (tie_breaks.yaml) : appliquées en dernier, elles font foi sur tout.
-    tie_breaks = _load_tie_breaks()
-    tb_applied = _apply_tie_breaks(docs, tie_breaks)
+    changes, tie_resolved = _harmonize(docs, longest) if harmonize else (0, 0)
 
     for sid, doc in docs.items():
         _write_override(sid, model, doc.types)
@@ -312,13 +291,10 @@ def main() -> int:
         f"{llm_calls} appel(s) LLM, {unresolved} terme(s) indécis (→ concept)."
     )
     if harmonize:
-        print(f"Harmonisation inter-textes : {changes} type(s) aligné(s) sur la majorité ; "
-              f"{len(ties)} terme(s) à égalité laissés tels quels (à trancher) : {', '.join(ties[:8])}"
-              f"{'…' if len(ties) > 8 else ''}")
+        print(f"Harmonisation inter-textes : {changes} type(s) alignés ; "
+              f"{tie_resolved} égalité(s) tranchée(s) par la définition substantielle (la plus longue).")
     else:
         print("Harmonisation non appliquée (run ciblé) — relance sans argument pour ré-harmoniser le corpus.")
-    if tie_breaks:
-        print(f"Décisions métier (tie_breaks.yaml) : {len(tie_breaks)} terme(s) cadré(s), {tb_applied} type(s) forcé(s).")
     print(f"Cache : {CACHE}  (supprimer ou --no-cache pour reclasser)")
     return 0
 

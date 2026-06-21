@@ -100,7 +100,7 @@ Short Selling, Benchmarks, Securitisation, SFTR, EMIR, Transparence, CRA), banqu
 (ECSP), retraite (PEPP, IORP II), LCB-FT, comptable, AEMF/ESMA.
 
 **Résultat consolidé :** **1 271 termes définis → 782 termes distincts** (liste minimale
-dédoublonnée) → **207 acteurs isolés**, dont une part partagée par plusieurs textes (ex. « credit
+dédoublonnée) → **208 acteurs isolés**, dont une part partagée par plusieurs textes (ex. « credit
 institution », « competent authority »). La dédup relie le même terme entre actes et garde la
 trace de toutes ses bases légales.
 
@@ -109,18 +109,19 @@ main**. Pour les **~38 autres textes**, elle est **produite automatiquement et d
 reproductible** : pour chaque terme, le système propose « acteur » ou « concept », et **redonne
 exactement le même résultat** à chaque exécution. Un même terme reçoit **le même type dans tout le
 corpus** (cohérence d'un texte à l'autre). Les **14 termes vraiment ambigus** — le terme penche des
-deux côtés selon le texte — sont tranchés par des **décisions consignées une fois pour toutes** et
-ré-appliquées automatiquement. L'extraction du terme et de sa définition reste **fidèle au texte** ;
+deux côtés selon le texte — sont tranchés **automatiquement** par leur **définition de référence**
+(la plus substantielle, pas un simple renvoi) : une règle générale, sans liste de décisions à tenir.
+L'extraction du terme et de sa définition reste **fidèle au texte** ;
 les classifications restent **marquées « à relire »** (validation métier).
 
 **Bilingue** : les **42/42 textes** sont désormais récupérés en **EN + FR** (versions officielles),
-et **147/225 acteurs** du vocabulaire portent un libellé **FR** distinct.
+et **149/227 acteurs** du vocabulaire portent un libellé **FR** distinct.
 
-**Le glossaire alimente le vocabulaire de référence (le point clé)** : les **207 acteurs** (et les
+**Le glossaire alimente le vocabulaire de référence (le point clé)** : les **208 acteurs** (et les
 concepts) tirés des définitions sont **versés dans le vocabulaire de référence du projet**. Ajoutés
-au vocabulaire déjà présent, ils le portent à **225 acteurs** et **612 concepts** au total — ce
+au vocabulaire déjà présent, ils le portent à **227 acteurs** et **613 concepts** au total — ce
 vocabulaire sert ensuite à **reconnaître et normaliser** ces termes lors de la lecture des
-obligations. *(À ne pas confondre : **207** = acteurs distincts issus des définitions ; **225** =
+obligations. *(À ne pas confondre : **208** = acteurs distincts issus des définitions ; **227** =
 taille du vocabulaire de référence après ajout au fonds existant.)* C'est exactement la finalité
 « les identifier comme objets pour mieux les lier ». Cette alimentation est **automatique et
 reproductible** ; les entrées sont **marquées « à relire »**.
@@ -133,12 +134,13 @@ n'importe quel acte — c'est ce qui la rend applicable à une base entière.
 ## 11. Ce qui reste à faire
 
 1. **Valider la classification acteur/concept** (le seul vrai travail manuel restant) : elle est
-   produite automatiquement, harmonisée entre textes, et **marquée « à relire »** ; les **14 termes
-   ambigus** ont une **proposition à confirmer** (établie en lisant leurs définitions). Confirmer ou
-   ajuster une décision revient à **changer une ligne**, et tout se reconstruit à l'identique.
-2. **Élaguer le vocabulaire** : 225 acteurs + 612 concepts, c'est beaucoup à présenter au moteur
-   (risque de dilution). On a déjà fusionné **8 simples variantes d'écriture** (pluriel, tiret…) ;
-   reste à arbitrer d'autres regroupements — en **gardant séparés les termes juridiquement
+   produite automatiquement et harmonisée entre textes (en cas d'ambiguïté, on tranche par la
+   **définition de référence** du terme — règle générale, sans liste à tenir), et **marquée « à
+   relire »**. Reste à confirmer ces propositions en relecture métier.
+2. **Élaguer le vocabulaire** : 227 acteurs + 613 concepts, c'est beaucoup à présenter au moteur
+   (risque de dilution). Les doublons purement **typographiques** (pluriel, tiret, trait d'union)
+   fusionnent désormais **d'office** à la déduplication (règle générale, aucune liste). Reste à
+   arbitrer d'éventuels regroupements de fond — en **gardant séparés les termes juridiquement
    distincts** (un « X » et un « X mère » ne sont pas le même terme).
 3. **Basculer sur les versions consolidées** (droit le plus à jour) : la capacité est en place ;
    c'est un **choix de méthode** (texte d'origine vs consolidé), à décider — pas à appliquer en
