@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from regulatory_index.glossary import harvest_glossary, parse_points
-from regulatory_index.glossary.definitions import find_definitions_article
+from regulatory_index.glossary.definitions import extract_citations, find_definitions_article
 
 # Guillemets EUR-Lex via code points (évite l'ambiguïté unicode signalée par ruff).
 EN_O, EN_C = chr(0x2018), chr(0x2019)
@@ -53,7 +53,9 @@ def test_parse_points_number_style() -> None:
     assert points[0].term == "one"
 
 
-def _html(language: str, lang_open: str, lang_close: str, *, terms: list[tuple[str, str, str]]) -> str:
+def _html(
+    language: str, lang_open: str, lang_close: str, *, terms: list[tuple[str, str, str]]
+) -> str:
     rows = []
     for label, term, tail in terms:
         marker = f"({label})" if language == "EN" else f"{label})"
@@ -74,7 +76,9 @@ def _html(language: str, lang_open: str, lang_close: str, *, terms: list[tuple[s
 
 def test_harvest_glossary_bilingual() -> None:
     html_en = _html("EN", EN_O, EN_C, terms=[("a", "alpha", "means X"), ("b", "beta", "means Y")])
-    html_fr = _html("FR", FR_O, FR_C, terms=[("a", "alpha_fr", "signifie X"), ("b", "beta_fr", "signifie Y")])
+    html_fr = _html(
+        "FR", FR_O, FR_C, terms=[("a", "alpha_fr", "signifie X"), ("b", "beta_fr", "signifie Y")]
+    )
     terms = harvest_glossary(html_en, html_fr, source_id="TEST", celex="123")
     assert len(terms) == 2
     by_label = {t.label: t for t in terms}
@@ -119,6 +123,31 @@ def test_parse_points_unlabelled_straight_apostrophe() -> None:
     assert points[1].term == "investment firm"
 
 
+def test_extract_citations_faithful_and_dedup() -> None:
+    """Renvois inter-textes extraits de la définition : fidèles, dédupliqués, sans faux positif."""
+    assert extract_citations("control as defined in Article 1 of Directive 83/349/EEC;") == [
+        "Directive 83/349/EEC"
+    ]
+    assert extract_citations("a firm as in Article 4(1) of Regulation (EU) No 575/2013;") == [
+        "Regulation (EU) No 575/2013"
+    ]
+    # « this Directive » sans numéro -> aucun renvoi (pas de faux positif)
+    assert extract_citations("an AIF managed by an AIFM under this Directive") == []
+    # plusieurs renvois, dédupliqués dans l'ordre
+    assert extract_citations(
+        "see Directive 2014/65/EU and Directive 2014/65/EU and Regulation (EU) 2024/927"
+    ) == ["Directive 2014/65/EU", "Regulation (EU) 2024/927"]
+
+
+def test_harvest_auto_populates_cites_from_definition() -> None:
+    """Sans override, les `cites` sont remplis automatiquement depuis la définition."""
+    html_en = _html(
+        "EN", EN_O, EN_C, terms=[("a", "control", "means control as in Directive 83/349/EEC")]
+    )
+    terms = harvest_glossary(html_en, source_id="TEST")
+    assert terms[0].cites == ["Directive 83/349/EEC"]
+
+
 def test_find_definitions_article_by_subtitle_without_trigger() -> None:
     """IDD/IORP2 consolidés : sous-titre « Definitions » hors <p oj-sti-art>, et amorce
     « For the purposes of this Directive: … » sans la formule « the following definitions »."""
@@ -151,7 +180,9 @@ def test_harvest_glossary_en_only() -> None:
 def test_harvest_glossary_tolerates_unparsable_fr() -> None:
     """FR illisible (article de définitions absent) : EN seul, jamais d'exception."""
     html_en = _html("EN", EN_O, EN_C, terms=[("a", "alpha", "means X")])
-    terms = harvest_glossary(html_en, "<html><body><p>rien d'utile</p></body></html>", source_id="TEST")
+    terms = harvest_glossary(
+        html_en, "<html><body><p>rien d'utile</p></body></html>", source_id="TEST"
+    )
     assert len(terms) == 1
     assert terms[0].term_en == "alpha"
     assert terms[0].term_fr == ""

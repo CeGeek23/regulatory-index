@@ -1,4 +1,3 @@
-
 """Moissonne les termes définis d'un acte EUR-Lex, à partir de son HTML.
 
 Point de départ = le **contenu de l'acte** (déjà disponible, p. ex. en base d'actes) ;
@@ -196,7 +195,9 @@ def parse_points(text: str, *, language: Language) -> list[ParsedPoint]:
                 break
             body.append(line)
         joined = " ".join(body).strip()
-        points.append(ParsedPoint(label=label, term=_first_quoted(joined, language), definition=joined))
+        points.append(
+            ParsedPoint(label=label, term=_first_quoted(joined, language), definition=joined)
+        )
     return points
 
 
@@ -250,6 +251,64 @@ def find_definitions_article(html: str, language: Language) -> str | None:
         if any(trigger in low for trigger in _DEF_TRIGGERS):
             return str(unit.source_meta["article"])
     return None
+
+
+# Mots introduisant un acte cité dans une définition (EN + FR) et marqueurs faisant partie
+# de la référence (clause d'adoption, numérotation).
+_CITE_ACTS = ("Directive", "Regulation", "Règlement", "Decision", "Décision")
+_CITE_MARKERS = {
+    "(EU)",
+    "(EC)",
+    "(EEC)",
+    "(ECSC)",
+    "(Euratom)",
+    "(UE)",
+    "(CE)",
+    "(CEE)",
+    "No",
+    "No.",
+    "n°",
+}
+
+
+def extract_citations(text: str) -> list[str]:
+    """Renvois explicites à d'autres actes cités DANS une définition. Déterministe, sans regex.
+
+    Repère « Directive 2009/65/EC », « Regulation (EU) No 575/2013 », « Directive (EU) 2024/927 » :
+    après un mot d'acte (Directive/Regulation/Règlement…), on agrège les marqueurs (« (EU) », « No »)
+    jusqu'au NUMÉRO de l'acte (token contenant un chiffre et un « / »). FIDÈLE au texte (le renvoi est
+    écrit noir sur blanc, ce n'est pas une interprétation). Dédupliqué, dans l'ordre d'apparition.
+    """
+    out: list[str] = []
+    toks = text.split()
+    i = 0
+    while i < len(toks):
+        if toks[i].strip(".,;:") in _CITE_ACTS:
+            ref = [toks[i].strip(".,;:")]
+            j, numbered = i + 1, False
+            while j < len(toks):
+                tc = toks[j].strip(".,;:")
+                if tc in _CITE_MARKERS:
+                    ref.append(tc)
+                    j += 1
+                    continue
+                if "/" in tc and any(ch.isdigit() for ch in tc):
+                    ref.append(tc)  # numéro de l'acte (ex. 575/2013, 2009/65/EC)
+                    numbered = True
+                    j += 1
+                break
+            if numbered:
+                out.append(" ".join(ref))
+            i = j
+        else:
+            i += 1
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for c in out:
+        if c not in seen:
+            seen.add(c)
+            deduped.append(c)
+    return deduped
 
 
 @cache
@@ -327,7 +386,9 @@ def harvest_glossary(
         term_id = str(ov.get("id") or _slug(term_en) or f"{source_id.lower()}_{ep.label}")
         type_value = ov.get("type")
         type_ = str(type_value) if type_value else None
-        cites = list(ov.get("cites") or [])
+        # cites : l'override relu prime ; sinon, renvois extraits automatiquement de la définition
+        # (fidèles au texte). Restaure le graphe inter-textes pour TOUS les actes, reproductible.
+        cites = list(ov.get("cites") or extract_citations(definition_en))
         terms.append(
             DefinedTerm(
                 term_id=term_id,
