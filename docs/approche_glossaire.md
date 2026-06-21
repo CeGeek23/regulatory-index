@@ -33,7 +33,7 @@ Pour chaque acte, deux livrables :
 2. **Le glossaire des termes définis**, tiré de cet article, avec pour **chaque terme** :
    - le **libellé EN et FR** (versions officielles, pas une traduction maison) ;
    - sa **base légale précise** (l'article et le point exact, ex. « Art. 4(1)(b) ») ;
-   - sa **catégorie** : acteur / concept / fonds / autorité… ;
+   - sa **catégorie** (schéma unique) : **acteur**, **investisseur**, **autorité** (de surveillance) ou **concept** ;
    - sa **définition reprise mot pour mot** ;
    - les **renvois** vers d'autres textes que la définition importe.
 

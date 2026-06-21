@@ -1,8 +1,8 @@
 # Enrichissement relu à la main du glossaire AIFMD niveau 1 (Directive 2011/61/UE), article 4.
 # Indexé par étiquette de point (a..ao). Chaque clé peut porter :
 #   id    : identifiant snake_case (aligné sur les vocabulaires contrôlés quand le terme y existe)
-#   type  : actor | investor | supervisor | fund | entity | instrument | capital | geography
-#           | activity | concept   (isole les acteurs des concepts, cf. demande client)
+#   type  : actor | investor | supervisor | concept   (schéma unique du projet : isole les acteurs
+#           — actor/investor/supervisor — des concepts/objets — tout le reste ; cf. demande client)
 #   cites : autres textes que la définition importe/vise (graphe inter-actes ; renvois d'origine
 #           — pour la version à jour des renvois abrogés, cf. docs/level1_perimeter.md)
 #   term_en / term_fr : à ne renseigner que si la détection automatique se trompe
@@ -11,7 +11,7 @@
 
 a:
   id: aif
-  type: fund
+  type: concept
   cites:
   - Directive 2009/65/EC (UCITS) Art. 5
 b:
@@ -56,21 +56,21 @@ l:
   type: actor
 m:
   id: feeder_aif
-  type: fund
+  type: concept
 n:
   type: concept
 o:
   id: holding_company
-  type: entity
+  type: concept
 p:
   id: home_ms_aif
-  type: geography
+  type: concept
 q:
   id: home_ms_aifm
-  type: geography
+  type: concept
 r:
   id: host_ms_aifm
-  type: geography
+  type: concept
 s:
   type: concept
 t:
@@ -83,28 +83,28 @@ v:
   type: concept
 w:
   id: managing_aifs
-  type: activity
+  type: concept
   cites:
   - AIFMD Annex I point 1(a)/(b)
 x:
   type: concept
 y:
   id: master_aif
-  type: fund
+  type: concept
 z:
   id: member_state_of_reference
-  type: geography
+  type: concept
   cites:
   - AIFMD Art. 37(4)
 aa:
   id: non_eu_aif
-  type: fund
+  type: concept
 ab:
   id: non_eu_aifm
   type: actor
 ac:
   id: non_listed_company
-  type: entity
+  type: concept
   cites:
   - Directive 2004/39/EC Art. 4(1)(14)
 ad:
@@ -143,7 +143,7 @@ am:
   type: supervisor
 an:
   id: securitisation_spe
-  type: entity
+  type: concept
   cites:
   - Regulation (EC) No 24/2009 (ECB) Art. 1(2)
 ao:
