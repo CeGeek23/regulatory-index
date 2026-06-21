@@ -1,8 +1,9 @@
 ---
-description: Vérifie / démarre LM Studio (serveur OpenAI-compatible localhost:1234)
+name: lms
+description: Vérifie et démarre si besoin LM Studio (serveur OpenAI-compatible sur localhost:1234) avec le modèle standard qwen2.5-7b-instruct. À utiliser avant toute classification ou extraction qui dépend du LLM local.
 ---
 
-Vérifie que LM Studio est prêt, et démarre-le sinon — sans me demander à chaque étape.
+Vérifie que LM Studio est prêt, et démarre-le sinon — sans demander à chaque étape.
 
 1. `curl -s --max-time 5 http://localhost:1234/v1/models` pour voir si le serveur répond et quel(s)
    modèle(s) sont chargés.
