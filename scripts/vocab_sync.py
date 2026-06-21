@@ -102,6 +102,19 @@ def _index(entries: list[dict[str, object]]) -> tuple[set[str], set[str]]:
     return surfaces, ids
 
 
+def _fold_aliases(new: dict[str, dict[str, object]], pending: list[tuple[str, str, str]]) -> None:
+    """Replie chaque variante (fusion) en alias de son canonique promu (si présent ; sinon ignorée)."""
+    for target, surface_en, surface_fr in pending:
+        entry = new.get(target)
+        if entry is None:
+            continue
+        aliases = entry["aliases"]
+        assert isinstance(aliases, list)
+        for surface in (surface_en, surface_fr):
+            if surface and surface not in (entry["canonical_en"], entry["canonical_fr"]) and surface not in aliases:
+                aliases.append(surface)
+
+
 def _promote(terms: list[DefinedTerm], vocab_name: str, *, actors_wanted: bool) -> tuple[int, int]:
     """Régénère la section glossaire de `{vocab_name}.yaml`. Renvoie (entrées relues, entrées du glossaire).
 
@@ -151,16 +164,7 @@ def _promote(terms: list[DefinedTerm], vocab_name: str, *, actors_wanted: bool) 
             "legal_basis": t.legal_basis,
         }
 
-    # Fusions : la variante devient un alias du canonique (si celui-ci est promu ; sinon retirée).
-    for target, surface_en, surface_fr in pending_alias:
-        entry = new.get(target)
-        if entry is None:
-            continue
-        aliases = entry["aliases"]
-        assert isinstance(aliases, list)
-        for surface in (surface_en, surface_fr):
-            if surface and surface not in (entry["canonical_en"], entry["canonical_fr"]) and surface not in aliases:
-                aliases.append(surface)
+    _fold_aliases(new, pending_alias)
 
     out = base_text + "\n"
     if new:

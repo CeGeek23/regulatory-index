@@ -59,6 +59,7 @@ ignore_missing_imports = true
 # Without this, Pylance flags every `typer.Option(...)` and `lx.extract(...)`
 # call as "partially unknown" because their stubs return `Any` overloads.
 include = ["src", "tests", "scripts"]
+extraPaths = ["src", "scripts"]  # résout l'import des scripts (vocab_sync, classify_overrides) dans les tests
 venvPath = "."
 venv = ".venv"
 pythonVersion = "3.11"
@@ -74,7 +75,8 @@ testpaths = ["tests"]
 addopts = "-ra --strict-markers"
 # Layout src/ : on garantit l'import du paquet même si l'install editable du .venv
 # a dérivé (uv run peut le désinstaller au re-sync). Indépendant de l'état d'install.
-pythonpath = ["src"]
+# scripts/ : pour tester la logique des scripts (classify_overrides, vocab_sync…).
+pythonpath = ["src", "scripts"]
 
 [tool.uv]
 # Use a system / pyenv-managed interpreter only — never download a uv-managed

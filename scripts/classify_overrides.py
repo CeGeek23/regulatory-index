@@ -183,6 +183,18 @@ def _load_tie_breaks() -> dict[str, str]:
     return {_norm(str(k)): str(v) for k, v in raw.items()}
 
 
+def _apply_tie_breaks(docs: dict[str, _Doc], tie_breaks: dict[str, str]) -> int:
+    """Force le type décidé (tie_breaks) sur tout terme concerné, partout. Renvoie le nb de changements."""
+    applied = 0
+    for doc in docs.values():
+        for label, term in doc.labels:
+            forced = tie_breaks.get(term)
+            if forced and doc.types[label] != forced:
+                doc.types[label] = forced
+                applied += 1
+    return applied
+
+
 def _write_override(sid: str, model: str, types: dict[str, str]) -> None:
     header = (
         f"# Glossaire {sid} — classification acteur/concept générée par scripts/classify_overrides.py\n"
@@ -285,13 +297,7 @@ def main() -> int:
 
     # Décisions métier (tie_breaks.yaml) : appliquées en dernier, elles font foi sur tout.
     tie_breaks = _load_tie_breaks()
-    tb_applied = 0
-    for doc in docs.values():
-        for label, term in doc.labels:
-            forced = tie_breaks.get(term)
-            if forced and doc.types[label] != forced:
-                doc.types[label] = forced
-                tb_applied += 1
+    tb_applied = _apply_tie_breaks(docs, tie_breaks)
 
     for sid, doc in docs.items():
         _write_override(sid, model, doc.types)
