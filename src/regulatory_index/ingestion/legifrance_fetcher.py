@@ -35,6 +35,11 @@ def fetch_html(article_id: str, *, timeout: float = 30.0) -> str:
     ) as client:
         response = client.get(legifrance_url(article_id))
         response.raise_for_status()
+    if response.status_code != 200 or not response.text.strip():  # WAF/challenge en 202 (un 2xx)
+        raise httpx.HTTPStatusError(
+            f"Réponse inattendue {response.status_code} pour {article_id} (challenge probable).",
+            request=response.request, response=response,
+        )
     return response.text
 
 

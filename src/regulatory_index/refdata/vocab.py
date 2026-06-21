@@ -73,14 +73,21 @@ def load_vocabulary(name: str) -> Vocabulary:
 
 @cache
 def _resolve_index(name: str) -> dict[str, VocabEntry]:
-    """Index inverse {canonical_en, canonical_fr, id, *aliases} -> VocabEntry.
+    """Index inverse {canonical_en, canonical_fr, id, *aliases} -> VocabEntry (clés en minuscules).
 
-    Les clés sont en minuscules. En cas de collision, la dernière entrée l'emporte
-    (acceptable pour v0).
+    Priorité déterministe en cas de collision : une **forme canonique** l'emporte sur un id/alias
+    d'une AUTRE entrée (sinon « participation », canonique d'une entrée, pourrait résoudre vers une
+    entrée dont ce n'est qu'un id/alias). Deux passes : id/alias d'abord (1er gagne), puis canoniques
+    (qui écrasent). Une vraie collision canonique↔canonique (homonyme) reste tranchée par l'ordre YAML.
     """
     index: dict[str, VocabEntry] = {}
-    for entry in load_vocabulary(name).entries:
-        for key in (entry.canonical_en, entry.canonical_fr, entry.id, *entry.aliases):
+    entries = load_vocabulary(name).entries
+    for entry in entries:  # passe 1 : id + alias (priorité basse, premier gagne)
+        for key in (entry.id, *entry.aliases):
+            if key:
+                index.setdefault(key.strip().lower(), entry)
+    for entry in entries:  # passe 2 : canoniques EN/FR (priorité haute, écrasent)
+        for key in (entry.canonical_en, entry.canonical_fr):
             if key:
                 index[key.strip().lower()] = entry
     return index

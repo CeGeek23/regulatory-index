@@ -3,14 +3,32 @@ from datetime import UTC, datetime
 import networkx as nx
 
 from regulatory_index.linking.citation_extractor import (
+    _matches_as_token,
     parse_article_locator,
     resolve_all,
     resolve_citation,
+    resolve_citations,
 )
 from regulatory_index.linking.graph_builder import build_graph, build_relations
 from regulatory_index.schemas.obligation import Obligation
 from regulatory_index.schemas.relation import CrossLevelRelationType
 from regulatory_index.schemas.source import Issuer, Level, Source
+
+
+def test_matches_as_token_respects_word_boundaries() -> None:
+    # Régression : un alias court ne doit pas matcher dans un mot plus long.
+    assert _matches_as_token("the aifmd directive", "aifmd")
+    assert not _matches_as_token("aifmdx nonsense", "aifmd")
+    assert not _matches_as_token("the cmfp rules", "cmf")
+    assert _matches_as_token("regulation 2011/61/eu here", "2011/61/eu")
+    assert not _matches_as_token("regulation 2011/61/eur", "2011/61/eu")
+
+
+def test_resolve_citations_returns_all_targets() -> None:
+    # Régression : une citation cross-niveau vise deux textes -> les deux résolus.
+    targets = resolve_citations("Regulation 231/2013 implementing Directive 2011/61/EU")
+    assert "AIFMD_L1" in targets
+    assert "AIFMD_L2" in targets
 
 
 def _obligation(

@@ -98,6 +98,9 @@ def parse_articles(
     keep: set[str] | None = None,
 ) -> list[NormativeUnit]:
     """Retourne une NormativeUnit par article. `keep` filtre par numéro d'article."""
+    language = language.upper()
+    if language not in ("EN", "FR"):
+        raise ValueError(f"Langue non supportée : {language!r} (attendu 'EN' ou 'FR').")
     soup = BeautifulSoup(html, "lxml")
 
     units: list[NormativeUnit] = []
@@ -107,13 +110,15 @@ def parse_articles(
         # Ignore les sous-éléments comme 'art_15.1', on ne veut que les articles de premier niveau.
         if "." in elem_id:
             continue
-        if elem_id in seen:
-            continue
-        seen.add(elem_id)
 
         article_num = _extract_article_number(div)
         if article_num is None:
             continue
+        # Dédup sur le NUMÉRO d'article extrait, pas sur l'id HTML : EUR-Lex (consolidé) peut donner
+        # deux articles DISTINCTS partageant le même id (ex. « Article 69a » et « Article 69-a »).
+        if article_num in seen:
+            continue
+        seen.add(article_num)
         if keep is not None and article_num not in keep:
             continue
 

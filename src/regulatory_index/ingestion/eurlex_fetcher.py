@@ -49,6 +49,16 @@ def fetch_html(celex: str, language: str, *, timeout: float = 45.0) -> str:
     ) as client:
         response = client.get(cellar_url(celex))
         response.raise_for_status()
+    # Le WAF EUR-Lex répond par un challenge en HTTP 202 (un 2xx, donc raise_for_status ne lève
+    # PAS) : on exige explicitement 200 + un corps non vide pour ne pas prendre une page de
+    # challenge (ou un 204) pour du contenu légitime.
+    if response.status_code != 200 or not response.text.strip():
+        raise httpx.HTTPStatusError(
+            f"Réponse inattendue {response.status_code} pour CELEX {celex} "
+            f"(WAF/challenge probable, corps de {len(response.text)} car.)",
+            request=response.request,
+            response=response,
+        )
     return response.text
 
 

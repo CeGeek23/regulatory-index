@@ -65,13 +65,45 @@ def parse_article_locator(citation: str) -> str | None:
     return None
 
 
-def resolve_citation(citation: str) -> str | None:
-    """Renvoie le source_id dont l'alias le plus long est une sous-chaîne de citation, sinon None."""
+def _matches_as_token(needle: str, alias: str) -> bool:
+    """`alias` présent dans `needle` avec frontières de mot (caractères adjacents non alphanumériques).
+
+    Évite les faux positifs de sous-chaîne : 'aifmd' ne matche pas 'aifmdx', 'cmf' pas 'cmfp',
+    '2011/61/eu' pas '2011/61/eur'. Sans regex.
+    """
+    if not alias:
+        return False
+    start = 0
+    while (i := needle.find(alias, start)) != -1:
+        before = needle[i - 1] if i > 0 else " "
+        after_idx = i + len(alias)
+        after = needle[after_idx] if after_idx < len(needle) else " "
+        if not before.isalnum() and not after.isalnum():
+            return True
+        start = i + 1
+    return False
+
+
+def resolve_citations(citation: str) -> list[str]:
+    """Tous les source_ids dont un alias matche (en token) dans la citation, dédupliqués.
+
+    Une citation peut viser PLUSIEURS textes (ex. « Règlement 231/2013 pris en application de la
+    Directive 2011/61/UE » → AIFMD_L2 et AIFMD_L1). Ordre déterministe (alias les plus longs d'abord).
+    """
     needle = citation.lower()
+    seen: set[str] = set()
+    out: list[str] = []
     for alias, source_id in load_alias_index():
-        if alias and alias in needle:
-            return source_id
-    return None
+        if source_id not in seen and _matches_as_token(needle, alias):
+            seen.add(source_id)
+            out.append(source_id)
+    return out
+
+
+def resolve_citation(citation: str) -> str | None:
+    """Premier source_id matché (compat) ; cf. `resolve_citations` pour le multi-textes."""
+    targets = resolve_citations(citation)
+    return targets[0] if targets else None
 
 
 def resolve_all(
@@ -82,18 +114,20 @@ def resolve_all(
     unresolved: list[UnresolvedCitation] = []
     for ob in obligations:
         for citation in ob.cited_references:
-            target = resolve_citation(citation)
-            if target is None:
+            targets = resolve_citations(citation)
+            if not targets:
                 unresolved.append(
                     UnresolvedCitation(obligation_id=ob.obligation_id, citation_text=citation)
                 )
-            else:
+                continue
+            article = parse_article_locator(citation)
+            for target in targets:  # une citation peut viser plusieurs textes
                 resolved.append(
                     ResolvedCitation(
                         obligation_id=ob.obligation_id,
                         citation_text=citation,
                         target_source_id=target,
-                        target_article=parse_article_locator(citation),
+                        target_article=article,
                     )
                 )
     return resolved, unresolved

@@ -43,6 +43,11 @@ def fetch_html(doc_code: str, *, timeout: float = 30.0) -> str:
     ) as client:
         response = client.get(amf_url(doc_code))
         response.raise_for_status()
+    if response.status_code != 200 or not response.text.strip():  # WAF/challenge en 202 (un 2xx)
+        raise httpx.HTTPStatusError(
+            f"Réponse inattendue {response.status_code} pour {doc_code} (challenge probable).",
+            request=response.request, response=response,
+        )
     return response.text
 
 

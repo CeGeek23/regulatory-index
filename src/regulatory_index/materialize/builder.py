@@ -107,11 +107,17 @@ def build_obligations(
     quelles (voir `collect_vocab_gaps`).
     """
 
-    items: list[tuple[str, NormativeUnit, RawObligation, ExtractionMeta]] = []
+    # Clé de tri = tuple RÉEL (offsets comparés comme des entiers : 2 avant 10, pas l'inverse) avec
+    # char_end + verbatim en départage → numérotation déterministe et conforme à l'ordre du texte,
+    # indépendante de l'ordre d'itération sur disque (y compris à char_start identique).
+    items: list[tuple[tuple[str, str, int, int, str], NormativeUnit, RawObligation, ExtractionMeta]] = []
     for ue in extractions:
         for raw in ue.obligations:
-            sort_key = (ue.unit.source_id, ue.unit.unit_id, raw.char_interval[0])
-            items.append((repr(sort_key), ue.unit, raw, ue.extraction_meta))
+            key: tuple[str, str, int, int, str] = (
+                ue.unit.source_id, ue.unit.unit_id,
+                raw.char_interval[0], raw.char_interval[1], raw.verbatim_text,
+            )
+            items.append((key, ue.unit, raw, ue.extraction_meta))
 
     items.sort(key=lambda t: t[0])
 

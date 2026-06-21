@@ -13,8 +13,21 @@ from typing import Any
 import langextract as lx
 import pytest
 
-from regulatory_index.extraction.langextract_runner import RunnerConfig, output_path, run
+from regulatory_index.extraction.langextract_runner import (
+    RunnerConfig,
+    _as_text,
+    output_path,
+    run,
+)
 from regulatory_index.ingestion.unit_loader import NormativeUnit
+
+
+def test_as_text_skips_none_items() -> None:
+    # Régression : le LLM peut renvoyer une liste commençant par None -> ne pas coercer en "None".
+    assert _as_text([None, "AIFM"]) == "AIFM"
+    assert _as_text([None, None]) == ""
+    assert _as_text("establish") == "establish"
+    assert _as_text(None) == ""
 
 
 def _fake_annotated_doc(passage: str, hits: list[dict[str, Any]]) -> lx.data.AnnotatedDocument:

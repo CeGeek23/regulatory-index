@@ -70,6 +70,8 @@ def _as_text(value: Any) -> str:
         return ""
     if isinstance(value, list | tuple):
         for item in value:
+            if item is None:
+                continue  # ne pas coercer None en la chaîne "None"
             text = str(item).strip()
             if text:
                 return text
@@ -149,7 +151,9 @@ def extract_unit(unit: NormativeUnit, config: RunnerConfig) -> UnitExtraction:
     for ex in extractions:
         try:
             obligations.append(_to_raw_obligation(ex))
-        except (ValueError, KeyError) as e:
+        except (ValueError, KeyError, TypeError) as e:
+            # une extraction malformée est consignée, sans invalider les autres de l'unité
+            # (ValidationError Pydantic est une sous-classe de ValueError → déjà couverte)
             errors.append(f"{type(e).__name__}: {e}")
 
     meta = ExtractionMeta(
