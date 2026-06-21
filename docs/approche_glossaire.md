@@ -16,8 +16,8 @@ En clair : on commence par le dictionnaire, pas par les articles de fond.
 
 ## 2. Pourquoi partir des articles de définition
 
-- Ce sont le **socle juridique** : un terme y est défini une fois, précisément, puis réutilisé
-  partout dans le texte. Sa définition fait foi.
+- Ils constituent le **socle terminologique** : un terme y est défini une fois, précisément, puis
+  réutilisé partout dans le texte. Sa définition fait foi.
 - Ils définissent **à la fois des acteurs** (le gestionnaire, le dépositaire, l'autorité
   compétente, l'investisseur…) **et des concepts** (effet de levier, participation qualifiée,
   liens étroits, commercialisation…).
@@ -70,7 +70,7 @@ fonctions de direction…), distincts des concepts. C'est fait : le glossaire pr
 Point sensible identifié et documenté : les définitions **renvoient à d'autres textes**, et beaucoup
 de ces renvois pointent vers des directives **aujourd'hui abrogées** (MiFID I, l'ancienne directive
 bancaire, la 7ᵉ directive comptable…). Travailler « sur les textes les plus à jour » suppose donc de
-**re-pointer chaque renvoi vers le texte en vigueur** (MiFID II, CRR/CRD IV, directive comptable de
+**re-pointer chaque renvoi vers le texte en vigueur** (MiFID II, CRR/CRD, directive comptable de
 2013, etc.). Cette table de correspondance est établie.
 
 À noter aussi : la directive AIFMD elle-même a été **modifiée (AIFMD II)** — la version consolidée
@@ -91,63 +91,60 @@ Au-delà des définitions, on a amorcé l'**extraction des obligations** sur le 
 ## 10. Où on en est, concrètement
 
 **Périmètre « tout le niveau 1 services financiers » — ~40 textes**, leur article de définitions
-moissonné automatiquement (API Cellar de l'Office des publications). Couvre : fonds (AIFMD L1/L2,
+récupéré automatiquement depuis la **source officielle de l'UE** (EUR-Lex / Office des
+publications). Couvre : fonds (AIFMD L1/L2,
 UCITS, ELTIF, MMFR, EuVECA, EuSEF), marchés (MiFID II, MiFIR, MAR, MAD II, Prospectus, CSDR,
 Short Selling, Benchmarks, Securitisation, SFTR, EMIR, Transparence, CRA), banque/résolution
 (CRR, CRD IV, BRRD, SRMR, DGSD), assurance (Solvabilité II, IDD), paiements (DSP2, monnaie
 électronique), durabilité (SFDR, Taxonomie), numérique (MiCA, DORA), financement participatif
-(ECSP), retraite (PEPP, IORP II), LCB-FT (LBC-FT), comptable, AEMF/ESMA.
+(ECSP), retraite (PEPP, IORP II), LCB-FT, comptable, AEMF/ESMA.
 
 **Résultat consolidé :** **1 271 termes définis → 782 termes distincts** (liste minimale
 dédoublonnée) → **207 acteurs isolés**, dont une part partagée par plusieurs textes (ex. « credit
 institution », « competent authority »). La dédup relie le même terme entre actes et garde la
 trace de toutes ses bases légales.
 
-**Statut de la classification acteur/concept** : AIFMD L1/L2 sont **relus à la main** ; les
-**~38 autres textes sont classés automatiquement et de façon REPRODUCTIBLE** — un script versionné
-(`scripts/classify_overrides.py`) interroge le modèle local LM Studio en décodage déterministe
-(température 0, graine fixe) et met le résultat en cache, si bien que relancer régénère exactement
-les mêmes overrides. Une **passe d'harmonisation déterministe** aligne ensuite un même terme sur
-**un seul type dans tout le corpus** (vote majoritaire ; les égalités sont signalées). Les **14
-égalités résiduelles** (le modèle hésite à parts égales) sont tranchées par
-`config/glossary/tie_breaks.yaml` — des **décisions métier versionnées**, appliquées en dernier et
-donc reproductibles : c'est là que la relecture humaine se pose une fois pour toutes. L'extraction
-du terme et de la définition reste fidèle au texte ; les catégories restent **marquées « à RELIRE »**.
+**Statut de la classification acteur/concept** : pour AIFMD (niveaux 1 et 2), elle est **relue à la
+main**. Pour les **~38 autres textes**, elle est **produite automatiquement et de façon
+reproductible** : pour chaque terme, le système propose « acteur » ou « concept », et **redonne
+exactement le même résultat** à chaque exécution. Un même terme reçoit **le même type dans tout le
+corpus** (cohérence d'un texte à l'autre). Les **14 termes vraiment ambigus** — le terme penche des
+deux côtés selon le texte — sont tranchés par des **décisions consignées une fois pour toutes** et
+ré-appliquées automatiquement. L'extraction du terme et de sa définition reste **fidèle au texte** ;
+les classifications restent **marquées « à relire »** (validation métier).
 
 **Bilingue** : les **42/42 textes** sont désormais récupérés en **EN + FR** (versions officielles),
 et **147/225 acteurs** du vocabulaire portent un libellé **FR** distinct.
 
-**Boucle glossaire → vocabulaire (le point clé)** : les termes du glossaire sont désormais **versés
-dans le vocabulaire de référence du projet** — **225 acteurs** (`actors.yaml`) et **612 concepts/
-objets** (`objects.yaml`). Autrement dit, les objets identifiés dans les définitions **alimentent
-maintenant l'extraction d'obligations** (reconnaissance des termes + normalisation), exactement la
-finalité « les identifier comme objets pour mieux les lier ». La promotion est **reproductible et
-idempotente** (`scripts/vocab_sync.py` régénère sa section à chaque run au lieu de l'empiler) ; les
-entrées versées sont **marquées « à relire »**.
+**Le glossaire alimente le vocabulaire de référence (le point clé)** : les **207 acteurs** (et les
+concepts) tirés des définitions sont **versés dans le vocabulaire de référence du projet**. Ajoutés
+au vocabulaire déjà présent, ils le portent à **225 acteurs** et **612 concepts** au total — ce
+vocabulaire sert ensuite à **reconnaître et normaliser** ces termes lors de la lecture des
+obligations. *(À ne pas confondre : **207** = acteurs distincts issus des définitions ; **225** =
+taille du vocabulaire de référence après ajout au fonds existant.)* C'est exactement la finalité
+« les identifier comme objets pour mieux les lier ». Cette alimentation est **automatique et
+reproductible** ; les entrées sont **marquées « à relire »**.
 
-**Méthode validée comme réplicable de bout en bout** : un seul code traite les définitions en
-(a)(b)(c) ou (1)(2)(3), plusieurs styles de guillemets, format de base ou consolidé, EN seul ou
-EN+FR ; et **toute la chaîne est reproductible** — extraction déterministe, classification
-acteur/concept régénérable à l'identique (LM Studio, cache), promotion au vocabulaire idempotente.
+**Méthode réplicable de bout en bout** : un même traitement gère les définitions numérotées
+(1)(2)(3) ou en lettres (a)(b)(c), les différents styles de guillemets, le texte d'origine ou
+consolidé, l'anglais seul ou anglais + français. **Toute la chaîne se rejoue à l'identique** sur
+n'importe quel acte — c'est ce qui la rend applicable à une base entière.
 
 ## 11. Ce qui reste à faire
 
-1. **Valider la classification acteur/concept** (seul point réellement manuel restant) : générée de
-   façon **reproductible** (`scripts/classify_overrides.py`, LM Studio), **harmonisée** entre textes,
-   et les **14 égalités tranchées par des propositions** dans `config/glossary/tie_breaks.yaml`
-   (lecture des définitions + vérif croisée). Il reste à **confirmer/ajuster** ces décisions — une
-   ligne à éditer, le générateur ré-applique. L'ensemble reste **marqué « à relire »**.
-2. **Élaguer le vocabulaire injecté à l'extraction** : 225 acteurs + 612 objets, c'est beaucoup
-   pour un petit modèle local (risque de dilution du prompt). Mécanisme en place et reproductible —
-   `config/glossary/prune.yaml` (drop/merge appliqués par `vocab_sync`) ; 8 fusions de variantes
-   purement morphologiques déjà validées. Reste à arbitrer les autres candidats listés dans
-   `data/exports/glossary/review_pruning.md` (quasi-doublons juridiquement distincts à NE pas fusionner,
-   mono-source longs).
-3. **Basculer sur les versions consolidées** (à jour) — la capacité est en place (résolution
-   automatique du dernier CELEX consolidé), à généraliser à tout le périmètre. *Choix de méthode
-   (texte d'origine vs consolidé), pas une étape mécanique : à décider, pas à appliquer en aveugle.*
+1. **Valider la classification acteur/concept** (le seul vrai travail manuel restant) : elle est
+   produite automatiquement, harmonisée entre textes, et **marquée « à relire »** ; les **14 termes
+   ambigus** ont une **proposition à confirmer** (établie en lisant leurs définitions). Confirmer ou
+   ajuster une décision revient à **changer une ligne**, et tout se reconstruit à l'identique.
+2. **Élaguer le vocabulaire** : 225 acteurs + 612 concepts, c'est beaucoup à présenter au moteur
+   (risque de dilution). On a déjà fusionné **8 simples variantes d'écriture** (pluriel, tiret…) ;
+   reste à arbitrer d'autres regroupements — en **gardant séparés les termes juridiquement
+   distincts** (un « X » et un « X mère » ne sont pas le même terme).
+3. **Basculer sur les versions consolidées** (droit le plus à jour) : la capacité est en place ;
+   c'est un **choix de méthode** (texte d'origine vs consolidé), à décider — pas à appliquer en
+   aveugle (les jeux de termes diffèrent).
 4. **Réconcilier les renvois abrogés** vers les textes en vigueur, et **traiter les faux-amis L3**
-   (doctrine AMF/ACPR), non encore intégrés (l'ESMA/AMF n'a pas de fetcher — HTML/PDF).
+   (doctrine AMF/ACPR), non encore intégrés.
 5. ~~**Compléter le bilingue**~~ — **fait** : les 42/42 textes sont récupérés en EN + FR.
 
 ---

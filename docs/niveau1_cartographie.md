@@ -175,7 +175,8 @@ Colonnes : **CELEX** (identifiant EUR-Lex), **type** (Directive/Règlement, lu d
 
 > **À lire ainsi** : 1 271 entrées brutes → on dédoublonne (un même *« investisseur professionnel »*
 > défini dans 10 textes = 1 ligne, avec la trace de ses 10 bases légales) → **782 termes distincts**,
-> dont **207 acteurs**. C'est la « liste minimale » : le vocabulaire de référence du projet.
+> dont **207 acteurs**. C'est la « liste minimale » : le glossaire de référence, dédoublonné (il
+> alimente ensuite le vocabulaire de référence du projet — cf. compteurs distincts).
 
 **Lecture des volumes** : le poids n'est pas uniforme. La **banque** (CRR 128, BRRD 108) et les
 **marchés** (MiFID II 63) concentrent les définitions ; à l'inverse certains textes sont quasi muets
