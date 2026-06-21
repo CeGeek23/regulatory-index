@@ -1,7 +1,7 @@
 """Matérialisation : transforme les extractions en index (obligations + relations + vues).
 
 - `builder`  : RawObligation -> Obligation (ids stables, canonicalisation vocab).
-- `core`     : agrégation en MaterializedIndex (Polars) + relations cross-level + vues.
+- `core`     : agrégation en MaterializedIndex (pandas) + relations cross-level + vues.
 
 API publique stable ré-exportée ici pour que `from ..materialize import materialize` etc.
 restent valides quelle que soit l'organisation interne.

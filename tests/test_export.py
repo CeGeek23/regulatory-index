@@ -73,8 +73,8 @@ def test_full_export_pipeline(tmp_path: Path) -> None:
         units_df=units_to_df(units),
     )
 
-    assert materialized.obligations_df.height == 2
-    themes = set(by_theme(materialized.obligations_df)["theme"].to_list())
+    assert len(materialized.obligations_df) == 2
+    themes = set(by_theme(materialized.obligations_df)["theme"].tolist())
     assert themes == {"Risk Management", "Governance"}
 
     excel_path = tmp_path / "out.xlsx"
@@ -97,7 +97,7 @@ def test_by_theme_merges_across_languages() -> None:
         _make_obligation("AIFMD-RISK-0002", "Risk Management", language="FR"),
     ]
     summary = by_theme(obligations_to_df(obligations))
-    assert summary.height == 1
-    row = summary.row(0, named=True)
+    assert len(summary) == 1
+    row = summary.iloc[0].to_dict()
     assert row["theme"] == "Risk Management"
     assert row["n"] == 2

@@ -1,12 +1,12 @@
-"""Matérialise les extractions persistées en DataFrames Polars en mémoire.
+"""Matérialise les extractions persistées en DataFrames pandas en mémoire.
 
 La source de vérité est les fichiers JSON dans `data/obligations/` (un par
 NormativeUnit). À l'export, on les charge, on construit les Obligations, on
 exécute le lieur de citations, et on transforme le tout en trois DataFrames
-Polars consommés directement par les writers (Excel / CSV).
+pandas consommés directement par les writers (Excel / CSV).
 
-Pas de base persistante, pas de SQL — Polars suffit à notre échelle
-(milliers d'obligations) et réduit la surface des dépendances.
+Pas de base persistante, pas de SQL — pandas suffit à notre échelle
+(milliers d'obligations) et reste une dépendance unique.
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import polars as pl
+import pandas as pd
 
 from ..ingestion.unit_loader import NormativeUnit
 from ..linking.citation_extractor import (
@@ -32,62 +32,26 @@ from ..schemas.relation import CrossLevelRelation
 from .builder import build_obligations
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Schémas — garde les DataFrames typés même vides (évite les erreurs pivot/select)
+# Colonnes — fixent la présence et l'ordre des colonnes, même DataFrame vide
 # ──────────────────────────────────────────────────────────────────────────────
 
-OBLIGATION_SCHEMA: dict[str, pl.DataType] = {
-    "obligation_id": pl.Utf8(),
-    "source_id": pl.Utf8(),
-    "level": pl.Utf8(),
-    "issuer": pl.Utf8(),
-    "language": pl.Utf8(),
-    "celex": pl.Utf8(),
-    "article": pl.Utf8(),
-    "paragraph": pl.Utf8(),
-    "point": pl.Utf8(),
-    "actor": pl.Utf8(),
-    "action": pl.Utf8(),
-    "object": pl.Utf8(),
-    "theme": pl.Utf8(),
-    "sub_theme": pl.Utf8(),
-    "condition": pl.Utf8(),
-    "scope": pl.Utf8(),
-    "exception": pl.Utf8(),
-    "expected_evidence": pl.Utf8(),
-    "associated_control": pl.Utf8(),
-    "verbatim_text": pl.Utf8(),
-    "char_start": pl.Int64(),
-    "char_end": pl.Int64(),
-    "cited_references": pl.Utf8(),
-    "extraction_model": pl.Utf8(),
-    "extracted_at": pl.Utf8(),
-    "human_validated": pl.Boolean(),
-    "source_url": pl.Utf8(),
-    "source_title": pl.Utf8(),
-}
+OBLIGATION_COLUMNS: list[str] = [
+    "obligation_id", "source_id", "level", "issuer", "language", "celex", "article",
+    "paragraph", "point", "actor", "action", "object", "theme", "sub_theme", "condition",
+    "scope", "exception", "expected_evidence", "associated_control", "verbatim_text",
+    "char_start", "char_end", "cited_references", "extraction_model", "extracted_at",
+    "human_validated", "source_url", "source_title",
+]
 
-RELATION_SCHEMA: dict[str, pl.DataType] = {
-    "source_obligation_id": pl.Utf8(),
-    "target_obligation_id": pl.Utf8(),
-    "relation_type": pl.Utf8(),
-    "citation_in_text": pl.Utf8(),
-    "evidence_text": pl.Utf8(),
-    "char_start": pl.Int64(),
-    "char_end": pl.Int64(),
-    "validated": pl.Boolean(),
-}
+RELATION_COLUMNS: list[str] = [
+    "source_obligation_id", "target_obligation_id", "relation_type", "citation_in_text",
+    "evidence_text", "char_start", "char_end", "validated",
+]
 
-UNIT_SCHEMA: dict[str, pl.DataType] = {
-    "unit_id": pl.Utf8(),
-    "source_id": pl.Utf8(),
-    "language": pl.Utf8(),
-    "hierarchy_path": pl.Utf8(),
-    "text_length": pl.Int64(),
-    "celex": pl.Utf8(),
-    "level": pl.Utf8(),
-    "issuer": pl.Utf8(),
-    "article": pl.Utf8(),
-}
+UNIT_COLUMNS: list[str] = [
+    "unit_id", "source_id", "language", "hierarchy_path", "text_length", "celex",
+    "level", "issuer", "article",
+]
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -104,7 +68,7 @@ def load_unit_extractions_from_dir(obligations_dir: Path) -> list[UnitExtraction
     return out
 
 
-def obligations_to_df(obligations: list[Obligation]) -> pl.DataFrame:
+def obligations_to_df(obligations: list[Obligation]) -> pd.DataFrame:
     rows: list[dict[str, Any]] = [
         {
             "obligation_id": o.obligation_id,
@@ -138,10 +102,10 @@ def obligations_to_df(obligations: list[Obligation]) -> pl.DataFrame:
         }
         for o in obligations
     ]
-    return pl.DataFrame(rows, schema=OBLIGATION_SCHEMA)
+    return pd.DataFrame(rows, columns=OBLIGATION_COLUMNS)
 
 
-def relations_to_df(relations: list[CrossLevelRelation]) -> pl.DataFrame:
+def relations_to_df(relations: list[CrossLevelRelation]) -> pd.DataFrame:
     rows: list[dict[str, Any]] = [
         {
             "source_obligation_id": r.source_obligation_id,
@@ -155,10 +119,10 @@ def relations_to_df(relations: list[CrossLevelRelation]) -> pl.DataFrame:
         }
         for r in relations
     ]
-    return pl.DataFrame(rows, schema=RELATION_SCHEMA)
+    return pd.DataFrame(rows, columns=RELATION_COLUMNS)
 
 
-def units_to_df(units: Iterable[NormativeUnit]) -> pl.DataFrame:
+def units_to_df(units: Iterable[NormativeUnit]) -> pd.DataFrame:
     rows: list[dict[str, Any]] = []
     for u in units:
         meta = u.source_meta or {}
@@ -177,7 +141,7 @@ def units_to_df(units: Iterable[NormativeUnit]) -> pl.DataFrame:
                 ),
             }
         )
-    return pl.DataFrame(rows, schema=UNIT_SCHEMA)
+    return pd.DataFrame(rows, columns=UNIT_COLUMNS)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -193,9 +157,9 @@ class MaterializedIndex:
     relations: list[CrossLevelRelation]
     resolved_citations: list[ResolvedCitation]
     unresolved_citations: list[UnresolvedCitation]
-    obligations_df: pl.DataFrame
-    relations_df: pl.DataFrame
-    units_df: pl.DataFrame
+    obligations_df: pd.DataFrame
+    relations_df: pd.DataFrame
+    units_df: pd.DataFrame
 
 
 def materialize(unit_extractions: list[UnitExtraction]) -> MaterializedIndex:
@@ -219,57 +183,50 @@ def materialize(unit_extractions: list[UnitExtraction]) -> MaterializedIndex:
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-def by_theme(obligations_df: pl.DataFrame) -> pl.DataFrame:
+def by_theme(obligations_df: pd.DataFrame) -> pd.DataFrame:
     # Les thèmes sont canonisés à la construction, donc on groupe sur le seul thème :
     # les variantes FR/EN d'un même thème fusionnent en une seule ligne.
-    if obligations_df.is_empty():
-        return pl.DataFrame(schema={"theme": pl.Utf8(), "n": pl.UInt32()})
-    return (
-        obligations_df.group_by("theme")
-        .len(name="n")
-        .sort(["n", "theme"], descending=[True, False])
-    )
+    if obligations_df.empty:
+        return pd.DataFrame(columns=["theme", "n"])
+    counts = obligations_df.groupby("theme", dropna=False).size().reset_index(name="n")
+    result: pd.DataFrame = counts.sort_values(
+        ["n", "theme"], ascending=[False, True]
+    ).reset_index(drop=True)
+    return result
 
 
-def by_actor(obligations_df: pl.DataFrame) -> pl.DataFrame:
-    if obligations_df.is_empty():
-        return pl.DataFrame(schema={"actor": pl.Utf8(), "n": pl.UInt32()})
-    return (
-        obligations_df.group_by("actor")
-        .len(name="n")
-        .sort(["n", "actor"], descending=[True, False])
-    )
+def by_actor(obligations_df: pd.DataFrame) -> pd.DataFrame:
+    if obligations_df.empty:
+        return pd.DataFrame(columns=["actor", "n"])
+    counts = obligations_df.groupby("actor", dropna=False).size().reset_index(name="n")
+    result: pd.DataFrame = counts.sort_values(
+        ["n", "actor"], ascending=[False, True]
+    ).reset_index(drop=True)
+    return result
 
 
-def actor_theme_matrix(obligations_df: pl.DataFrame) -> pl.DataFrame:
-    if obligations_df.is_empty():
-        return pl.DataFrame(schema={"actor": pl.Utf8(), "theme": pl.Utf8(), "n": pl.UInt32()})
-    return obligations_df.group_by(["actor", "theme"]).len(name="n").sort(["actor", "theme"])
+def actor_theme_matrix(obligations_df: pd.DataFrame) -> pd.DataFrame:
+    if obligations_df.empty:
+        return pd.DataFrame(columns=["actor", "theme", "n"])
+    counts = obligations_df.groupby(["actor", "theme"], dropna=False).size().reset_index(name="n")
+    result: pd.DataFrame = counts.sort_values(["actor", "theme"]).reset_index(drop=True)
+    return result
 
 
-def relations_summary(relations_df: pl.DataFrame) -> pl.DataFrame:
-    if relations_df.is_empty():
-        return pl.DataFrame(schema={"relation_type": pl.Utf8(), "n": pl.UInt32()})
-    return relations_df.group_by("relation_type").len(name="n").sort("n", descending=True)
+def relations_summary(relations_df: pd.DataFrame) -> pd.DataFrame:
+    if relations_df.empty:
+        return pd.DataFrame(columns=["relation_type", "n"])
+    counts = relations_df.groupby("relation_type", dropna=False).size().reset_index(name="n")
+    result: pd.DataFrame = counts.sort_values("n", ascending=False).reset_index(drop=True)
+    return result
 
 
-def sources_view(obligations_df: pl.DataFrame) -> pl.DataFrame:
+def sources_view(obligations_df: pd.DataFrame) -> pd.DataFrame:
     """Tuples distincts (source_id, level, issuer, language, title, url) utilisés par Excel."""
-    if obligations_df.is_empty():
-        return pl.DataFrame(
-            schema={
-                "source_id": pl.Utf8(),
-                "level": pl.Utf8(),
-                "issuer": pl.Utf8(),
-                "language": pl.Utf8(),
-                "source_title": pl.Utf8(),
-                "source_url": pl.Utf8(),
-            }
-        )
-    return (
-        obligations_df.select(
-            ["source_id", "level", "issuer", "language", "source_title", "source_url"]
-        )
-        .unique()
-        .sort(["level", "source_id"])
+    cols = ["source_id", "level", "issuer", "language", "source_title", "source_url"]
+    if obligations_df.empty:
+        return pd.DataFrame(columns=cols)
+    result: pd.DataFrame = (
+        obligations_df[cols].drop_duplicates().sort_values(["level", "source_id"]).reset_index(drop=True)
     )
+    return result

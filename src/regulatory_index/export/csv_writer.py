@@ -14,10 +14,10 @@ def write_csv(materialized: MaterializedIndex, out_dir: Path, delimiter: str = "
     obligations_path = out_dir / "obligations.csv"
     relations_path = out_dir / "relations.csv"
 
-    materialized.obligations_df.write_csv(obligations_path, separator=delimiter)
-    materialized.relations_df.write_csv(relations_path, separator=delimiter)
+    materialized.obligations_df.to_csv(obligations_path, sep=delimiter, index=False)
+    materialized.relations_df.to_csv(relations_path, sep=delimiter, index=False)
 
     return {
-        "obligations": materialized.obligations_df.height,
-        "relations": materialized.relations_df.height,
+        "obligations": len(materialized.obligations_df),
+        "relations": len(materialized.relations_df),
     }

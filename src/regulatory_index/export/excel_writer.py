@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-import polars as pl
+import pandas as pd
 import xlsxwriter
 
 from ..materialize import (
@@ -57,18 +57,18 @@ _RELATION_COLUMNS = [
 ]
 
 
-def _df_rows(df: pl.DataFrame, columns: list[str]) -> list[tuple[Any, ...]]:
-    if df.is_empty():
+def _df_rows(df: pd.DataFrame, columns: list[str]) -> list[tuple[Any, ...]]:
+    if df.empty:
         return []
-    return [tuple(row) for row in df.select(columns).iter_rows()]
+    return [tuple(row) for row in df[columns].itertuples(index=False, name=None)]
 
 
 def write_workbook(materialized: MaterializedIndex, output_path: Path) -> dict[str, int]:
     """Construit le classeur à partir des DataFrames en mémoire. Renvoie le nombre de lignes par feuille."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    obligations_df = materialized.obligations_df.sort(["level", "theme", "obligation_id"])
-    relations_df = materialized.relations_df.sort("source_obligation_id")
+    obligations_df = materialized.obligations_df.sort_values(["level", "theme", "obligation_id"])
+    relations_df = materialized.relations_df.sort_values("source_obligation_id")
     sources_df = sources_view(materialized.obligations_df)
 
     obligations = _df_rows(obligations_df, [c for c, *_ in _OBLIGATION_COLUMNS])
@@ -177,7 +177,7 @@ def write_workbook(materialized: MaterializedIndex, output_path: Path) -> dict[s
 def _write_summary_sheet(
     workbook: xlsxwriter.Workbook,
     name: str,
-    df: pl.DataFrame,
+    df: pd.DataFrame,
     headers: list[str],
     widths: list[int],
     header_fmt: Any,
@@ -187,8 +187,8 @@ def _write_summary_sheet(
     for col, (label, width) in enumerate(zip(headers, widths, strict=False)):
         ws.write(0, col, label, header_fmt)
         ws.set_column(col, col, width)
-    if df.is_empty():
+    if df.empty:
         return
-    for row, record in enumerate(df.iter_rows(), start=1):
+    for row, record in enumerate(df.itertuples(index=False, name=None), start=1):
         for col, value in enumerate(record):
             ws.write(row, col, value)
