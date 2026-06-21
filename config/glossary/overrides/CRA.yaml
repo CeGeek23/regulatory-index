@@ -1,34 +1,78 @@
 # Glossaire CRA — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 a:
-  type: concept
+  type: produit
 b:
-  type: concept
+  type: acteur
 c:
-  type: concept
+  type: acteur
 d:
-  type: concept
+  type: acteur
 e:
-  type: actor
+  type: acteur
 f:
-  type: actor
+  type: acteur
 g:
-  type: concept
+  type: activite
 h:
-  type: concept
+  type: produit
 i:
-  type: actor
+  type: acteur
 j:
-  type: concept
+  type: acteur
 k:
-  type: concept
+  type: produit
 l:
-  type: concept
+  type: produit
 m:
-  type: concept
+  type: acteur
 n:
-  type: actor
+  type: acteur
 o:
-  type: concept
+  type: activite
+p:
+  type: acteur
+q:
+  type: acteur
+r:
+  type: acteur
+s:
+  type: acteur
+t:
+  type: acteur
+u:
+  type: acteur
+v:
+  type: acteur
+w:
+  type: acteur
+x:
+  type: acteur
+y:
+  type: acteur
+z:
+  type: produit
+aa:
+  type: activite
+ab:
+  type: acteur
+ac:
+  type: produit
+ad:
+  type: acteur
+ae:
+  type: acteur
+af:
+  type: produit
+ag:
+  type: produit
+ah:
+  type: activite
+ai:
+  type: activite
+aj:
+  type: activite
+ak:
+  type: produit

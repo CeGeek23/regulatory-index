@@ -1,96 +1,104 @@
 # Glossaire CSDR — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
-'1':
-  type: concept
-'2':
-  type: concept
-'3':
-  type: concept
-'4':
-  type: concept
-'5':
-  type: concept
-'6':
-  type: concept
-'7':
-  type: concept
-'8':
-  type: concept
-'9':
-  type: concept
-'10':
-  type: concept
-'11':
-  type: actor
-'12':
-  type: concept
-'13':
-  type: concept
-'14':
-  type: concept
-'15':
-  type: concept
-'16':
-  type: concept
-'17':
-  type: supervisor
-'18':
-  type: supervisor
-'19':
-  type: actor
-'20':
-  type: concept
-'21':
-  type: concept
-'22':
-  type: concept
-'23':
-  type: concept
-'24':
-  type: concept
-'25':
-  type: actor
-'26':
-  type: concept
-'27':
-  type: concept
-'28':
-  type: concept
-'29':
-  type: concept
-'30':
-  type: concept
-'31':
-  type: concept
-'32':
-  type: concept
-'33':
-  type: concept
-'34':
-  type: concept
-'35':
-  type: concept
-'36':
-  type: concept
-'37':
-  type: concept
-'38':
-  type: concept
-'39':
-  type: concept
-'40':
-  type: concept
-'41':
-  type: concept
-'42':
-  type: concept
-'43':
-  type: concept
-'44':
-  type: concept
-'45':
-  type: actor
-'46':
-  type: actor
+a:
+  type: produit
+b:
+  type: acteur
+c:
+  type: produit
+d:
+  type: produit
+e:
+  type: activite
+f:
+  type: acteur
+g:
+  type: activite
+h:
+  type: produit
+i:
+  type: produit
+j:
+  type: activite
+k:
+  type: acteur
+l:
+  type: activite
+m:
+  type: activite
+n:
+  type: produit
+o:
+  type: activite
+p:
+  type: acteur
+q:
+  type: acteur
+r:
+  type: acteur
+s:
+  type: acteur
+t:
+  type: produit
+u:
+  type: acteur
+v:
+  type: acteur
+w:
+  type: acteur
+x:
+  type: produit
+y:
+  type: acteur
+z:
+  type: acteur
+aa:
+  type: produit
+ab:
+  type: produit
+ac:
+  type: activite
+ad:
+  type: activite
+ae:
+  type: produit
+af:
+  type: acteur
+ag:
+  type: activite
+ah:
+  type: activite
+ai:
+  type: produit
+aj:
+  type: produit
+ak:
+  type: produit
+al:
+  type: produit
+am:
+  type: produit
+an:
+  type: activite
+ao:
+  type: activite
+ap:
+  type: activite
+aq:
+  type: acteur
+ar:
+  type: produit
+as:
+  type: acteur
+at:
+  type: acteur
+au:
+  type: acteur
+av:
+  type: produit
+aw:
+  type: acteur
+ax:
+  type: activite

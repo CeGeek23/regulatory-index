@@ -1,100 +1,100 @@
 # Glossaire PSD2 — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
-'1':
-  type: concept
-'2':
-  type: concept
-'3':
-  type: concept
-'4':
-  type: actor
-'5':
-  type: concept
-'6':
-  type: concept
-'7':
-  type: concept
-'8':
-  type: actor
-'9':
-  type: actor
-'10':
-  type: actor
-'11':
-  type: actor
-'12':
-  type: concept
-'13':
-  type: concept
-'14':
-  type: concept
-'15':
-  type: concept
-'16':
-  type: concept
-'17':
-  type: actor
-'18':
-  type: actor
-'19':
-  type: actor
-'20':
-  type: actor
-'21':
-  type: concept
-'22':
-  type: concept
-'23':
-  type: concept
-'24':
-  type: concept
-'25':
-  type: concept
-'26':
-  type: concept
-'27':
-  type: concept
-'28':
-  type: concept
-'29':
-  type: concept
-'30':
-  type: concept
-'31':
-  type: concept
-'32':
-  type: concept
-'33':
-  type: concept
-'34':
-  type: concept
-'35':
-  type: concept
-'36':
-  type: actor
-'37':
-  type: concept
-'38':
-  type: actor
-'39':
-  type: actor
-'40':
-  type: concept
-'41':
-  type: concept
-'42':
-  type: concept
-'43':
-  type: concept
-'44':
-  type: concept
-'45':
-  type: concept
-'46':
-  type: concept
-'47':
-  type: concept
-'48':
-  type: concept
+a:
+  type: acteur
+b:
+  type: produit
+c:
+  type: activite
+d:
+  type: acteur
+e:
+  type: activite
+f:
+  type: activite
+g:
+  type: activite
+h:
+  type: acteur
+i:
+  type: acteur
+j:
+  type: acteur
+k:
+  type: acteur
+l:
+  type: activite
+m:
+  type: activite
+n:
+  type: produit
+o:
+  type: activite
+p:
+  type: activite
+q:
+  type: activite
+r:
+  type: acteur
+s:
+  type: acteur
+t:
+  type: acteur
+u:
+  type: activite
+v:
+  type: activite
+w:
+  type: activite
+x:
+  type: activite
+y:
+  type: produit
+z:
+  type: produit
+aa:
+  type: produit
+ab:
+  type: produit
+ac:
+  type: activite
+ad:
+  type: activite
+ae:
+  type: activite
+af:
+  type: produit
+ag:
+  type: activite
+ah:
+  type: activite
+ai:
+  type: produit
+aj:
+  type: acteur
+ak:
+  type: produit
+al:
+  type: acteur
+am:
+  type: acteur
+an:
+  type: acteur
+ao:
+  type: produit
+ap:
+  type: activite
+aq:
+  type: produit
+ar:
+  type: activite
+as:
+  type: activite
+at:
+  type: produit
+au:
+  type: produit
+av:
+  type: activite

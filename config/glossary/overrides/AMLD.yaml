@@ -1,38 +1,44 @@
 # Glossaire AMLD — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
-'1':
-  type: actor
-'2':
-  type: actor
-'3':
-  type: concept
-'4':
-  type: concept
-'5':
-  type: supervisor
-'6':
-  type: actor
-'7':
-  type: actor
-'8':
-  type: actor
-'9':
-  type: actor
-'10':
-  type: concept
-'11':
-  type: concept
-'12':
-  type: actor
-'13':
-  type: concept
-'14':
-  type: actor
-'15':
-  type: concept
-'16':
-  type: concept
-'17':
-  type: actor
+a:
+  type: acteur
+b:
+  type: acteur
+c:
+  type: produit
+d:
+  type: activite
+e:
+  type: acteur
+f:
+  type: acteur
+g:
+  type: acteur
+h:
+  type: acteur
+i:
+  type: acteur
+j:
+  type: produit
+k:
+  type: acteur
+l:
+  type: acteur
+m:
+  type: acteur
+n:
+  type: activite
+o:
+  type: acteur
+p:
+  type: produit
+q:
+  type: acteur
+r:
+  type: produit
+s:
+  type: acteur
+t:
+  type: produit

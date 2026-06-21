@@ -1,260 +1,362 @@
 # Glossaire CRR — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
-'1':
-  type: actor
-'2':
-  type: actor
-'3':
-  type: actor
-'4':
-  type: actor
-'5':
-  type: actor
-'6':
-  type: actor
-'7':
-  type: concept
-'8':
-  type: actor
-'9':
-  type: actor
-'10':
-  type: actor
-'11':
-  type: concept
-'12':
-  type: concept
-'13':
-  type: actor
-'14':
-  type: actor
-'15':
-  type: concept
-'16':
-  type: concept
-'17':
-  type: actor
-'18':
-  type: actor
-'19':
-  type: actor
-'20':
-  type: actor
-'21':
-  type: concept
-'22':
-  type: concept
-'23':
-  type: actor
-'24':
-  type: concept
-'25':
-  type: actor
-'26':
-  type: actor
-'27':
-  type: actor
-'28':
-  type: concept
-'29':
-  type: actor
-'30':
-  type: concept
-'31':
-  type: actor
-'32':
-  type: concept
-'33':
-  type: concept
-'34':
-  type: concept
-'35':
-  type: concept
-'36':
-  type: concept
-'37':
-  type: concept
-'38':
-  type: concept
-'39':
-  type: concept
-'40':
-  type: supervisor
-'41':
-  type: supervisor
-'42':
-  type: concept
-'43':
-  type: concept
-'44':
-  type: concept
-'45':
-  type: supervisor
-'46':
-  type: concept
-'47':
-  type: concept
-'48':
-  type: concept
-'49':
-  type: concept
-'50':
-  type: concept
-'51':
-  type: concept
-'52':
-  type: concept
-'53':
-  type: concept
-'54':
-  type: concept
-'55':
-  type: concept
-'56':
-  type: concept
-'57':
-  type: concept
-'58':
-  type: concept
-'59':
-  type: concept
-'60':
-  type: concept
-'61':
-  type: concept
-'62':
-  type: concept
-'63':
-  type: concept
-'64':
-  type: concept
-'65':
-  type: concept
-'66':
-  type: concept
-'67':
-  type: concept
-'68':
-  type: concept
-'69':
-  type: concept
-'70':
-  type: concept
-'71':
-  type: concept
-'72':
-  type: concept
-'73':
-  type: concept
-'74':
-  type: concept
-'75':
-  type: concept
-'76':
-  type: concept
-'77':
-  type: concept
-'78':
-  type: concept
-'79':
-  type: concept
-'80':
-  type: concept
-'81':
-  type: concept
-'82':
-  type: concept
-'83':
-  type: concept
-'84':
-  type: concept
-'85':
-  type: actor
-'86':
-  type: concept
-'87':
-  type: concept
-'88':
-  type: concept
-'89':
-  type: concept
-'90':
-  type: concept
-'91':
-  type: concept
-'92':
-  type: concept
-'93':
-  type: concept
-'94':
-  type: concept
-'95':
-  type: concept
-'96':
-  type: concept
-'97':
-  type: concept
-'98':
-  type: concept
-'99':
-  type: concept
-'100':
-  type: concept
-'101':
-  type: concept
-'102':
-  type: concept
-'103':
-  type: concept
-'104':
-  type: concept
-'105':
-  type: concept
-'106':
-  type: concept
-'107':
-  type: concept
-'108':
-  type: concept
-'109':
-  type: concept
-'110':
-  type: concept
-'111':
-  type: actor
-'112':
-  type: concept
-'113':
-  type: concept
-'114':
-  type: concept
-'115':
-  type: concept
-'116':
-  type: concept
-'117':
-  type: concept
-'118':
-  type: concept
-'119':
-  type: concept
-'120':
-  type: concept
-'121':
-  type: concept
-'122':
-  type: concept
-'123':
-  type: concept
-'124':
-  type: concept
-'125':
-  type: concept
-'126':
-  type: concept
-'127':
-  type: concept
-'128':
-  type: concept
+a:
+  type: acteur
+b:
+  type: acteur
+c:
+  type: acteur
+d:
+  type: acteur
+e:
+  type: acteur
+f:
+  type: acteur
+g:
+  type: acteur
+h:
+  type: acteur
+i:
+  type: acteur
+j:
+  type: produit
+k:
+  type: acteur
+l:
+  type: acteur
+m:
+  type: acteur
+n:
+  type: acteur
+o:
+  type: acteur
+p:
+  type: acteur
+q:
+  type: acteur
+r:
+  type: acteur
+s:
+  type: acteur
+t:
+  type: acteur
+u:
+  type: acteur
+v:
+  type: acteur
+w:
+  type: acteur
+x:
+  type: acteur
+y:
+  type: acteur
+z:
+  type: acteur
+aa:
+  type: acteur
+ab:
+  type: acteur
+ac:
+  type: acteur
+ad:
+  type: acteur
+ae:
+  type: acteur
+af:
+  type: acteur
+ag:
+  type: acteur
+ah:
+  type: acteur
+ai:
+  type: acteur
+aj:
+  type: acteur
+ak:
+  type: acteur
+al:
+  type: acteur
+am:
+  type: acteur
+an:
+  type: produit
+ao:
+  type: acteur
+ap:
+  type: acteur
+aq:
+  type: produit
+ar:
+  type: produit
+as:
+  type: acteur
+at:
+  type: acteur
+au:
+  type: acteur
+av:
+  type: acteur
+aw:
+  type: produit
+ax:
+  type: acteur
+ay:
+  type: acteur
+az:
+  type: produit
+ba:
+  type: produit
+bb:
+  type: produit
+bc:
+  type: produit
+bd:
+  type: produit
+be:
+  type: activite
+bf:
+  type: produit
+bg:
+  type: produit
+bh:
+  type: produit
+bi:
+  type: activite
+bj:
+  type: produit
+bk:
+  type: produit
+bl:
+  type: produit
+bm:
+  type: produit
+bn:
+  type: activite
+bo:
+  type: produit
+bp:
+  type: produit
+bq:
+  type: produit
+br:
+  type: produit
+bs:
+  type: activite
+bt:
+  type: produit
+bu:
+  type: produit
+bv:
+  type: produit
+bw:
+  type: produit
+bx:
+  type: produit
+by:
+  type: produit
+bz:
+  type: produit
+ca:
+  type: produit
+cb:
+  type: produit
+cc:
+  type: acteur
+cd:
+  type: produit
+ce:
+  type: activite
+cf:
+  type: produit
+cg:
+  type: activite
+ch:
+  type: produit
+ci:
+  type: acteur
+cj:
+  type: acteur
+ck:
+  type: produit
+cl:
+  type: produit
+cm:
+  type: produit
+cn:
+  type: produit
+co:
+  type: produit
+cp:
+  type: produit
+cq:
+  type: produit
+cr:
+  type: produit
+cs:
+  type: produit
+ct:
+  type: produit
+cu:
+  type: produit
+cv:
+  type: produit
+cw:
+  type: activite
+cx:
+  type: produit
+cy:
+  type: produit
+cz:
+  type: activite
+da:
+  type: produit
+db:
+  type: activite
+dc:
+  type: produit
+dd:
+  type: activite
+de:
+  type: produit
+df:
+  type: activite
+dg:
+  type: acteur
+dh:
+  type: produit
+di:
+  type: produit
+dj:
+  type: produit
+dk:
+  type: activite
+dl:
+  type: produit
+dm:
+  type: produit
+dn:
+  type: produit
+do:
+  type: activite
+dp:
+  type: produit
+dq:
+  type: acteur
+dr:
+  type: acteur
+ds:
+  type: produit
+dt:
+  type: produit
+du:
+  type: produit
+dv:
+  type: produit
+dw:
+  type: produit
+dx:
+  type: produit
+dy:
+  type: produit
+dz:
+  type: produit
+ea:
+  type: produit
+eb:
+  type: produit
+ec:
+  type: produit
+ed:
+  type: acteur
+ee:
+  type: produit
+ef:
+  type: produit
+eg:
+  type: produit
+eh:
+  type: produit
+ei:
+  type: produit
+ej:
+  type: produit
+ek:
+  type: produit
+el:
+  type: produit
+em:
+  type: produit
+en:
+  type: produit
+eo:
+  type: produit
+ep:
+  type: produit
+eq:
+  type: produit
+er:
+  type: produit
+es:
+  type: produit
+et:
+  type: produit
+eu:
+  type: produit
+ev:
+  type: produit
+ew:
+  type: acteur
+ex:
+  type: acteur
+ey:
+  type: acteur
+ez:
+  type: acteur
+fa:
+  type: acteur
+fb:
+  type: acteur
+fc:
+  type: produit
+fd:
+  type: acteur
+fe:
+  type: produit
+ff:
+  type: acteur
+fg:
+  type: activite
+fh:
+  type: produit
+fi:
+  type: produit
+fj:
+  type: produit
+fk:
+  type: produit
+fl:
+  type: activite
+fm:
+  type: acteur
+fn:
+  type: acteur
+fo:
+  type: acteur
+fp:
+  type: acteur
+fq:
+  type: produit
+fr:
+  type: activite
+fs:
+  type: produit
+ft:
+  type: produit
+fu:
+  type: acteur
+fv:
+  type: produit
+fw:
+  type: activite

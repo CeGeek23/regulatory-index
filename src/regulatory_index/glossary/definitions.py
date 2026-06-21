@@ -36,13 +36,14 @@ OVERRIDES_DIR = Path(__file__).resolve().parents[3] / "config" / "glossary" / "o
 # Délimiteurs de terme rencontrés dans les rendus EUR-Lex, par langue (essayés ensemble ;
 # on retient celui dont l'ouvrant apparaît en premier). EUR-Lex panache les styles :
 # guillemets simples courbes U+2018/U+2019, point U+2027 (ex. CRR), guillemets doubles
-# courbes U+201C/U+201D, et guillemets droits.
+# courbes U+201C/U+201D, guillemets droits doubles, et apostrophe droite U+0027 (ex. CRD IV).
 _QUOTE_PAIRS: dict[str, tuple[tuple[str, str], ...]] = {
     "EN": (
         (chr(0x2018), chr(0x2019)),
         (chr(0x2027), chr(0x2027)),
         (chr(0x201C), chr(0x201D)),
         ('"', '"'),
+        ("'", "'"),
     ),
     "FR": (
         (chr(0x00AB), chr(0x00BB)),
@@ -50,9 +51,12 @@ _QUOTE_PAIRS: dict[str, tuple[tuple[str, str], ...]] = {
         (chr(0x2027), chr(0x2027)),
         (chr(0x201C), chr(0x201D)),
         ('"', '"'),
+        ("'", "'"),
     ),
 }
-_POSSESSIVE_CLOSE = chr(0x2019)  # U+2019 sert aussi d'apostrophe possessive (possessif anglais)
+# Fermants qui servent AUSSI d'apostrophe (possessif/élision) : U+2019 et l'apostrophe droite
+# U+0027. Quand l'un est suivi d'une minuscule, ce n'est pas le vrai fermant (« employees' … »).
+_POSSESSIVE_CLOSES = (chr(0x2019), "'")
 
 
 @dataclass(frozen=True)
@@ -108,7 +112,7 @@ def _first_quoted(text: str, language: str) -> str:
         end = text.find(close_q, cursor)
         if end == -1:
             return ""
-        if close_q == _POSSESSIVE_CLOSE and text[end + 1 : end + 2].islower():
+        if close_q in _POSSESSIVE_CLOSES and text[end + 1 : end + 2].islower():
             cursor = end + 1  # apostrophe de possessif, pas le vrai fermant
             continue
         return text[start + 1 : end].strip()
@@ -202,11 +206,27 @@ def parse_points(text: str, *, language: Language) -> list[ParsedPoint]:
 _DEF_TRIGGERS = ("the following definitions", "on entend par", "définitions suivantes")
 
 
-def find_definitions_article(html: str, language: Language) -> str | None:
-    """Numéro de l'article de définitions, repéré par sa phrase d'amorce dans le corps.
+_DEF_SUBTITLES = ("definitions", "définitions")
 
-    Complète la détection par sous-titre (`TableOfContents.definitions_article`) :
-    fonctionne aussi quand le rendu n'a pas de sous-titres d'article.
+
+def _article_subtitle(unit_text: str) -> str:
+    """Sous-titre d'un article = 1ʳᵉ ligne non vide APRÈS l'en-tête « Article N ».
+
+    Le texte d'un `NormativeUnit` se présente « Article 2\\n\\nDefinitions\\nFor the purposes… » ;
+    certains rendus consolidés (Cellar) logent ce sous-titre dans un `<p class="norm">` que le
+    parseur ne reconnaît pas comme sous-titre — on le relit donc ici dans le corps.
+    """
+    lines = [ln.strip() for ln in unit_text.splitlines() if ln.strip()]
+    return lines[1].lower() if len(lines) > 1 else ""
+
+
+def find_definitions_article(html: str, language: Language) -> str | None:
+    """Numéro de l'article de définitions, repéré par son sous-titre OU sa phrase d'amorce.
+
+    Complète la détection par sommaire (`TableOfContents.definitions_article`) : fonctionne aussi
+    quand le rendu n'a pas de sous-titres d'article reconnus (cas des versions consolidées dont le
+    sous-titre « Definitions » est dans un `<p class="norm">`, ou des articles ouvrant directement
+    par « For the purposes of this Directive: (1) … » sans la formule « the following definitions »).
     """
     units = parse_articles(
         html,
@@ -219,6 +239,12 @@ def find_definitions_article(html: str, language: Language) -> str | None:
         url="",
         keep=None,
     )
+    # 1) sous-titre explicite « Definitions »/« Définitions » (capté ou non par le parseur).
+    for unit in units:
+        subtitle = str(unit.source_meta.get("subtitle") or "").strip().lower()
+        if subtitle in _DEF_SUBTITLES or _article_subtitle(unit.text) in _DEF_SUBTITLES:
+            return str(unit.source_meta["article"])
+    # 2) à défaut, phrase d'amorce dans le corps.
     for unit in units:
         low = unit.text.lower()
         if any(trigger in low for trigger in _DEF_TRIGGERS):

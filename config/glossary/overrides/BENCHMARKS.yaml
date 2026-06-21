@@ -1,62 +1,68 @@
 # Glossaire BENCHMARKS — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
-'1':
-  type: concept
-'2':
-  type: concept
-'3':
-  type: concept
-'4':
-  type: concept
-'5':
-  type: concept
-'6':
-  type: actor
-'7':
-  type: concept
-'8':
-  type: concept
-'9':
-  type: concept
-'10':
-  type: actor
-'11':
-  type: actor
-'12':
-  type: actor
-'13':
-  type: concept
-'14':
-  type: concept
-'15':
-  type: concept
-'16':
-  type: concept
-'17':
-  type: actor
-'18':
-  type: concept
-'19':
-  type: concept
-'20':
-  type: actor
-'21':
-  type: actor
-'22':
-  type: concept
-'23':
-  type: concept
-'24':
-  type: concept
-'25':
-  type: concept
-'26':
-  type: concept
-'27':
-  type: concept
-'28':
-  type: concept
-'29':
-  type: supervisor
+a:
+  type: produit
+b:
+  type: acteur
+c:
+  type: produit
+d:
+  type: produit
+e:
+  type: produit
+f:
+  type: acteur
+g:
+  type: activite
+h:
+  type: produit
+i:
+  type: acteur
+j:
+  type: acteur
+k:
+  type: acteur
+l:
+  type: acteur
+m:
+  type: activite
+n:
+  type: produit
+o:
+  type: activite
+p:
+  type: produit
+q:
+  type: acteur
+r:
+  type: produit
+s:
+  type: produit
+t:
+  type: acteur
+u:
+  type: acteur
+v:
+  type: produit
+w:
+  type: produit
+x:
+  type: produit
+y:
+  type: produit
+z:
+  type: produit
+aa:
+  type: produit
+ab:
+  type: produit
+ac:
+  type: produit
+ad:
+  type: produit
+ae:
+  type: acteur
+af:
+  type: acteur

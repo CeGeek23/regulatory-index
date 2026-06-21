@@ -1,7 +1,8 @@
 """Écrit le glossaire des termes définis : base YAML + table CSV + table Markdown lisible.
 
-Générique : ne suppose rien de spécifique à AIFMD. Les acteurs (types actor/investor/
-supervisor) sont présentés séparément des concepts, car c'est ce que le client veut isoler.
+Générique : ne suppose rien de spécifique à AIFMD. Les acteurs (type « acteur ») sont présentés
+séparément des produits/activités, car c'est ce que le client veut isoler (typologie : acteur /
+produit / activité, issue des articles de définition).
 """
 
 from __future__ import annotations
@@ -13,7 +14,7 @@ import yaml
 
 from ..glossary.models import DefinedTerm
 
-_ACTOR_TYPES = frozenset({"actor", "investor", "supervisor"})
+_ACTOR_TYPES = frozenset({"acteur"})  # typologie client : seul « acteur » est un acteur
 
 _CSV_FIELDS = ["term_id", "type", "term_en", "term_fr", "legal_basis", "cites", "definition_en", "definition_fr"]
 

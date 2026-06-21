@@ -1,42 +1,50 @@
 # Glossaire ELTIF — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
-'1':
-  type: concept
-'2':
-  type: investor
-'3':
-  type: investor
-'4':
-  type: concept
-'5':
-  type: concept
-'6':
-  type: concept
-'7':
-  type: actor
-'8':
-  type: concept
-'9':
-  type: concept
-'10':
-  type: supervisor
-'11':
-  type: concept
-'12':
-  type: actor
-'13':
-  type: supervisor
-'14':
-  type: concept
-'15':
-  type: concept
-'16':
-  type: concept
-'17':
-  type: concept
-'18':
-  type: concept
-'19':
-  type: concept
+a:
+  type: produit
+b:
+  type: acteur
+c:
+  type: acteur
+d:
+  type: produit
+e:
+  type: produit
+f:
+  type: produit
+g:
+  type: acteur
+h:
+  type: acteur
+i:
+  type: acteur
+j:
+  type: acteur
+k:
+  type: produit
+l:
+  type: acteur
+m:
+  type: acteur
+n:
+  type: activite
+o:
+  type: produit
+p:
+  type: acteur
+q:
+  type: activite
+r:
+  type: produit
+s:
+  type: activite
+t:
+  type: activite
+u:
+  type: activite
+v:
+  type: produit
+w:
+  type: produit

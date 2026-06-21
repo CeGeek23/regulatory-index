@@ -4,7 +4,7 @@ via le modèle LM Studio local (API OpenAI-compatible).
 
 Chaîne :
     data/raw/<ID>/*.html  --harvest_glossary-->  termes (fidèles au texte, déterministe)
-                          --LLM LM Studio-------> type ∈ {actor,investor,supervisor,concept}
+                          --LLM LM Studio-------> type ∈ {acteur,produit,activite}  (typologie client)
                           --harmonisation-------> un terme = un même type partout (vote majoritaire)
                           --write_text----------> config/glossary/overrides/<ID>.yaml
 
@@ -13,15 +13,16 @@ classification acteur/concept (l'extraction terme+définition, elle, est déjà 
 
 Reproductibilité :
   - décodage glouton (temperature=0, seed=0) => sortie stable d'un run à l'autre ;
-  - cache JSON (data/classification_cache.json) clé par (modèle, source_id, label,
-    empreinte du terme+définition) => re-run identique sans ré-interroger le modèle ;
+  - cache JSON (data/classification_cache.json) clé par (modèle, empreinte du prompt/typologie,
+    source_id, label, empreinte du terme+définition) => re-run identique sans ré-interroger le
+    modèle ; un changement de typologie/prompt invalide AUTOMATIQUEMENT le cache (clé distincte) ;
     supprimer le cache (ou --no-cache) pour reclasser de zéro ;
   - en-tête de fichier UNIQUE et déterministe (un seul libellé, fin des variantes manuelles) ;
   - HARMONISATION inter-textes déterministe (sur un run complet, sans cible) : un même terme
     (libellé EN normalisé) reçoit le même type partout, par vote majoritaire ; en cas d'égalité,
     on tranche par la définition SUBSTANTIELLE (la plus longue — pas un simple renvoi « as defined
     in… »), règle GÉNÉRALE et reproductible (aucune liste de décisions à maintenir) ;
-  - N'ÉCRASE JAMAIS un override relu à la main (en-tête « relu » : AIFMD_L1/L2).
+  - N'ÉCRASE JAMAIS un override relu à la main (mécanisme général : « relu » en 1ʳᵉ ligne).
 
 Le `type` reste marqué « à RELIRE » : c'est une proposition automatique, à valider en relecture
 métier (le terme et la définition, eux, sont fidèles au texte officiel).
@@ -51,26 +52,48 @@ from regulatory_index.glossary import DefinedTerm, harvest_glossary
 RAW = Path("data/raw")
 OVERRIDES = Path("config/glossary/overrides")
 CACHE = Path("data/classification_cache.json")
-ALLOWED = ("actor", "investor", "supervisor", "concept")
-PROTECTED = {"AIFMD_L1", "AIFMD_L2"}  # relus à la main — jamais écrasés (ceinture + bretelles)
+ALLOWED = ("acteur", "produit", "activite")  # typologie STRICTE du client (articles de définition)
+# Aucun texte protégé en dur : corpus uniforme (tout classé par le même modèle, tout « à relire »).
+# Un override qu'un humain valide ensuite reste néanmoins préservé via _is_hand_curated (« relu » L1).
+PROTECTED: set[str] = set()
 
 # Tout dans le message utilisateur (certains gabarits GGUF locaux n'ont pas de rôle `system`).
-PROMPT = """Tu es juriste spécialiste de la réglementation financière de l'Union européenne.
-Classe le TERME DÉFINI ci-dessous dans EXACTEMENT une de ces catégories :
-- actor : personne morale ou physique régulée ou qui agit (gestionnaire, dépositaire, \
-établissement de crédit, entreprise d'investissement, prestataire de services, contrepartie, émetteur…).
-- investor : un type d'investisseur ou de client (investisseur professionnel, client de détail, \
-investisseur de détail, contrepartie éligible…).
-- supervisor : une autorité de surveillance, de régulation ou de résolution (autorité compétente, \
-AEMF/ESMA, ABE/EBA, AEAPP/EIOPA, autorité de résolution…).
-- concept : tout le reste (notion juridique, instrument financier, opération, document, montant, \
-seuil, état membre, groupe…).
+PROMPT = """Tu es juriste de la réglementation financière de l'Union européenne. Classe le TERME \
+DÉFINI ci-dessous dans EXACTEMENT une catégorie (typologie du client), en raisonnant SUR SA \
+DÉFINITION (pas seulement son nom). Applique les tests DANS L'ORDRE et arrête-toi au premier qui \
+s'applique :
+
+1) acteur — une PERSONNE ou une ENTITÉ (un « QUI ») qu'on peut agréer, surveiller ou sanctionner : \
+gestionnaire, dépositaire, entreprise d'investissement, établissement de crédit, autorité compétente, \
+AEMF/AMF, investisseur, émetteur, contrepartie, courtier, dépositaire central de titres, société \
+(holding, mère, filiale).
+
+2) activite — une ACTION, un SERVICE ou une OPÉRATION (un « CE QU'ON FAIT ») : la gestion de FIA \
+(assurer des fonctions de gestion de portefeuille/des risques), la commercialisation, la \
+pré-commercialisation, l'octroi de prêts, la conservation, la tenue de marché, la négociation. Indice : \
+la définition décrit une activité « exercée », des « fonctions assurées », un « service fourni ».
+
+3) produit — TOUT LE RESTE : ni un qui, ni une action, donc un OBJET ou une NOTION. Inclut : tout \
+instrument financier ; tout FONDS/FIA quel que soit son nom (feeder, master, FIA octroyant des prêts, \
+FIA à effet de levier) ; un prêt, une part ; ET toute notion juridique ou géographique : un ÉTAT MEMBRE \
+(d'origine, de référence, d'accueil), le contrôle, les liens étroits, une participation qualifiée, \
+l'effet de levier, les fonds propres, le capital, une succursale.
+
+ATTENTION : un terme qui DÉSIGNE UN PAYS OU UN TERRITOIRE — un « État membre », même qualifié \
+(« d'origine », « d'accueil », « de référence », « où le risque est situé », « de l'AIFM/de l'OPCVM ») \
+— est une NOTION GÉOGRAPHIQUE, donc produit, JAMAIS un acteur (l'« État membre d'origine de l'AIFM » \
+reste un lieu, pas l'AIFM).
 
 Terme (EN) : {en}
 Terme (FR) : {fr}
 Définition : {definition}
 
-Réponds par UN SEUL MOT, exactement l'une de ces valeurs : actor, investor, supervisor, concept."""
+Réponds par UN SEUL MOT : acteur, produit, ou activite."""
+
+# Empreinte du prompt + des catégories : intégrée à la clé de cache pour qu'un changement de
+# typologie/prompt INVALIDE automatiquement les anciennes entrées (sinon le cache renverrait des
+# types calculés sous un ancien schéma — bug à éviter). Reproductible : même prompt → même empreinte.
+PROMPT_FP = hashlib.sha1((PROMPT + "|" + "|".join(ALLOWED)).encode("utf-8")).hexdigest()[:8]
 
 
 @dataclass
@@ -106,7 +129,7 @@ def _fingerprint(term: DefinedTerm) -> str:
 
 def _parse_type(text: str | None) -> str | None:
     """Premier mot de catégorie reconnu dans la réponse (les libellés ne se chevauchent pas)."""
-    low = (text or "").lower()
+    low = (text or "").lower().replace("é", "e")  # « activité » -> « activite »
     hits = [(low.index(a), a) for a in ALLOWED if a in low]
     return min(hits)[1] if hits else None
 
@@ -176,7 +199,7 @@ def _harmonize(docs: dict[str, _Doc], longest: dict[str, tuple[int, str]]) -> tu
 def _write_override(sid: str, model: str, types: dict[str, str]) -> None:
     header = (
         f"# Glossaire {sid} — classification acteur/concept générée par scripts/classify_overrides.py\n"
-        f"# Modèle LM Studio : {model}. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).\n"
+        f"# Modèle LM Studio : {model}. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).\n"
         f"# Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.\n\n"
     )
     body = yaml.safe_dump({lbl: {"type": t} for lbl, t in types.items()}, sort_keys=False, allow_unicode=True)
@@ -250,7 +273,7 @@ def main() -> int:
 
         doc = _Doc()
         for t in terms:
-            cache_key = f"{model}|{sid}|{t.label}|{_fingerprint(t)}"
+            cache_key = f"{model}|{PROMPT_FP}|{sid}|{t.label}|{_fingerprint(t)}"
             typ = cache.get(cache_key) if use_cache else None
             if typ is None:
                 try:
@@ -262,7 +285,7 @@ def main() -> int:
                     ) from exc
                 llm_calls += 1
                 if typ is None:
-                    typ = "concept"  # proposition par défaut (tout le fichier est « à RELIRE »)
+                    typ = "produit"  # défaut = objet/notion (tout le fichier est « à RELIRE »)
                     doc.n_unres += 1
                 cache[cache_key] = typ
             term_norm = _norm(t.term_en) or _norm(t.term_fr)

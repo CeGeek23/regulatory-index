@@ -1,20 +1,20 @@
 # Glossaire CBDF_REG — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 a:
-  type: concept
+  type: produit
 b:
-  type: actor
+  type: acteur
 c:
-  type: actor
+  type: acteur
 d:
-  type: actor
+  type: acteur
 e:
-  type: supervisor
+  type: acteur
 f:
-  type: concept
+  type: acteur
 g:
-  type: concept
+  type: produit
 h:
-  type: actor
+  type: acteur

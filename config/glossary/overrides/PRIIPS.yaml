@@ -1,20 +1,20 @@
 # Glossaire PRIIPS — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
-'1':
-  type: concept
-'2':
-  type: concept
-'3':
-  type: concept
-'4':
-  type: actor
-'5':
-  type: actor
-'6':
-  type: investor
-'7':
-  type: concept
-'8':
-  type: supervisor
+a:
+  type: produit
+b:
+  type: produit
+c:
+  type: produit
+d:
+  type: acteur
+e:
+  type: acteur
+f:
+  type: acteur
+g:
+  type: produit
+h:
+  type: acteur

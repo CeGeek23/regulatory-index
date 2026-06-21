@@ -1,130 +1,134 @@
 # Glossaire MIFID2 — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
-'1':
-  type: actor
-'2':
-  type: concept
-'3':
-  type: concept
-'4':
-  type: concept
-'5':
-  type: actor
-'6':
-  type: concept
-'7':
-  type: actor
-'8':
-  type: actor
-'9':
-  type: actor
-'10':
-  type: investor
-'11':
-  type: investor
-'12':
-  type: concept
-'13':
-  type: concept
-'14':
-  type: concept
-'15':
-  type: concept
-'16':
-  type: concept
-'17':
-  type: concept
-'18':
-  type: actor
-'19':
-  type: concept
-'20':
-  type: actor
-'21':
-  type: concept
-'22':
-  type: concept
-'23':
-  type: concept
-'24':
-  type: concept
-'25':
-  type: concept
-'26':
-  type: supervisor
-'27':
-  type: actor
-'28':
-  type: actor
-'29':
-  type: actor
-'30':
-  type: actor
-'31':
-  type: concept
-'32':
-  type: concept
-'33':
-  type: concept
-'34':
-  type: concept
-'35':
-  type: concept
-'36':
-  type: actor
-'37':
-  type: actor
-'38':
-  type: concept
-'39':
-  type: concept
-'40':
-  type: concept
-'41':
-  type: concept
-'42':
-  type: concept
-'43':
-  type: concept
-'44':
-  type: concept
-'45':
-  type: concept
-'46':
-  type: concept
-'47':
-  type: concept
-'48':
-  type: concept
-'49':
-  type: concept
-'50':
-  type: concept
-'51':
-  type: concept
-'52':
-  type: concept
-'53':
-  type: actor
-'54':
-  type: concept
-'55':
-  type: concept
-'56':
-  type: concept
-'57':
-  type: actor
-'58':
-  type: concept
-'59':
-  type: concept
-'60':
-  type: actor
-'61':
-  type: concept
-'62':
-  type: concept
-'63':
-  type: actor
+a:
+  type: acteur
+b:
+  type: activite
+c:
+  type: activite
+d:
+  type: activite
+e:
+  type: activite
+f:
+  type: activite
+g:
+  type: acteur
+h:
+  type: activite
+i:
+  type: activite
+j:
+  type: acteur
+k:
+  type: acteur
+l:
+  type: acteur
+m:
+  type: produit
+n:
+  type: acteur
+o:
+  type: activite
+p:
+  type: produit
+q:
+  type: produit
+r:
+  type: produit
+s:
+  type: acteur
+t:
+  type: activite
+u:
+  type: activite
+v:
+  type: activite
+w:
+  type: activite
+x:
+  type: activite
+y:
+  type: activite
+z:
+  type: activite
+aa:
+  type: acteur
+ab:
+  type: acteur
+ac:
+  type: acteur
+ad:
+  type: acteur
+ae:
+  type: acteur
+af:
+  type: acteur
+ag:
+  type: acteur
+ah:
+  type: acteur
+ai:
+  type: acteur
+aj:
+  type: produit
+ak:
+  type: acteur
+al:
+  type: acteur
+am:
+  type: acteur
+an:
+  type: activite
+ao:
+  type: activite
+ap:
+  type: activite
+aq:
+  type: activite
+ar:
+  type: activite
+as:
+  type: produit
+at:
+  type: produit
+au:
+  type: produit
+av:
+  type: produit
+aw:
+  type: produit
+ax:
+  type: produit
+ay:
+  type: produit
+az:
+  type: produit
+ba:
+  type: produit
+bb:
+  type: acteur
+bc:
+  type: acteur
+bd:
+  type: produit
+be:
+  type: acteur
+bf:
+  type: produit
+bg:
+  type: produit
+bh:
+  type: acteur
+bi:
+  type: produit
+bj:
+  type: produit
+bk:
+  type: produit
+bl:
+  type: produit
+bm:
+  type: acteur

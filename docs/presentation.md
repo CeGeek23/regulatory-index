@@ -40,17 +40,19 @@ Chaque texte UE commence par un **article de définitions** (ex. AIFMD **article
 **socle terminologique** du texte : un terme y est défini **une seule fois, précisément**, puis
 réutilisé partout. **Sa définition fait foi.**
 
-Ces articles définissent **deux choses** qu'on sépare volontairement :
+Ces articles définissent **trois choses** qu'on sépare volontairement :
 
 - **Les acteurs** — *qui* est régulé ou agit : le gestionnaire, le dépositaire, l'**autorité
   compétente**, l'investisseur, le courtier principal (*prime broker*)…
-- **Les concepts** — *de quoi* on parle : l'effet de levier, la participation qualifiée, les liens
-  étroits, la commercialisation, un instrument financier…
+- **Les produits** — *de quoi* on parle : l'instrument financier, le fonds/FIA, l'effet de levier,
+  la participation qualifiée, les liens étroits, l'État membre, le contrôle…
+- **Les activités** — *ce qui est encadré* : la gestion de FIA, la commercialisation, l'octroi de
+  prêts…
 
 > **Pourquoi c'est le bon point de départ** : une obligation, c'est toujours « **un acteur** doit
-> faire quelque chose **à propos d'un concept** ». Si on a la liste propre des acteurs et des
-> concepts, on peut ensuite **rattacher et relier** toutes les obligations — exactement le besoin
-> exprimé : *« les identifier comme objets pour mieux les lier »*.
+> faire quelque chose **à propos d'un produit ou d'une activité** ». Si on a la liste propre des
+> acteurs, des produits et des activités, on peut ensuite **rattacher et relier** toutes les
+> obligations — exactement le besoin exprimé : *« les identifier comme objets pour mieux les lier »*.
 
 ---
 
@@ -63,7 +65,7 @@ Au lieu d'une pile de 40 textes, on obtient une bibliothèque organisée :
 | Les rayons (Histoire, Sciences…) | Les **8 domaines métier** (fonds, marchés, banque, assurance, paiements, durabilité, numérique, transverse) |
 | Un livre | Un **texte** (AIFMD, MiFID II…) |
 | Le glossaire en fin de livre | L'**article de définitions** du texte |
-| Une entrée du glossaire | Un **terme défini** (un acteur ou un concept) |
+| Une entrée du glossaire | Un **terme défini** (un acteur, un produit ou une activité) |
 | « voir aussi p. X » | Un **renvoi** vers un autre texte |
 
 **En chiffres réels :**
@@ -71,9 +73,9 @@ Au lieu d'une pile de 40 textes, on obtient une bibliothèque organisée :
 | | |
 |---|---:|
 | Textes de niveau 1 traités | **~40** |
-| Termes définis récupérés (bruts) | **1 271** |
-| Termes **distincts** après dédoublonnage (la « liste minimale ») | **782** |
-| **Acteurs** isolés des concepts | **208** |
+| Termes définis récupérés (bruts) | **1 459** |
+| Termes **distincts** après dédoublonnage (la « liste minimale ») | **893** |
+| **Acteurs** isolés des produits/activités | **303** |
 | Langues officielles (anglais + français) | **42/42 textes** |
 
 > Beaucoup d'acteurs sont **partagés** par plusieurs textes (ex. *établissement de crédit*,
@@ -90,8 +92,10 @@ vient de **notre analyse** :
 1. **Extraction = fidèle au texte.** Le terme et sa définition sont **repris mot pour mot** du
    texte officiel (EN **et** FR officiels, pas une traduction maison), avec leur **base légale
    exacte** (ex. « Art. 4(1)(b) »). Aucune reformulation. **Vérifiable ligne à ligne.**
-2. **Classification (acteur / concept) = analyse, relue.** **Rien n'est deviné** : un terme non
-   encore validé est **marqué « à relire »** plutôt que mal étiqueté.
+2. **Classification (acteur / produit / activité) = analyse, à relire.** **Rien n'est deviné** :
+   la classification est **entièrement générée automatiquement** (modèle local, déterministe et
+   reproductible) puis **harmonisée entre textes** ; un terme non encore validé reste **marqué
+   « à relire »** plutôt que mal étiqueté.
 
 **Les pièges identifiés et documentés** (un expert les attend) :
 
@@ -99,7 +103,8 @@ vient de **notre analyse** :
   ancienne directive bancaire, 7ᵉ directive comptable…). La table de correspondance vers les textes
   en vigueur (MiFID II, CRR/CRD, directive comptable 2013…) est **établie**.
 - **AIFMD a été modifiée (AIFMD II)** — la version consolidée ajoute des définitions récentes
-  (octroi de prêts…), à intégrer pour viser le droit applicable.
+  (octroi de prêts…) : AIFMD passe ainsi de **41 à 48 termes définis**. Le glossaire est bâti sur
+  les **versions consolidées** (droit le plus à jour) partout où elles existent.
 - **Faux-amis FR ↔ UE** au niveau 3 (doctrine AMF/ACPR) : à isoler pour ne pas les fusionner à tort.
 
 ---
@@ -113,7 +118,7 @@ C'est le point à marteler. Le travail n'a **pas** été fait « à la main sur 
    un texte officiel
         │  on lit sa structure → on localise l'article de définitions
         ▼
-   tous les termes définis (acteurs + concepts), bilingues, avec base légale
+   tous les termes définis (acteurs + produits + activités), bilingues, avec base légale
         │  on dédoublonne entre textes → liste minimale
         ▼
    on alimente le « vocabulaire de référence » du projet
@@ -124,8 +129,9 @@ C'est le point à marteler. Le travail n'a **pas** été fait « à la main sur 
 
 **Et tout est reproductible** : relancer la chaîne sur les mêmes textes redonne **exactement le
 même résultat**. Ajouter un nouvel acte = **une ligne**, et tout se reconstruit pareil. La
-**décision humaine** (valider qu'un terme est un acteur ou un concept) est **consignée une fois pour
-toutes** dans un fichier dédié, et **ré-appliquée automatiquement** à chaque reconstruction.
+**classification** (acteur / produit / activité) est **générée automatiquement** par le modèle
+local, **consignée** dans un fichier dédié, et **ré-appliquée à l'identique** à chaque
+reconstruction — la **décision humaine** se limite à la **relire** et la valider.
 
 > Concrètement, pour la présentation : *« je ne livre pas un glossaire d'AIFMD, je livre la **chaîne**
 > qui produit le glossaire de tout le niveau 1 — et qui le reproduira à l'identique demain, sur la
@@ -140,9 +146,9 @@ toutes** dans un fichier dédié, et **ré-appliquée automatiquement** à chaqu
 | Extraction des termes + définitions (mot pour mot, bilingue, base légale) | ✅ **solide, vérifiable** |
 | Liste minimale + acteurs isolés | ✅ **fait** |
 | Caractère **reproductible / réplicable** de toute la chaîne | ✅ **vérifié** |
-| Classification **acteur / concept** | ⚠️ **proposée automatiquement, « à relire »** — à confirmer par un expert |
+| Classification **acteur / produit / activité** | ⚠️ **générée automatiquement, harmonisée, « à relire »** — à confirmer par un expert |
 | 14 termes vraiment ambigus (le même terme penche des deux côtés selon le texte) | ⚠️ **tranchés par une règle générale** (la définition de référence), à confirmer en relecture |
-| Versions **consolidées** (droit le plus à jour) | ⏳ capacité prête — **choix de méthode** à décider |
+| Versions **consolidées** (droit le plus à jour) | ✅ **utilisées partout où elles existent** |
 | Niveau 3 (doctrine AMF/ACPR) et faux-amis | ⏳ pas encore intégré |
 
 > Message clé : **la mécanique est faite et fiable ; ce qui reste est du ressort de l'expert
@@ -153,8 +159,8 @@ toutes** dans un fichier dédié, et **ré-appliquée automatiquement** à chaqu
 ## 7. En une phrase
 
 > On transforme les **articles de définition** des ~40 textes de niveau 1 en un **dictionnaire
-> structuré, bilingue, dédoublonné, avec les acteurs isolés des concepts** — **fidèle au texte**
-> pour l'extraction, **relu** pour l'analyse — afin de servir de **socle** au rattachement des
+> structuré, bilingue, dédoublonné, avec les acteurs isolés des produits/activités** — **fidèle au
+> texte** pour l'extraction, **à relire** pour l'analyse — afin de servir de **socle** au rattachement des
 > obligations, et **reproductible** sur toute une base d'actes.
 
 *Pour la structure détaillée et les 40 textes domaine par domaine : [niveau1_cartographie.md](niveau1_cartographie.md).

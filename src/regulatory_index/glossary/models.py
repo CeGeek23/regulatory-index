@@ -14,9 +14,9 @@ from pydantic import BaseModel, Field
 
 from ..schemas.source import Language, Level
 
-# Catégorie d'un terme défini — schéma UNIQUE du projet : actor | investor | supervisor | concept.
-# Les trois premiers = acteurs (personne/entité régulée ou qui agit) ; `concept` = tout le reste
-# (objet, instrument, opération, notion, géographie…). None = non classé (« vocab gap »).
+# Catégorie d'un terme défini — typologie STRICTE du client : acteur | produit | activite.
+# acteur = personne/entité régulée ou qui agit ; activite = activité/service régulé ; produit = tout
+# le reste défini (objet, instrument, fonds, notion juridique…). None = non classé (« vocab gap »).
 TermType = str
 
 
@@ -25,7 +25,7 @@ class DefinedTerm(BaseModel):
 
     term_id: str = Field(description="Identifiant stable en snake_case, ex. 'aifm'")
     label: str = Field(description="Étiquette du point dans l'article, ex. 'b' ou 'ao'")
-    type: TermType | None = Field(default=None, description="actor | investor | supervisor | concept")
+    type: TermType | None = Field(default=None, description="acteur | produit | activite (typologie client)")
     term_en: str
     term_fr: str
     legal_basis: str = Field(description="Renvoi précis, ex. 'AIFMD Art. 4(1)(b)'")

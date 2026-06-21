@@ -24,7 +24,7 @@ import yaml
 
 from regulatory_index.glossary import DefinedTerm, harvest_glossary
 
-ACTOR_TYPES = {"actor", "investor", "supervisor"}
+ACTOR_TYPES = {"acteur"}  # typologie client : seul « acteur » va dans actors.yaml ; produit + activité → objects
 RAW = Path("data/raw")
 OVERRIDES = Path("config/glossary/overrides")
 VOCAB = Path("config/vocabularies")

@@ -21,10 +21,11 @@ RAW = Path("data/raw")
 OVERRIDES = Path("config/glossary/overrides")
 OUT = Path("data/exports/presentation/glossaire_ancre.html")
 
-# Les 4 catégories extraites par le projet, leur couleur et leur libellé.
-TYPE_COLOUR = {"actor": "#2E75B6", "investor": "#2E8B57", "supervisor": "#7030A0", "concept": "#C55A11"}
-TYPE_LABEL = {"actor": "acteur", "investor": "investisseur", "supervisor": "autorité", "concept": "concept"}
-ACTOR_TYPES = {"actor", "investor", "supervisor"}
+# Les 3 catégories de la typologie STRICTE du client (articles de définition).
+TYPE_COLOUR = {"acteur": "#2E75B6", "produit": "#C55A11", "activite": "#2E8B57"}
+TYPE_LABEL = {"acteur": "acteur", "produit": "produit", "activite": "activité"}
+TYPE_ORDER = ("acteur", "produit", "activite")
+ACTOR_TYPES = {"acteur"}
 
 # Périmètre groupé par domaine (ordre d'affichage + sommaire), avec libellés lisibles.
 DOMAINS: dict[str, list[str]] = {
@@ -89,7 +90,7 @@ def _render(text: str, terms: list[DefinedTerm]) -> tuple[str, dict[str, int]]:
 
     counts: dict[str, int] = {}
     for t in terms:
-        typ = (t.type or "concept") if (t.type in TYPE_COLOUR) else "concept"
+        typ = t.type if (t.type in TYPE_COLOUR) else "produit"
         counts[typ] = counts.get(typ, 0) + 1
 
     out: list[str] = []
@@ -104,7 +105,7 @@ def _render(text: str, terms: list[DefinedTerm]) -> tuple[str, dict[str, int]]:
             out.append(chunk)
         else:
             t = ordered[who]
-            typ = (t.type or "concept") if (t.type in TYPE_COLOUR) else "concept"
+            typ = t.type if (t.type in TYPE_COLOUR) else "produit"
             cls = "act" if typ in ACTOR_TYPES else "con"
             tip = f"{TYPE_LABEL[typ].upper()} · {t.legal_basis}" + (f" · FR : {t.term_fr}" if t.term_fr else "")
             out.append(
@@ -146,7 +147,7 @@ def main() -> int:
             name = TITLES.get(sid, sid)
             n_actor = sum(counts.get(k, 0) for k in ACTOR_TYPES)
             summary = " · ".join(f"{counts[k]} {TYPE_LABEL[k]}{'s' if counts[k] > 1 else ''}"
-                                 for k in ("actor", "investor", "supervisor", "concept") if counts.get(k))
+                                 for k in TYPE_ORDER if counts.get(k))
             sections.append(
                 f'<section id="{sid}"><h2>{html.escape(name)} '
                 f'<span class="count">{summary}</span></h2>'
@@ -161,10 +162,9 @@ def main() -> int:
 
     legend = "".join(
         f'<span class="s" style="--c:{TYPE_COLOUR[k]}">{TYPE_LABEL[k]}</span>'
-        for k in ("actor", "investor", "supervisor", "concept")
+        for k in TYPE_ORDER
     )
-    tot_line = " · ".join(f"<b>{totals.get(k, 0)}</b> {TYPE_LABEL[k]}s"
-                          for k in ("actor", "investor", "supervisor", "concept"))
+    tot_line = " · ".join(f"<b>{totals.get(k, 0)}</b> {TYPE_LABEL[k]}s" for k in TYPE_ORDER)
 
     doc = f"""<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8">
 <title>Glossaire ancré — niveau 1</title>
@@ -193,12 +193,12 @@ def main() -> int:
 </style></head><body>
 <header><h1>Glossaire ancré — tout ce que l'approche extrait, surligné dans le texte</h1>
 <p>Pour chaque texte de niveau 1 : son <b>article de définitions réel</b>, avec chaque terme défini
-surligné <b>à sa place</b> et coloré par catégorie. Acteurs/investisseurs/autorités en gras coloré,
-concepts en pointillé. Survolez un terme pour son type, sa base légale et son libellé FR.</p></header>
+surligné <b>à sa place</b> et coloré par catégorie : <b>acteur</b> (en gras), <b>produit</b> et
+<b>activité</b> (soulignés). Survolez un terme pour son type, sa base légale et son libellé FR.</p></header>
 <div class="legend"><b>Légende :</b>{legend} &nbsp;—&nbsp; total : {tot_line}</div>
 <nav>{''.join(toc)}</nav>
 {''.join(sections)}
-<footer>Données réelles du projet · texte officiel non reformulé · classification acteur/concept « à relire » (sauf AIFMD, relu).</footer>
+<footer>Données réelles du projet · texte officiel non reformulé · versions consolidées · classification acteur/produit/activité « à relire ».</footer>
 </body></html>"""
 
     OUT.parent.mkdir(parents=True, exist_ok=True)

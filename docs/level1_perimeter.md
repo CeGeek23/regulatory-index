@@ -9,25 +9,27 @@
 Pour chaque texte de niveau 1 :
 1. récupérer son **sommaire** (`regindex sommaire` / `glossary.build_toc`) → localise l'article de définitions ;
 2. moissonner son **article de définitions** (`regindex glossary` / `glossary.harvest_glossary`) →
-   liste de tous les termes (acteurs + concepts), bilingue EN/FR, avec base légale et renvois ;
-3. réconcilier les termes communs entre textes (un concept = une entrée — la « liste minimale »).
+   liste de tous les termes (acteurs + produits/activités), bilingue EN/FR, avec base légale et renvois ;
+3. réconcilier les termes communs entre textes (un terme distinct = une entrée — la « liste minimale »).
 
-Statut actuel : **~40 textes du niveau 1 services financiers moissonnés en EN + FR** — **782 termes
-distincts, 207 acteurs isolés** (sortie : `data/exports/glossary/glossary_L1_minimal.csv` +
-`glossary_L1_actors.csv` ; détail et limites dans `docs/approche_glossaire.md`). Classification
-acteur/concept relue à la main pour AIFMD, **générée de façon reproductible (LM Studio) puis
-harmonisée, « à relire », pour les autres textes**.
+Statut actuel : **~40 textes du niveau 1 services financiers moissonnés en EN + FR**, sur leurs
+**versions consolidées** (droit le plus à jour) partout où l'UE en publie une (sortie :
+`data/exports/glossary/glossary_L1_minimal.csv` + `glossary_L1_actors.csv` ; détail et limites dans
+`docs/approche_glossaire.md`). Classification **acteur / produit / activité** (typologie du client)
+**générée de façon reproductible** (modèle local LM Studio, décodage déterministe) **puis harmonisée
+entre textes**, et systématiquement **marquée « à relire »** (validation métier).
 Génération de bout en bout : `uv run python scripts/build_l1_glossary.py` (auto-fetch via Cellar).
 
-## 2. Le point « textes les plus à jour » ⚠️
+## 2. Le point « textes les plus à jour »
 
-Le glossaire ci-joint est construit sur le **texte d'origine 2011/61**. Deux écarts à corriger
+Le glossaire est désormais construit sur les **versions consolidées**. Deux écarts ont été traités
 pour viser le droit applicable aujourd'hui :
 
 **a) AIFMD a été modifiée par AIFMD II** — Directive (UE) 2024/927 (application **16 avril 2026**).
 AIFMD II **ajoute/retouche des définitions** à l'article 4 (notamment autour de l'octroi de
-prêts : *loan origination*, *loan-originating AIF*, *shareholder loan*…). → il faut rejouer le
-moissonnage sur la **version consolidée** `02011L0061-2024xxxx`, pas sur `32011L0061`.
+prêts : *loan origination*, *loan-originating AIF*, *shareholder loan*, *leveraged AIF*…). →
+**fait** : le moissonnage tourne sur la **version consolidée** `02011L0061-20260416` (et non plus
+`32011L0061`), ce qui porte AIFMD de **41 à 48 termes définis**.
 
 **b) Les définitions d'AIFMD renvoient à des textes en partie ABROGÉS.** C'est le piège central :
 prises « à jour », ces définitions pointent vers des textes remplacés. Table des renvois trouvés
@@ -93,8 +95,8 @@ sans article de définitions propre (rien à extraire).
   HTTP 202). `scripts/build_l1_glossary.py` récupère le périmètre L1 manquant tout seul.
 - **Versions consolidées** : `eurlex_fetcher.latest_consolidated_celex` résout le CELEX consolidé
   le plus récent via les métadonnées RDF (ex. AIFMD → `02011L0061-20260416`, incluant AIFMD II).
-  Le glossaire actuel est bâti sur les textes **d'origine** ; passer au consolidé = re-fetch +
-  **re-classification** (jeux de termes différents).
-- **Reste à faire** : confirmer la classification acteur/concept (générée + harmonisée, « à relire »)
-  pour les ~38 textes non-AIFMD — les ambiguïtés étant tranchées par la **définition de référence**
-  (règle générale, sans liste) ; traiter les faux-amis L3 (AMF/ACPR, sans fetcher à ce jour).
+  Le glossaire est désormais bâti sur ces versions **consolidées** ; seuls les textes pour lesquels
+  l'UE ne publie **pas** de consolidé officiel restent sur le texte d'origine.
+- **Reste à faire** : confirmer en relecture métier la classification **acteur / produit / activité**
+  (générée + harmonisée, « à relire ») — en priorité les définitions **par renvoi**, plus délicates ;
+  traiter les faux-amis L3 (AMF/ACPR, sans fetcher à ce jour).

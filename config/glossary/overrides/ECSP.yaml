@@ -1,40 +1,40 @@
 # Glossaire ECSP — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 a:
-  type: actor
+  type: activite
 b:
-  type: actor
+  type: produit
 c:
-  type: actor
+  type: activite
 d:
-  type: concept
+  type: acteur
 e:
-  type: actor
+  type: acteur
 f:
-  type: concept
+  type: activite
 g:
-  type: actor
+  type: acteur
 h:
-  type: actor
+  type: acteur
 i:
-  type: actor
+  type: acteur
 j:
-  type: actor
+  type: acteur
 k:
-  type: investor
+  type: acteur
 l:
-  type: concept
+  type: activite
 m:
-  type: concept
+  type: produit
 n:
-  type: concept
+  type: produit
 o:
-  type: concept
+  type: activite
 p:
-  type: concept
+  type: produit
 q:
-  type: actor
+  type: acteur
 r:
-  type: supervisor
+  type: acteur

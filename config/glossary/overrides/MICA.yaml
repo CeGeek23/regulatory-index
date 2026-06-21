@@ -1,106 +1,106 @@
 # Glossaire MICA — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
-'1':
-  type: concept
-'2':
-  type: concept
-'3':
-  type: concept
-'4':
-  type: concept
-'5':
-  type: concept
-'6':
-  type: concept
-'7':
-  type: concept
-'8':
-  type: concept
-'9':
-  type: concept
-'10':
-  type: actor
-'11':
-  type: actor
-'12':
-  type: concept
-'13':
-  type: actor
-'14':
-  type: concept
-'15':
-  type: actor
-'16':
-  type: actor
-'17':
-  type: actor
-'18':
-  type: actor
-'19':
-  type: actor
-'20':
-  type: concept
-'21':
-  type: actor
-'22':
-  type: concept
-'23':
-  type: actor
-'24':
-  type: actor
-'25':
-  type: actor
-'26':
-  type: actor
-'27':
-  type: actor
-'28':
-  type: actor
-'29':
-  type: actor
-'30':
-  type: investor
-'31':
-  type: concept
-'32':
-  type: concept
-'33':
-  type: concept
-'34':
-  type: concept
-'35':
-  type: supervisor
-'36':
-  type: concept
-'37':
-  type: investor
-'38':
-  type: concept
-'39':
-  type: actor
-'40':
-  type: concept
-'41':
-  type: concept
-'42':
-  type: actor
-'43':
-  type: actor
-'44':
-  type: concept
-'45':
-  type: concept
-'46':
-  type: actor
-'47':
-  type: actor
-'48':
-  type: actor
-'49':
-  type: concept
-'50':
-  type: concept
-'51':
-  type: concept
+a:
+  type: produit
+b:
+  type: produit
+c:
+  type: activite
+d:
+  type: produit
+e:
+  type: produit
+f:
+  type: produit
+g:
+  type: produit
+h:
+  type: produit
+i:
+  type: produit
+j:
+  type: produit
+k:
+  type: acteur
+l:
+  type: activite
+m:
+  type: acteur
+n:
+  type: produit
+o:
+  type: acteur
+p:
+  type: activite
+q:
+  type: activite
+r:
+  type: activite
+s:
+  type: activite
+t:
+  type: activite
+u:
+  type: activite
+v:
+  type: activite
+w:
+  type: activite
+x:
+  type: activite
+y:
+  type: activite
+z:
+  type: activite
+aa:
+  type: acteur
+ab:
+  type: acteur
+ac:
+  type: acteur
+ad:
+  type: acteur
+ae:
+  type: produit
+af:
+  type: produit
+ag:
+  type: acteur
+ah:
+  type: produit
+ai:
+  type: acteur
+aj:
+  type: acteur
+ak:
+  type: acteur
+al:
+  type: acteur
+am:
+  type: acteur
+an:
+  type: activite
+ao:
+  type: activite
+ap:
+  type: acteur
+aq:
+  type: acteur
+ar:
+  type: produit
+as:
+  type: produit
+at:
+  type: acteur
+au:
+  type: acteur
+av:
+  type: acteur
+aw:
+  type: produit
+ax:
+  type: activite
+ay:
+  type: produit

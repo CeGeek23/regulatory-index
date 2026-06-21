@@ -24,3 +24,4 @@ data/units/
 data/obligations/
 data/relations/
 data/exports/
+data/classification_cache.json

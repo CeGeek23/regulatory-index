@@ -1,82 +1,104 @@
 # Glossaire SOLVENCY2 — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
-'1':
-  type: actor
-'2':
-  type: concept
-'3':
-  type: actor
-'4':
-  type: actor
-'5':
-  type: actor
-'6':
-  type: concept
-'7':
-  type: concept
-'8':
-  type: concept
-'9':
-  type: concept
-'10':
-  type: supervisor
-'11':
-  type: actor
-'12':
-  type: actor
-'13':
-  type: concept
-'14':
-  type: concept
-'15':
-  type: concept
-'16':
-  type: actor
-'17':
-  type: concept
-'18':
-  type: concept
-'19':
-  type: concept
-'20':
-  type: concept
-'21':
-  type: concept
-'22':
-  type: concept
-'23':
-  type: concept
-'24':
-  type: concept
-'25':
-  type: actor
-'26':
-  type: actor
-'27':
-  type: concept
-'28':
-  type: concept
-'29':
-  type: concept
-'30':
-  type: concept
-'31':
-  type: concept
-'32':
-  type: concept
-'33':
-  type: concept
-'34':
-  type: concept
-'35':
-  type: concept
-'36':
-  type: concept
-'37':
-  type: concept
-'38':
-  type: concept
-'39':
-  type: concept
+a:
+  type: acteur
+b:
+  type: produit
+c:
+  type: acteur
+d:
+  type: acteur
+e:
+  type: acteur
+f:
+  type: acteur
+g:
+  type: produit
+h:
+  type: acteur
+i:
+  type: produit
+j:
+  type: acteur
+k:
+  type: acteur
+l:
+  type: produit
+m:
+  type: acteur
+n:
+  type: acteur
+o:
+  type: acteur
+p:
+  type: acteur
+q:
+  type: produit
+r:
+  type: produit
+s:
+  type: acteur
+t:
+  type: acteur
+u:
+  type: produit
+v:
+  type: acteur
+w:
+  type: acteur
+x:
+  type: produit
+y:
+  type: acteur
+z:
+  type: activite
+aa:
+  type: acteur
+ab:
+  type: produit
+ac:
+  type: acteur
+ad:
+  type: acteur
+ae:
+  type: produit
+af:
+  type: activite
+ag:
+  type: acteur
+ah:
+  type: activite
+ai:
+  type: produit
+aj:
+  type: produit
+ak:
+  type: acteur
+al:
+  type: activite
+am:
+  type: produit
+an:
+  type: produit
+ao:
+  type: activite
+ap:
+  type: produit
+aq:
+  type: produit
+ar:
+  type: produit
+as:
+  type: acteur
+at:
+  type: acteur
+au:
+  type: produit
+av:
+  type: produit
+aw:
+  type: produit
+ax:
+  type: produit

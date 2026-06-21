@@ -1,134 +1,134 @@
 # Glossaire DORA — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 '1':
-  type: concept
+  type: activite
 '2':
-  type: concept
+  type: produit
 '3':
-  type: concept
+  type: produit
 '4':
-  type: concept
+  type: produit
 '5':
-  type: concept
+  type: produit
 '6':
-  type: concept
+  type: produit
 '7':
-  type: concept
+  type: produit
 '8':
-  type: concept
+  type: activite
 '9':
-  type: concept
+  type: activite
 '10':
-  type: concept
+  type: activite
 '11':
-  type: concept
+  type: activite
 '12':
-  type: concept
+  type: produit
 '13':
-  type: concept
+  type: produit
 '14':
-  type: concept
+  type: activite
 '15':
-  type: concept
+  type: activite
 '16':
-  type: concept
+  type: produit
 '17':
-  type: concept
+  type: activite
 '18':
-  type: concept
+  type: activite
 '19':
-  type: actor
+  type: acteur
 '20':
-  type: actor
+  type: acteur
 '21':
-  type: concept
+  type: activite
 '22':
-  type: concept
+  type: acteur
 '23':
-  type: actor
+  type: acteur
 '24':
-  type: actor
+  type: acteur
 '25':
-  type: concept
+  type: acteur
 '26':
-  type: concept
+  type: acteur
 '27':
-  type: concept
+  type: acteur
 '28':
-  type: actor
+  type: acteur
 '29':
-  type: concept
+  type: activite
 '30':
-  type: actor
+  type: acteur
 '31':
-  type: actor
+  type: acteur
 '32':
-  type: concept
+  type: acteur
 '33':
-  type: actor
+  type: acteur
 '34':
-  type: actor
+  type: acteur
 '35':
-  type: actor
+  type: acteur
 '36':
-  type: concept
+  type: acteur
 '37':
-  type: actor
+  type: acteur
 '38':
-  type: actor
+  type: acteur
 '39':
-  type: concept
+  type: acteur
 '40':
-  type: concept
+  type: acteur
 '41':
-  type: concept
+  type: produit
 '42':
-  type: concept
+  type: produit
 '43':
-  type: concept
+  type: activite
 '44':
-  type: actor
+  type: acteur
 '45':
-  type: actor
+  type: acteur
 '46':
-  type: actor
+  type: acteur
 '47':
-  type: actor
+  type: acteur
 '48':
-  type: actor
+  type: acteur
 '49':
-  type: actor
+  type: acteur
 '50':
-  type: actor
+  type: acteur
 '51':
-  type: actor
+  type: acteur
 '52':
-  type: actor
+  type: acteur
 '53':
-  type: actor
+  type: acteur
 '54':
-  type: concept
+  type: acteur
 '55':
-  type: actor
+  type: acteur
 '56':
-  type: concept
+  type: acteur
 '57':
-  type: concept
+  type: acteur
 '58':
-  type: actor
+  type: acteur
 '59':
-  type: concept
+  type: produit
 '60':
-  type: actor
+  type: acteur
 '61':
-  type: supervisor
+  type: acteur
 '62':
-  type: concept
+  type: produit
 '63':
-  type: concept
+  type: acteur
 '64':
-  type: concept
+  type: acteur
 '65':
-  type: supervisor
+  type: acteur

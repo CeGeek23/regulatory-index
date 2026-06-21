@@ -1,50 +1,50 @@
 # Glossaire TAXONOMY — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 '1':
-  type: concept
+  type: produit
 '2':
-  type: actor
+  type: acteur
 '3':
-  type: concept
+  type: produit
 '4':
-  type: actor
+  type: produit
 '5':
-  type: concept
+  type: produit
 '6':
-  type: concept
+  type: produit
 '7':
-  type: concept
+  type: produit
 '8':
-  type: concept
+  type: produit
 '9':
-  type: concept
+  type: produit
 '10':
-  type: concept
+  type: produit
 '11':
-  type: concept
+  type: produit
 '12':
-  type: concept
+  type: produit
 '13':
-  type: concept
+  type: produit
 '14':
-  type: concept
+  type: produit
 '15':
-  type: concept
+  type: produit
 '16':
-  type: concept
+  type: produit
 '17':
-  type: concept
+  type: produit
 '18':
-  type: concept
+  type: produit
 '19':
-  type: concept
+  type: produit
 '20':
-  type: concept
+  type: produit
 '21':
-  type: concept
+  type: produit
 '22':
-  type: concept
+  type: produit
 '23':
-  type: concept
+  type: produit

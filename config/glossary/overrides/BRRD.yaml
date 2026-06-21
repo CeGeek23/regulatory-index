@@ -1,220 +1,238 @@
 # Glossaire BRRD — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
-'1':
-  type: supervisor
-'2':
-  type: actor
-'3':
-  type: actor
-'4':
-  type: actor
-'5':
-  type: concept
-'6':
-  type: concept
-'7':
-  type: concept
-'8':
-  type: concept
-'9':
-  type: actor
-'10':
-  type: concept
-'11':
-  type: concept
-'12':
-  type: concept
-'13':
-  type: concept
-'14':
-  type: concept
-'15':
-  type: concept
-'16':
-  type: concept
-'17':
-  type: actor
-'18':
-  type: supervisor
-'19':
-  type: concept
-'20':
-  type: concept
-'21':
-  type: supervisor
-'22':
-  type: concept
-'23':
-  type: actor
-'24':
-  type: actor
-'25':
-  type: actor
-'26':
-  type: concept
-'27':
-  type: concept
-'28':
-  type: concept
-'29':
-  type: concept
-'30':
-  type: concept
-'31':
-  type: concept
-'32':
-  type: concept
-'33':
-  type: concept
-'34':
-  type: concept
-'35':
-  type: concept
-'36':
-  type: concept
-'37':
-  type: supervisor
-'38':
-  type: concept
-'39':
-  type: concept
-'40':
-  type: concept
-'41':
-  type: concept
-'42':
-  type: concept
-'43':
-  type: concept
-'44':
-  type: supervisor
-'45':
-  type: concept
-'46':
-  type: concept
-'47':
-  type: concept
-'48':
-  type: concept
-'49':
-  type: concept
-'50':
-  type: concept
-'51':
-  type: concept
-'52':
-  type: supervisor
-'53':
-  type: concept
-'54':
-  type: concept
-'55':
-  type: concept
-'56':
-  type: concept
-'57':
-  type: concept
-'58':
-  type: concept
-'59':
-  type: concept
-'60':
-  type: concept
-'61':
-  type: concept
-'62':
-  type: actor
-'63':
-  type: concept
-'64':
-  type: concept
-'65':
-  type: concept
-'66':
-  type: concept
-'67':
-  type: concept
-'68':
-  type: concept
-'69':
-  type: concept
-'70':
-  type: concept
-'71':
-  type: concept
-'72':
-  type: concept
-'73':
-  type: concept
-'74':
-  type: concept
-'75':
-  type: concept
-'76':
-  type: concept
-'77':
-  type: concept
-'78':
-  type: supervisor
-'79':
-  type: concept
-'80':
-  type: actor
-'81':
-  type: concept
-'82':
-  type: concept
-'83':
-  type: actor
-'84':
-  type: concept
-'85':
-  type: concept
-'86':
-  type: concept
-'87':
-  type: actor
-'88':
-  type: concept
-'89':
-  type: concept
-'90':
-  type: supervisor
-'91':
-  type: concept
-'92':
-  type: concept
-'93':
-  type: concept
-'94':
-  type: concept
-'95':
-  type: concept
-'96':
-  type: concept
-'97':
-  type: concept
-'98':
-  type: concept
-'99':
-  type: concept
-'100':
-  type: concept
-'101':
-  type: concept
-'102':
-  type: concept
-'103':
-  type: concept
-'104':
-  type: actor
-'105':
-  type: actor
-'106':
-  type: supervisor
-'107':
-  type: concept
-'108':
-  type: concept
+a:
+  type: activite
+b:
+  type: acteur
+c:
+  type: acteur
+d:
+  type: acteur
+e:
+  type: acteur
+f:
+  type: produit
+g:
+  type: acteur
+h:
+  type: produit
+i:
+  type: produit
+j:
+  type: acteur
+k:
+  type: acteur
+l:
+  type: acteur
+m:
+  type: acteur
+n:
+  type: acteur
+o:
+  type: acteur
+p:
+  type: acteur
+q:
+  type: activite
+r:
+  type: acteur
+s:
+  type: acteur
+t:
+  type: produit
+u:
+  type: produit
+v:
+  type: acteur
+w:
+  type: acteur
+x:
+  type: acteur
+y:
+  type: acteur
+z:
+  type: acteur
+aa:
+  type: acteur
+ab:
+  type: acteur
+ac:
+  type: produit
+ad:
+  type: activite
+ae:
+  type: produit
+af:
+  type: acteur
+ag:
+  type: activite
+ah:
+  type: produit
+ai:
+  type: produit
+aj:
+  type: activite
+ak:
+  type: activite
+al:
+  type: acteur
+am:
+  type: produit
+an:
+  type: activite
+ao:
+  type: acteur
+ap:
+  type: acteur
+aq:
+  type: acteur
+ar:
+  type: produit
+as:
+  type: acteur
+at:
+  type: produit
+au:
+  type: acteur
+av:
+  type: activite
+aw:
+  type: produit
+ax:
+  type: acteur
+ay:
+  type: acteur
+az:
+  type: produit
+ba:
+  type: acteur
+bb:
+  type: produit
+bc:
+  type: acteur
+bd:
+  type: activite
+be:
+  type: produit
+bf:
+  type: produit
+bg:
+  type: activite
+bh:
+  type: acteur
+bi:
+  type: produit
+bj:
+  type: produit
+bk:
+  type: acteur
+bl:
+  type: activite
+bm:
+  type: acteur
+bn:
+  type: produit
+bo:
+  type: produit
+bp:
+  type: produit
+bq:
+  type: produit
+br:
+  type: produit
+bs:
+  type: produit
+bt:
+  type: produit
+bu:
+  type: produit
+bv:
+  type: produit
+bw:
+  type: produit
+bx:
+  type: produit
+by:
+  type: produit
+bz:
+  type: produit
+ca:
+  type: produit
+cb:
+  type: produit
+cc:
+  type: produit
+cd:
+  type: acteur
+ce:
+  type: acteur
+cf:
+  type: acteur
+cg:
+  type: produit
+ch:
+  type: activite
+ci:
+  type: acteur
+cj:
+  type: acteur
+ck:
+  type: produit
+cl:
+  type: acteur
+cm:
+  type: acteur
+cn:
+  type: acteur
+co:
+  type: acteur
+cp:
+  type: acteur
+cq:
+  type: acteur
+cr:
+  type: produit
+cs:
+  type: produit
+ct:
+  type: acteur
+cu:
+  type: produit
+cv:
+  type: activite
+cw:
+  type: produit
+cx:
+  type: produit
+cy:
+  type: produit
+cz:
+  type: produit
+da:
+  type: produit
+db:
+  type: produit
+dc:
+  type: activite
+dd:
+  type: produit
+de:
+  type: activite
+df:
+  type: activite
+dg:
+  type: activite
+dh:
+  type: acteur
+di:
+  type: acteur
+dj:
+  type: acteur
+dk:
+  type: acteur
+dl:
+  type: activite
+dm:
+  type: produit

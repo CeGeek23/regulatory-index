@@ -16,40 +16,39 @@ def _doc(types: dict[str, str], labels: list[tuple[str, str]]) -> co._Doc:
 
 
 def test_parse_type_recognises_first_match_and_none() -> None:
-    assert co._parse_type("actor") == "actor"
-    assert co._parse_type("  Concept.") == "concept"
-    assert co._parse_type("réponse : investor") == "investor"
-    assert co._parse_type("supervisor\n") == "supervisor"
+    assert co._parse_type("acteur") == "acteur"
+    assert co._parse_type("  Produit.") == "produit"
+    assert co._parse_type("activité") == "activite"  # accent normalisé
     # premier libellé reconnu l'emporte (les libellés ne se chevauchent pas)
-    assert co._parse_type("not an actor but a concept") == "actor"
+    assert co._parse_type("c'est un acteur, pas un produit") == "acteur"
     assert co._parse_type("n'importe quoi") is None
     assert co._parse_type(None) is None
 
 
 def test_harmonize_majority_wins() -> None:
     docs = {
-        # 'issuer' : concept x1 / actor x3 -> majorité stricte = actor partout
-        "A": _doc({"a": "concept"}, [("a", "issuer")]),
-        "B": _doc({"a": "actor"}, [("a", "issuer")]),
-        "C": _doc({"a": "actor"}, [("a", "issuer")]),
-        "D": _doc({"a": "actor"}, [("a", "issuer")]),
+        # 'issuer' : produit x1 / acteur x3 -> majorité stricte = acteur partout
+        "A": _doc({"a": "produit"}, [("a", "issuer")]),
+        "B": _doc({"a": "acteur"}, [("a", "issuer")]),
+        "C": _doc({"a": "acteur"}, [("a", "issuer")]),
+        "D": _doc({"a": "acteur"}, [("a", "issuer")]),
     }
-    longest = {"issuer": (50, "actor")}
+    longest = {"issuer": (50, "acteur")}
     changes, tie_resolved = co._harmonize(docs, longest)
-    assert docs["A"].types["a"] == "actor"  # basculé vers la majorité
+    assert docs["A"].types["a"] == "acteur"  # basculé vers la majorité
     assert changes == 1  # seul A a changé
     assert tie_resolved == 0
 
 
 def test_harmonize_tie_resolved_by_substantive_definition() -> None:
     docs = {
-        # 'deposit' : actor x1 / concept x1 -> ÉGALITÉ -> on tranche par la déf. la plus longue
-        "A": _doc({"a": "actor"}, [("a", "deposit")]),
-        "B": _doc({"b": "concept"}, [("b", "deposit")]),
+        # 'deposit' : acteur x1 / produit x1 -> ÉGALITÉ -> on tranche par la déf. la plus longue
+        "A": _doc({"a": "acteur"}, [("a", "deposit")]),
+        "B": _doc({"b": "produit"}, [("b", "deposit")]),
     }
-    longest = {"deposit": (120, "concept")}  # la vraie définition (longue) dit « concept »
+    longest = {"deposit": (120, "produit")}  # la vraie définition (longue) dit « produit »
     changes, tie_resolved = co._harmonize(docs, longest)
-    assert docs["A"].types["a"] == "concept"  # tranché par la définition substantielle
-    assert docs["B"].types["b"] == "concept"
+    assert docs["A"].types["a"] == "produit"  # tranché par la définition substantielle
+    assert docs["B"].types["b"] == "produit"
     assert tie_resolved == 1
     assert changes == 1  # seul A a changé

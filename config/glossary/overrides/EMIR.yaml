@@ -1,62 +1,66 @@
 # Glossaire EMIR — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
-'1':
-  type: concept
-'2':
-  type: concept
-'3':
-  type: concept
-'4':
-  type: concept
-'5':
-  type: concept
-'6':
-  type: concept
-'7':
-  type: concept
-'8':
-  type: actor
-'9':
-  type: actor
-'10':
-  type: actor
-'11':
-  type: concept
-'12':
-  type: concept
-'13':
-  type: supervisor
-'14':
-  type: actor
-'15':
-  type: actor
-'16':
-  type: concept
-'17':
-  type: actor
-'18':
-  type: actor
-'19':
-  type: actor
-'20':
-  type: concept
-'21':
-  type: concept
-'22':
-  type: concept
-'23':
-  type: concept
-'24':
-  type: concept
-'25':
-  type: concept
-'26':
-  type: concept
-'27':
-  type: actor
-'28':
-  type: actor
-'29':
-  type: actor
+a:
+  type: acteur
+b:
+  type: produit
+c:
+  type: activite
+d:
+  type: activite
+e:
+  type: produit
+f:
+  type: produit
+g:
+  type: produit
+h:
+  type: acteur
+i:
+  type: acteur
+j:
+  type: acteur
+k:
+  type: produit
+l:
+  type: activite
+m:
+  type: acteur
+n:
+  type: acteur
+o:
+  type: acteur
+p:
+  type: acteur
+q:
+  type: acteur
+r:
+  type: acteur
+s:
+  type: acteur
+t:
+  type: acteur
+u:
+  type: acteur
+v:
+  type: acteur
+w:
+  type: acteur
+x:
+  type: produit
+y:
+  type: produit
+z:
+  type: produit
+aa:
+  type: acteur
+ab:
+  type: acteur
+ac:
+  type: acteur
+ad:
+  type: produit
+ae:
+  type: produit

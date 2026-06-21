@@ -1,150 +1,100 @@
-# Enrichissement relu à la main du glossaire AIFMD niveau 1 (Directive 2011/61/UE), article 4.
-# Indexé par étiquette de point (a..ao). Chaque clé peut porter :
-#   id    : identifiant snake_case (aligné sur les vocabulaires contrôlés quand le terme y existe)
-#   type  : actor | investor | supervisor | concept   (schéma unique du projet : isole les acteurs
-#           — actor/investor/supervisor — des concepts/objets — tout le reste ; cf. demande client)
-#   cites : autres textes que la définition importe/vise (graphe inter-actes ; renvois d'origine
-#           — pour la version à jour des renvois abrogés, cf. docs/level1_perimeter.md)
-#   term_en / term_fr : à ne renseigner que si la détection automatique se trompe
-#
-# Sans ce fichier, le moissonnage reste générique : type via vocabulaires, cites via alias connus.
+# Glossaire AIFMD_L1 — classification acteur/concept générée par scripts/classify_overrides.py
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
+# Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 a:
-  id: aif
-  type: concept
-  cites:
-  - Directive 2009/65/EC (UCITS) Art. 5
+  type: produit
 b:
-  id: aifm
-  type: actor
+  type: acteur
 c:
-  id: branch
-  type: concept
+  type: acteur
 d:
-  id: carried_interest
-  type: concept
+  type: activite
 e:
-  id: close_links
-  type: concept
-  cites:
-  - Directive 83/349/EEC Art. 1
+  type: produit
 f:
-  id: competent_authority
-  type: supervisor
+  type: acteur
 g:
-  id: competent_authority_depositary
-  type: supervisor
-  cites:
-  - Directive 2006/48/EC
-  - Directive 2004/39/EC
-  - AIFMD Art. 21
+  type: acteur
 h:
-  id: competent_authority_eu_aif
-  type: supervisor
+  type: acteur
 i:
-  id: control
-  type: concept
-  cites:
-  - Directive 83/349/EEC Art. 1
+  type: acteur
 j:
-  id: established
-  type: concept
+  type: acteur
 k:
-  type: concept
+  type: acteur
 l:
-  id: eu_aifm
-  type: actor
+  type: acteur
 m:
-  id: feeder_aif
-  type: concept
+  type: produit
 n:
-  type: concept
+  type: produit
 o:
-  id: holding_company
-  type: concept
+  type: acteur
 p:
-  id: home_ms_aif
-  type: concept
+  type: acteur
 q:
-  id: home_ms_aifm
-  type: concept
+  type: produit
 r:
-  id: host_ms_aifm
-  type: concept
+  type: produit
 s:
-  type: concept
+  type: produit
 t:
-  type: actor
+  type: produit
 u:
-  id: legal_representative
-  type: actor
+  type: acteur
 v:
-  id: leverage
-  type: concept
+  type: produit
 w:
-  id: managing_aifs
-  type: concept
-  cites:
-  - AIFMD Annex I point 1(a)/(b)
+  type: acteur
 x:
-  type: concept
+  type: activite
 y:
-  id: master_aif
-  type: concept
+  type: produit
 z:
-  id: member_state_of_reference
-  type: concept
-  cites:
-  - AIFMD Art. 37(4)
+  type: produit
 aa:
-  id: non_eu_aif
-  type: concept
+  type: produit
 ab:
-  id: non_eu_aifm
-  type: actor
+  type: acteur
 ac:
-  id: non_listed_company
-  type: concept
-  cites:
-  - Directive 2004/39/EC Art. 4(1)(14)
+  type: acteur
 ad:
-  type: concept
+  type: produit
 ae:
-  type: concept
+  type: acteur
 af:
-  id: prime_broker
-  type: actor
+  type: activite
 ag:
-  id: professional_investor
-  type: investor
-  cites:
-  - Directive 2004/39/EC (MiFID) Annex II
+  type: acteur
 ah:
-  id: qualifying_holding
-  type: concept
-  cites:
-  - Directive 2004/109/EC Art. 9, 10, 12(4)-(5)
+  type: acteur
 ai:
-  id: employees_representatives
-  type: actor
-  term_en: employees' representatives
-  cites:
-  - Directive 2002/14/EC Art. 2(e)
+  type: acteur
 aj:
-  id: retail_investor
-  type: investor
+  type: acteur
 ak:
-  type: concept
+  type: acteur
 al:
-  id: supervisory_authorities_non_eu_aif
-  type: supervisor
+  type: acteur
 am:
-  id: supervisory_authorities_non_eu_aifm
-  type: supervisor
+  type: acteur
 an:
-  id: securitisation_spe
-  type: concept
-  cites:
-  - Regulation (EC) No 24/2009 (ECB) Art. 1(2)
+  type: acteur
 ao:
-  type: concept
+  type: produit
+ap:
+  type: produit
+aq:
+  type: produit
+ar:
+  type: produit
+as:
+  type: activite
+at:
+  type: produit
+au:
+  type: acteur
+av:
+  type: produit

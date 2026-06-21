@@ -1,42 +1,42 @@
 # Glossaire IORP2 — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
-'1':
-  type: actor
-'2':
-  type: concept
-'3':
-  type: actor
-'4':
-  type: concept
-'5':
-  type: actor
-'6':
-  type: concept
-'7':
-  type: concept
-'8':
-  type: supervisor
-'9':
-  type: concept
-'10':
-  type: concept
-'11':
-  type: concept
-'12':
-  type: concept
-'13':
-  type: actor
-'14':
-  type: concept
-'15':
-  type: concept
-'16':
-  type: concept
-'17':
-  type: concept
-'18':
-  type: concept
-'19':
-  type: concept
+a:
+  type: acteur
+b:
+  type: produit
+c:
+  type: acteur
+d:
+  type: produit
+e:
+  type: acteur
+f:
+  type: acteur
+g:
+  type: acteur
+h:
+  type: acteur
+i:
+  type: produit
+j:
+  type: acteur
+k:
+  type: produit
+l:
+  type: acteur
+m:
+  type: acteur
+n:
+  type: activite
+o:
+  type: activite
+p:
+  type: activite
+q:
+  type: produit
+r:
+  type: acteur
+s:
+  type: activite

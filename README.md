@@ -103,7 +103,7 @@ Pipeline **autonome** qui part directement du **HTML d'un acte** (pas d'acquisit
 # Sommaire (chapitres / sections / articles) + repérage de l'article de définitions
 uv run regindex sommaire AIFMD_L1            # → data/exports/sommaire/sommaire_AIFMD_L1_EN.json
 
-# Glossaire des termes définis (bilingue EN/FR, acteurs isolés des concepts)
+# Glossaire des termes définis (bilingue EN/FR, acteurs isolés des produits/activités)
 uv run regindex glossary AIFMD_L1            # → data/exports/glossary/{AIFMD_L1_definitions.yaml, glossary_AIFMD_L1.csv/.md}
 ```
 
@@ -115,12 +115,12 @@ from regulatory_index.glossary import build_toc, harvest_glossary
 toc = build_toc(html_en, source_id="AIFMD_L1", language="EN")
 toc.definitions_article          # -> "4"  (détecté via le sous-titre 'Definitions')
 terms = harvest_glossary(html_en, html_fr, source_id="AIFMD_L1", celex="32011L0061")
-# terms: list[DefinedTerm] — term_en/fr, type (actor|concept|...), legal_basis, cites, définitions
+# terms: list[DefinedTerm] — term_en/fr, type (acteur|produit|activite), legal_basis, cites, définitions
 ```
 
-**Un seul chemin, sans heuristique.** L'**extraction** est automatique et se rejoue sur n'importe quel acte : article de définitions auto-détecté via le sommaire, points `(a)(b)…` comme `(1)(2)…` découpés de façon déterministe (str, sans regex), FR optionnel → `term_en/fr`, `definition_en/fr`, `legal_basis`. L'**enrichissement** (`type` acteur/concept…, `cites` renvois inter-actes) provient d'un fichier par acte (`config/glossary/overrides/{source_id}.yaml`) ; un acte sans override sort avec `type`/`cites` à `null` — **jamais devinés**.
+**Un seul chemin, sans heuristique.** L'**extraction** est automatique et se rejoue sur n'importe quel acte : article de définitions auto-détecté via le sommaire, points `(a)(b)…` comme `(1)(2)…` découpés de façon déterministe (str, sans regex), FR optionnel → `term_en/fr`, `definition_en/fr`, `legal_basis`. L'**enrichissement** (`type` acteur/produit/activité, `cites` renvois inter-actes) provient d'un fichier par acte (`config/glossary/overrides/{source_id}.yaml`) ; un acte sans override sort avec `type`/`cites` à `null` — **jamais devinés**.
 
-**Classification acteur/concept reproductible.** Le `type` des overrides est soit **relu à la main** (AIFMD L1/L2), soit **généré de façon reproductible** par `scripts/classify_overrides.py` (`just classify-overrides`) : le modèle local LM Studio est interrogé en décodage déterministe (température 0, graine fixe) avec mise en cache, donc relancer régénère les mêmes fichiers **à l'identique** (et hors-ligne via `--model <id>` si le cache est rempli). Un run complet **harmonise** ensuite chaque terme sur **un seul type dans tout le corpus** (vote majoritaire déterministe), et les égalités résiduelles sont **tranchées par la définition de référence** du terme (la plus substantielle, pas un simple renvoi) — **règle générale et déterministe, sans liste de décisions à maintenir**. Ces `type` restent marqués « à RELIRE » ; les `cites` viennent de la relecture. La promotion au vocabulaire contrôlé (`scripts/vocab_sync.py`, `just vocab-sync`) **régénère** sa section de façon **idempotente** (plus d'empilement) ; la déduplication unifie casse, espaces et variantes de tiret/trait d'union, si bien que les doublons typographiques fusionnent **d'office** (sans liste à tenir). Le périmètre est acquis en **EN + FR** (`build_l1_glossary`, 42/42 textes). Toute la chaîne définitions → classification → harmonisation → vocabulaire est ainsi rejouable sans dérive.
+**Classification acteur/produit/activité reproductible.** Le `type` des overrides (typologie stricte du client : acteur / produit / activité, tirée des articles de définition) est **généré de façon reproductible** par `scripts/classify_overrides.py` (`just classify-overrides`) : le modèle local LM Studio est interrogé en décodage déterministe (température 0, graine fixe) avec mise en cache (clé incluant une empreinte du prompt → un changement de typologie invalide le cache d'office), donc relancer régénère les mêmes fichiers **à l'identique** (et hors-ligne via `--model <id>` si le cache est rempli). Un run complet **harmonise** ensuite chaque terme sur **un seul type dans tout le corpus** (vote majoritaire déterministe), et les égalités résiduelles sont **tranchées par la définition de référence** du terme (la plus substantielle, pas un simple renvoi) — **règle générale et déterministe, sans liste de décisions à maintenir**. Ces `type` restent marqués « à RELIRE » ; les `cites` viennent de la relecture. La promotion au vocabulaire contrôlé (`scripts/vocab_sync.py`, `just vocab-sync`) **régénère** sa section de façon **idempotente** (plus d'empilement) ; la déduplication unifie casse, espaces et variantes de tiret/trait d'union, si bien que les doublons typographiques fusionnent **d'office** (sans liste à tenir). Le périmètre est acquis en **EN + FR** (`build_l1_glossary`, 42/42 textes). Toute la chaîne définitions → classification → harmonisation → vocabulaire est ainsi rejouable sans dérive.
 
 Réplication (vérifiée) : `regindex glossary AIFMD_L2` produit le glossaire du Règl. délégué 231/2013 (définitions à l'**article 1**, points **numérotés**) via le même code, son enrichissement venant de `config/glossary/overrides/AIFMD_L2.yaml`. Le périmètre niveau 1 et le piège « renvois vers des textes abrogés » sont documentés dans `docs/level1_perimeter.md`. La **cartographie des ~40 textes par domaine métier** (niveaux Lamfalussy, volumétrie réelle termes/acteurs par texte) est dans `docs/niveau1_cartographie.md`. Pour une **présentation métier** (non technique, qui relie le travail à la logique réglementaire) : `docs/presentation.md`, avec une **trame de prise de parole** (~5 min + prépa Q&A) dans `docs/trame_presentation.md`.
 
@@ -132,8 +132,8 @@ Réplication (vérifiée) : `regindex glossary AIFMD_L2` produit le glossaire du
 config/
   vocabularies/        YAML de vocab contrôlé (actors, actions, objects, themes,
                        conditions, acronyms, relation_types) + theme codes
-  glossary/            overrides/ (classification acteur/concept par acte : AIFMD relu,
-                       reste généré + harmonisé, reproductible — règle générale, sans liste)
+  glossary/            overrides/ (classification acteur/produit/activité par acte : tout
+                       généré + harmonisé, reproductible — règle générale, sans liste)
   sources_manifest.yaml   Documents officiels à acquérir
   sources_registry.yaml   Registry des sources + aliases pour citation matching
 

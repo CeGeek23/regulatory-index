@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from regulatory_index.glossary import harvest_glossary, parse_points
+from regulatory_index.glossary.definitions import find_definitions_article
 
 # Guillemets EUR-Lex via code points (évite l'ambiguïté unicode signalée par ruff).
 EN_O, EN_C = chr(0x2018), chr(0x2019)
@@ -99,6 +100,43 @@ def test_parse_points_unlabelled_consolidated() -> None:
     points = parse_points(text, language="EN")
     assert [p.label for p in points] == ["a", "b", "c"]
     assert [p.term for p in points] == ["alpha", "beta", "gamma"]
+
+
+def test_parse_points_unlabelled_straight_apostrophe() -> None:
+    """Consolidés type CRD IV : termes en apostrophe DROITE (U+0027), sans étiquette de point."""
+    text = "\n".join(
+        [
+            "Article 3",
+            "Definitions",
+            "For the purposes of this Directive, the following definitions shall apply:",
+            "'credit institution' means an undertaking the business of which is to take deposits;",
+            "'investment firm' means a firm as defined in point (2) of Article 4(1);",
+        ]
+    )
+    points = parse_points(text, language="EN")
+    assert [p.label for p in points] == ["a", "b"]
+    assert points[0].term == "credit institution"
+    assert points[1].term == "investment firm"
+
+
+def test_find_definitions_article_by_subtitle_without_trigger() -> None:
+    """IDD/IORP2 consolidés : sous-titre « Definitions » hors <p oj-sti-art>, et amorce
+    « For the purposes of this Directive: … » sans la formule « the following definitions »."""
+    html = """
+    <html><body>
+      <div class="eli-subdivision" id="art_1">
+        <p class="oj-ti-art">Article 1</p>
+        <p class="norm">Scope</p>
+        <p class="norm">This Directive applies to insurance undertakings.</p>
+      </div>
+      <div class="eli-subdivision" id="art_2">
+        <p class="oj-ti-art">Article 2</p>
+        <p class="norm">Definitions</p>
+        <p class="norm">For the purposes of this Directive: 'alpha' means the first;</p>
+      </div>
+    </body></html>
+    """
+    assert find_definitions_article(html, "EN") == "2"
 
 
 def test_harvest_glossary_en_only() -> None:

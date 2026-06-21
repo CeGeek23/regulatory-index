@@ -1,56 +1,60 @@
 # Glossaire PROSPECTUS — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 a:
-  type: concept
+  type: produit
 b:
-  type: concept
+  type: produit
 c:
-  type: concept
+  type: produit
 d:
-  type: concept
+  type: activite
 e:
-  type: investor
+  type: activite
 f:
-  type: concept
+  type: produit
 g:
-  type: actor
+  type: acteur
 h:
-  type: actor
+  type: acteur
 i:
-  type: actor
+  type: acteur
 j:
-  type: concept
+  type: produit
 k:
-  type: concept
+  type: acteur
 l:
-  type: concept
+  type: activite
 m:
-  type: concept
+  type: activite
 n:
-  type: concept
+  type: produit
 o:
-  type: supervisor
+  type: acteur
 p:
-  type: concept
+  type: produit
 q:
-  type: concept
+  type: acteur
 r:
-  type: supervisor
+  type: acteur
 s:
-  type: concept
+  type: produit
 t:
-  type: concept
+  type: acteur
 u:
-  type: concept
+  type: produit
 v:
-  type: concept
+  type: produit
 w:
-  type: concept
+  type: activite
 x:
-  type: concept
+  type: activite
 y:
-  type: concept
+  type: produit
 z:
-  type: concept
+  type: produit
+aa:
+  type: activite
+ab:
+  type: produit

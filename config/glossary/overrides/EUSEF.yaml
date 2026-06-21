@@ -1,30 +1,34 @@
 # Glossaire EUSEF — classification acteur/concept générée par scripts/classify_overrides.py
-# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ actor|investor|supervisor|concept. À RELIRE (validation métier).
+# Modèle LM Studio : qwen2.5-7b-instruct. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).
 # Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.
 
 a:
-  type: concept
+  type: acteur
 b:
-  type: concept
+  type: produit
 c:
-  type: actor
+  type: acteur
 d:
-  type: concept
+  type: acteur
 e:
-  type: concept
+  type: produit
 f:
-  type: concept
+  type: activite
 g:
-  type: concept
+  type: produit
 h:
-  type: concept
+  type: produit
 i:
-  type: actor
+  type: activite
 j:
-  type: concept
+  type: produit
 k:
-  type: concept
+  type: acteur
 l:
-  type: concept
+  type: produit
 m:
-  type: supervisor
+  type: acteur
+n:
+  type: acteur
+o:
+  type: activite

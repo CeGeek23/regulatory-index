@@ -32,7 +32,7 @@ from regulatory_index.refdata.vocab import load_vocabulary
 
 RAW = Path("data/raw")
 OUT = Path("data/exports/glossary")
-ACTOR_TYPES = {"actor", "investor", "supervisor"}
+ACTOR_TYPES = {"acteur"}  # typologie client : seul « acteur » est un acteur (produit/activité = objets)
 
 # Périmètre niveau 1 (source_id -> CELEX de base). Récupéré via l'API Cellar (cf.
 # eurlex_fetcher) pour que `uv run python scripts/build_l1_glossary.py` soit reproductible

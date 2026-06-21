@@ -269,7 +269,7 @@ def glossary(
         act_label=act_label or source_id.split("_")[0],
         definitions_article=definitions_article or None,
     )
-    n_actors = sum(1 for t in terms if (t.type or "") in {"actor", "investor", "supervisor"})
+    n_actors = sum(1 for t in terms if (t.type or "") == "acteur")
     paths = write_glossary(
         terms,
         out_dir / "glossary",
