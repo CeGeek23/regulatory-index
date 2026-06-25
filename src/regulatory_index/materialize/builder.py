@@ -110,20 +110,40 @@ def build_obligations(
     # Clé de tri = tuple RÉEL (offsets comparés comme des entiers : 2 avant 10, pas l'inverse) avec
     # char_end + verbatim en départage → numérotation déterministe et conforme à l'ordre du texte,
     # indépendante de l'ordre d'itération sur disque (y compris à char_start identique).
-    items: list[tuple[tuple[str, str, int, int, str], NormativeUnit, RawObligation, ExtractionMeta]] = []
+    items: list[
+        tuple[tuple[str, str, int, int, str], NormativeUnit, RawObligation, ExtractionMeta]
+    ] = []
     for ue in extractions:
         for raw in ue.obligations:
             key: tuple[str, str, int, int, str] = (
-                ue.unit.source_id, ue.unit.unit_id,
-                raw.char_interval[0], raw.char_interval[1], raw.verbatim_text,
+                ue.unit.source_id,
+                ue.unit.unit_id,
+                raw.char_interval[0],
+                raw.char_interval[1],
+                raw.verbatim_text,
             )
             items.append((key, ue.unit, raw, ue.extraction_meta))
 
     items.sort(key=lambda t: t[0])
 
     counter: dict[str, int] = {}
+    # Déduplication déterministe : un seul enregistrement par
+    # (unité, actor, action, object) CANONIQUES. C'est l'invariant « une obligation par
+    # triplet » du prompt, désormais garanti côté code quel que soit le modèle — il
+    # absorbe notamment la double émission d'une même norme sous deux formulations
+    # (p. ex. la couche de transposition « Member States shall require that X » et la
+    # norme substantielle « X »). On conserve la PREMIÈRE occurrence dans l'ordre du
+    # texte (items déjà triés par offset), donc le résultat reste stable entre exécutions.
+    seen: set[tuple[str, str, str, str]] = set()
     out: list[Obligation] = []
     for _, unit, raw, meta in items:
+        actor = _canonicalize("actor", raw.actor, canonical_language)
+        action = _canonicalize("action", raw.action, canonical_language)
+        obj = _canonicalize("object", raw.object, canonical_language)
+        dedup_key = (unit.unit_id, actor, action, obj)
+        if dedup_key in seen:
+            continue
+        seen.add(dedup_key)
         code = _theme_code_for(raw.theme)
         counter[code] = counter.get(code, 0) + 1
         oid = f"{prefix}-{code}-{counter[code]:04d}"
@@ -131,9 +151,9 @@ def build_obligations(
         out.append(
             Obligation(
                 obligation_id=oid,
-                actor=_canonicalize("actor", raw.actor, canonical_language),
-                action=_canonicalize("action", raw.action, canonical_language),
-                object=_canonicalize("object", raw.object, canonical_language),
+                actor=actor,
+                action=action,
+                object=obj,
                 condition=raw.condition,
                 source=source,
                 theme=_canonicalize("theme", raw.theme, canonical_language),

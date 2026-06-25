@@ -95,3 +95,31 @@
       theme: Remuneration
       condition: at least annually
       cited_references: []
+
+# Actor convention: a "Member States shall require that <X>" transposition duty is
+# captured ONCE, under the substantive duty-bearer (here the AIFM) — NOT under
+# "Member States", and without a second "Member States / require" duplicate.
+- text: |
+    Member States shall require that an AIFM applying for authorisation provide information on the persons effectively conducting the business of the AIFM to the competent authorities of its home Member State.
+  extractions:
+    - verbatim: "provide information on the persons effectively conducting the business of the AIFM"
+      actor: AIFM
+      action: provide
+      object: information on persons conducting the business
+      theme: Governance
+      condition: when applying for authorisation
+      cited_references: []
+
+# Binding restriction inside a permissive "may" sentence: the "but not earlier than"
+# floor is a genuine obligation and must be extracted (the opening "may" does not
+# make the sentence a pure option).
+- text: |
+    An AIFM may start managing AIFs as soon as the authorisation is granted, but not earlier than 1 month after having submitted any missing information.
+  extractions:
+    - verbatim: "not earlier than 1 month after having submitted any missing information"
+      actor: AIFM
+      action: refrain from
+      object: starting to manage AIFs before the one-month period
+      theme: Governance
+      condition: before the 1-month period after submitting missing information
+      cited_references: []

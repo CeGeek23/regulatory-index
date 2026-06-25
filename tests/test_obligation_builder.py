@@ -30,11 +30,17 @@ def _ue(
     return UnitExtraction(unit=unit, obligations=obligations, extraction_meta=meta)
 
 
-def _raw(theme: str, char_start: int = 0, actor: str = "AIFM") -> RawObligation:
+def _raw(
+    theme: str,
+    char_start: int = 0,
+    actor: str = "AIFM",
+    obj: str = "risk management framework",
+    action: str = "establish",
+) -> RawObligation:
     return RawObligation(
         actor=actor,
-        action="establish",
-        object="risk management framework",
+        action=action,
+        object=obj,
         theme=theme,
         verbatim_text="AIFMs shall establish risk management framework",
         char_interval=(char_start, char_start + 10),
@@ -44,7 +50,14 @@ def _raw(theme: str, char_start: int = 0, actor: str = "AIFM") -> RawObligation:
 def test_ids_assigned_per_theme_with_codes() -> None:
     obligations = build_obligations(
         [
-            _ue("u1", "AIFMD_L1", [_raw("Risk Management", 0), _raw("Risk Management", 100)]),
+            _ue(
+                "u1",
+                "AIFMD_L1",
+                [
+                    _raw("Risk Management", 0, obj="risk policy"),
+                    _raw("Risk Management", 100, obj="liquidity policy"),
+                ],
+            ),
             _ue("u2", "AIFMD_L1", [_raw("Governance", 0)]),
         ]
     )
@@ -58,9 +71,7 @@ def test_ids_assigned_per_theme_with_codes() -> None:
 
 
 def test_source_populated_from_registry_for_known_source_id() -> None:
-    obligations = build_obligations(
-        [_ue("u1", "AIFMD_L1", [_raw("Risk Management")])]
-    )
+    obligations = build_obligations([_ue("u1", "AIFMD_L1", [_raw("Risk Management")])])
     src = obligations[0].source
     assert src.celex == "32011L0061"
     assert src.level == 1
@@ -69,10 +80,87 @@ def test_source_populated_from_registry_for_known_source_id() -> None:
 
 
 def test_ids_are_deterministic_across_runs() -> None:
-    ues = [_ue("u1", "AIFMD_L1", [_raw("Risk Management", 50), _raw("Risk Management", 10)])]
+    ues = [
+        _ue(
+            "u1",
+            "AIFMD_L1",
+            [
+                _raw("Risk Management", 50, obj="risk policy"),
+                _raw("Risk Management", 10, obj="liquidity policy"),
+            ],
+        )
+    ]
     a = [o.obligation_id for o in build_obligations(ues)]
     b = [o.obligation_id for o in build_obligations(ues)]
     assert a == b
+
+
+def test_duplicate_triples_in_same_unit_are_deduplicated() -> None:
+    # Deux extractions au MÊME triplet (actor, action, object) dans une même unité
+    # = doublon (p. ex. la couche de transposition « Member States require X » et la
+    # norme substantielle « X » résolues au même acteur) -> une seule obligation.
+    obligations = build_obligations(
+        [
+            _ue(
+                "u1",
+                "AIFMD_L1",
+                [
+                    _raw(
+                        "Governance",
+                        0,
+                        actor="AIFM",
+                        obj="information on persons",
+                        action="provide",
+                    ),
+                    _raw(
+                        "Governance",
+                        90,
+                        actor="AIFM",
+                        obj="information on persons",
+                        action="provide",
+                    ),
+                ],
+            )
+        ]
+    )
+    assert len(obligations) == 1
+
+
+def test_distinct_triples_in_same_unit_are_kept() -> None:
+    # Même acteur/action mais objets différents = obligations distinctes -> non fusionnées.
+    obligations = build_obligations(
+        [
+            _ue(
+                "u1",
+                "AIFMD_L1",
+                [
+                    _raw(
+                        "Governance",
+                        0,
+                        actor="AIFM",
+                        obj="information on persons",
+                        action="provide",
+                    ),
+                    _raw(
+                        "Governance", 90, actor="AIFM", obj="remuneration policy", action="provide"
+                    ),
+                ],
+            )
+        ]
+    )
+    assert len(obligations) == 2
+
+
+def test_same_triple_across_different_units_is_not_deduplicated() -> None:
+    # La dédup est intra-unité : la même norme citée dans deux articles reste deux
+    # obligations distinctes (sources/offsets différents).
+    obligations = build_obligations(
+        [
+            _ue("u1", "AIFMD_L1", [_raw("Governance", actor="AIFM", obj="x", action="provide")]),
+            _ue("u2", "AIFMD_L1", [_raw("Governance", actor="AIFM", obj="x", action="provide")]),
+        ]
+    )
+    assert len(obligations) == 2
 
 
 def test_fr_values_canonicalize_to_english_pivot() -> None:

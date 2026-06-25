@@ -85,3 +85,31 @@
       theme: Rémunération
       condition: au moins annuellement
       cited_references: []
+
+# Convention d'acteur : un devoir de transposition « Les États membres exigent que <X> »
+# est capté UNE seule fois, sous le débiteur substantiel (ici le gestionnaire) — et NON
+# sous « les États membres », sans doublon « États membres / exiger ».
+- text: |
+    Les États membres exigent que le gestionnaire qui demande un agrément fournisse aux autorités compétentes de son État membre d'origine des informations sur les personnes qui dirigent effectivement l'activité du gestionnaire.
+  extractions:
+    - verbatim: "fournisse aux autorités compétentes de son État membre d'origine des informations sur les personnes qui dirigent effectivement l'activité du gestionnaire"
+      actor: Gestionnaire de FIA
+      action: fournir
+      object: informations sur les personnes dirigeant l'activité
+      theme: Gouvernance
+      condition: lors de la demande d'agrément
+      cited_references: []
+
+# Restriction contraignante dans une phrase permissive « peut » : le plancher
+# « mais pas avant » est une véritable obligation et doit être extrait (le « peut »
+# d'ouverture n'en fait pas une simple faculté).
+- text: |
+    Le gestionnaire peut commencer à gérer des FIA dès l'octroi de l'agrément, mais pas avant un délai d'un mois après avoir communiqué toute information manquante.
+  extractions:
+    - verbatim: "pas avant un délai d'un mois après avoir communiqué toute information manquante"
+      actor: Gestionnaire de FIA
+      action: s'abstenir de
+      object: commencer à gérer des FIA avant le délai d'un mois
+      theme: Gouvernance
+      condition: avant le délai d'un mois après communication des informations manquantes
+      cited_references: []
