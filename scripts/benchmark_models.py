@@ -30,13 +30,15 @@ from regulatory_index.refdata.vocab import load_vocabulary
 
 CORPUS = Path("data/units/corpus.jsonl")
 REPORT = Path("data/exports/obligations/model_benchmark.md")
-BENCH_RAW = Path("data/exports/obligations/_bench_raw.json")  # cache reprenable (1 entrée par modèle)
+BENCH_RAW = Path(
+    "data/exports/obligations/_bench_raw.json"
+)  # cache reprenable (1 entrée par modèle)
 CTX = 16384  # contexte chargé pour chaque modèle (le prompt vocab + few-shots + schéma est gros)
 SUBSET = [
-    "AIFMD_L1#en#art_15",   # EN L1 — gestion des risques (dense)
-    "AIFMD_L1#en#art_23",   # EN L1 — transparence (dense, très cité)
-    "AIFMD_L2#en#art_40",   # EN L2 — politique de gestion des risques
-    "AIFMD_L1#fr#art_15",   # FR    — test bilingue
+    "AIFMD_L1#en#art_15",  # EN L1 — gestion des risques (dense)
+    "AIFMD_L1#en#art_23",  # EN L1 — transparence (dense, très cité)
+    "AIFMD_L2#en#art_40",  # EN L2 — politique de gestion des risques
+    "AIFMD_L1#fr#art_15",  # FR    — test bilingue
 ]
 _VOCAB_FIELDS = {"actor": "actors", "action": "actions", "theme": "themes"}
 
@@ -65,20 +67,33 @@ def _bench_model(model: str, units: list[NormativeUnit]) -> list[dict[str, Any]]
         try:
             ext = extract_unit(u, RunnerConfig(model_id=model))
             grounded = sum(1 for o in ext.obligations if o.char_interval[1] > o.char_interval[0])
-            rows.append({
-                "unit": u.unit_id, "obl": len(ext.obligations), "grounded": grounded,
-                "lat": time.monotonic() - t0, "canon": _canonical_rate(ext.obligations),
-                "drops": len(ext.errors), "err": None,
-            })
+            rows.append(
+                {
+                    "unit": u.unit_id,
+                    "obl": len(ext.obligations),
+                    "grounded": grounded,
+                    "lat": time.monotonic() - t0,
+                    "canon": _canonical_rate(ext.obligations),
+                    "err": None,
+                }
+            )
         except Exception as e:
-            rows.append({
-                "unit": u.unit_id, "obl": 0, "grounded": 0, "lat": time.monotonic() - t0,
-                "canon": 0.0, "drops": 0, "err": f"{type(e).__name__}: {str(e)[:120]}",
-            })
+            rows.append(
+                {
+                    "unit": u.unit_id,
+                    "obl": 0,
+                    "grounded": 0,
+                    "lat": time.monotonic() - t0,
+                    "canon": 0.0,
+                    "err": f"{type(e).__name__}: {str(e)[:120]}",
+                }
+            )
         r = rows[-1]
         flag = f"ERR {r['err']}" if r["err"] else ""
-        print(f"    {r['unit']:22} obl={r['obl']:>2} grounded={r['grounded']:>2} "
-              f"canon={r['canon']:5.1f}% {r['lat']:6.1f}s {flag}")
+        print(
+            f"    {r['unit']:22} obl={r['obl']:>2} grounded={r['grounded']:>2} "
+            f"canon={r['canon']:5.1f}% {r['lat']:6.1f}s {flag}"
+        )
     _lms("unload", model)
     return rows
 
@@ -90,9 +105,13 @@ def _aggregate(model: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
     canon_den = sum(r["obl"] for r in ok)
     canon = sum(r["canon"] * r["obl"] for r in ok) / canon_den if canon_den else 0.0
     return {
-        "model": model, "units_ok": len(ok), "failed": len(rows) - len(ok),
-        "obl": obl, "grounded_pct": (grounded / obl * 100) if obl else 0.0,
-        "canon_pct": canon, "mean_lat": sum(r["lat"] for r in rows) / len(rows) if rows else 0.0,
+        "model": model,
+        "units_ok": len(ok),
+        "failed": len(rows) - len(ok),
+        "obl": obl,
+        "grounded_pct": (grounded / obl * 100) if obl else 0.0,
+        "canon_pct": canon,
+        "mean_lat": sum(r["lat"] for r in rows) / len(rows) if rows else 0.0,
     }
 
 
@@ -123,10 +142,12 @@ def main() -> int:
     summaries = [_aggregate(m, detail[m]) for m in models if m in detail]
 
     lines = [
-        "# Benchmark modèles — extraction d'obligations (LM Studio)", "",
+        "# Benchmark modèles — extraction d'obligations (LM Studio)",
+        "",
         f"Sous-ensemble : **{len(units)} unités** ({', '.join(u.unit_id for u in units)}).",
         f"Contexte {CTX} pour tous. `canonical %` = part des champs actor/action/theme résolus "
-        "dans le vocab contrôlé (cohérence ; le complément = découverte/bruit).", "",
+        "dans le vocab contrôlé (cohérence ; le complément = découverte/bruit).",
+        "",
         "| Modèle | Unités OK | Échecs | Obligations | Grounded % | Canonical % | Latence moy. (s) |",
         "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
@@ -137,8 +158,12 @@ def main() -> int:
         )
     lines += ["", "## Détail par unité", ""]
     for m, rows in detail.items():
-        lines += [f"### `{m}`", "", "| Unité | Obl. | Grounded | Canon % | Lat. (s) | Erreur |",
-                  "| --- | ---: | ---: | ---: | ---: | --- |"]
+        lines += [
+            f"### `{m}`",
+            "",
+            "| Unité | Obl. | Grounded | Canon % | Lat. (s) | Erreur |",
+            "| --- | ---: | ---: | ---: | ---: | --- |",
+        ]
         for r in rows:
             lines.append(
                 f"| {r['unit']} | {r['obl']} | {r['grounded']} | {r['canon']:.0f}% | "
@@ -150,8 +175,10 @@ def main() -> int:
 
     print("=== RÉCAP ===")
     for s in summaries:
-        print(f"  {s['model']:42} obl={s['obl']:>3} grounded={s['grounded_pct']:5.1f}% "
-              f"canon={s['canon_pct']:5.1f}% lat={s['mean_lat']:5.1f}s failed={s['failed']}")
+        print(
+            f"  {s['model']:42} obl={s['obl']:>3} grounded={s['grounded_pct']:5.1f}% "
+            f"canon={s['canon_pct']:5.1f}% lat={s['mean_lat']:5.1f}s failed={s['failed']}"
+        )
     print(f"\nRapport: {REPORT}")
     return 0
 

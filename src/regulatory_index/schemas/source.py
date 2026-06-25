@@ -23,8 +23,4 @@ class Source(BaseModel):
     url: str
     language: Language
     publication_date: date | None = None
-    char_interval: tuple[int, int] | None = Field(
-        default=None,
-        description="Offsets optionnels dans le texte source ; non peuplé par le pipeline actuel",
-    )
     alignment_status: AlignmentStatus | None = None

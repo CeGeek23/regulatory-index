@@ -100,12 +100,6 @@ def resolve_citations(citation: str) -> list[str]:
     return out
 
 
-def resolve_citation(citation: str) -> str | None:
-    """Premier source_id matché (compat) ; cf. `resolve_citations` pour le multi-textes."""
-    targets = resolve_citations(citation)
-    return targets[0] if targets else None
-
-
 def resolve_all(
     obligations: list[Obligation],
 ) -> tuple[list[ResolvedCitation], list[UnresolvedCitation]]:

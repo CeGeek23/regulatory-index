@@ -93,19 +93,17 @@ def _make_source(unit: NormativeUnit, raw_align: str | None) -> Source:
     )
 
 
-def build_obligations(
-    extractions: Iterable[UnitExtraction],
-    *,
-    prefix: str = "AIFMD",
-    canonical_language: str = "EN",
-) -> list[Obligation]:
+def build_obligations(extractions: Iterable[UnitExtraction]) -> list[Obligation]:
     """Aplatit les UnitExtractions en Obligations avec des ids stables attribués par theme.
 
     Les champs de vocab contrôlé (actor, action, object, theme) sont normalisés vers
-    leur label canonique dans `canonical_language` afin que les formes de surface FR/EN
-    se ramènent à une seule valeur. Les valeurs hors vocab sont conservées telles
-    quelles (voir `collect_vocab_gaps`).
+    leur label canonique EN afin que les formes de surface FR/EN se ramènent à une
+    seule valeur. Les valeurs hors vocab sont conservées telles quelles
+    (voir `collect_vocab_gaps`).
     """
+
+    prefix = "AIFMD"
+    canonical_language = "EN"
 
     # Clé de tri = tuple RÉEL (offsets comparés comme des entiers : 2 avant 10, pas l'inverse) avec
     # char_end + verbatim en départage → numérotation déterministe et conforme à l'ordre du texte,

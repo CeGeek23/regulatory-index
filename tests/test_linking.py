@@ -6,7 +6,6 @@ from regulatory_index.linking.citation_extractor import (
     _matches_as_token,
     parse_article_locator,
     resolve_all,
-    resolve_citation,
     resolve_citations,
 )
 from regulatory_index.linking.graph_builder import build_graph, build_relations
@@ -62,13 +61,6 @@ def _obligation(
         extraction_model="qwen2.5-7b-instruct",
         extracted_at=datetime.now(UTC),
     )
-
-
-def test_resolve_citation_matches_longest_alias() -> None:
-    assert resolve_citation("Article 15(3) of Directive 2011/61/EU") == "AIFMD_L1"
-    assert resolve_citation("Article 38 of Regulation 231/2013") == "AIFMD_L2"
-    assert resolve_citation("DOC-2014-06") == "AMF_DOC_2014_06"
-    assert resolve_citation("plain text with no known reference") is None
 
 
 def test_resolve_all_partitions_resolved_and_unresolved() -> None:

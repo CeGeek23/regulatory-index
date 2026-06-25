@@ -55,7 +55,6 @@ CACHE = Path("data/classification_cache.json")
 ALLOWED = ("acteur", "produit", "activite")  # typologie STRICTE du client (articles de définition)
 # Aucun texte protégé en dur : corpus uniforme (tout classé par le même modèle, tout « à relire »).
 # Un override qu'un humain valide ensuite reste néanmoins préservé via _is_hand_curated (« relu » L1).
-PROTECTED: set[str] = set()
 
 # Tout dans le message utilisateur (certains gabarits GGUF locaux n'ont pas de rôle `system`).
 PROMPT = """Tu es juriste de la réglementation financière de l'Union européenne. Classe le TERME \
@@ -100,7 +99,7 @@ PROMPT_FP = hashlib.sha1((PROMPT + "|" + "|".join(ALLOWED)).encode("utf-8")).hex
 class _Doc:
     """Classification d'un acte en attente d'écriture (après harmonisation éventuelle)."""
 
-    types: dict[str, str] = field(default_factory=dict)          # label -> type
+    types: dict[str, str] = field(default_factory=dict)  # label -> type
     labels: list[tuple[str, str]] = field(default_factory=list)  # (label, terme EN normalisé)
     n_unres: int = 0
 
@@ -138,7 +137,9 @@ def _classify(client: OpenAI, model: str, term: DefinedTerm) -> str | None:
     prompt = PROMPT.format(
         en=term.term_en or "(absent)",
         fr=term.term_fr or "(absent)",
-        definition=(term.definition_en or term.definition_fr or "(définition non extraite)").strip(),
+        definition=(
+            term.definition_en or term.definition_fr or "(définition non extraite)"
+        ).strip(),
     )
     for _ in range(2):  # une relance si la réponse n'est pas exploitable
         resp = client.chat.completions.create(
@@ -159,7 +160,9 @@ def _pick_model(client: OpenAI, requested: str | None) -> str:
         return requested
     ids = [m.id for m in client.models.list().data]
     if not ids:
-        raise SystemExit("Aucun modèle chargé dans LM Studio (GET /v1/models vide). Charge un modèle.")
+        raise SystemExit(
+            "Aucun modèle chargé dans LM Studio (GET /v1/models vide). Charge un modèle."
+        )
     return ids[0]
 
 
@@ -202,7 +205,9 @@ def _write_override(sid: str, model: str, types: dict[str, str]) -> None:
         f"# Modèle LM Studio : {model}. type ∈ acteur|produit|activite (typologie client). À RELIRE (validation métier).\n"
         f"# Indexé par étiquette de point. Reproductible : relancer le script régénère ce fichier à l'identique.\n\n"
     )
-    body = yaml.safe_dump({lbl: {"type": t} for lbl, t in types.items()}, sort_keys=False, allow_unicode=True)
+    body = yaml.safe_dump(
+        {lbl: {"type": t} for lbl, t in types.items()}, sort_keys=False, allow_unicode=True
+    )
     (OVERRIDES / f"{sid}.yaml").write_text(header + body, encoding="utf-8")
 
 
@@ -224,7 +229,9 @@ def main() -> int:
         """Création paresseuse : on ne contacte LM Studio que pour un terme non caché."""
         nonlocal client_holder
         if client_holder is None:
-            client_holder = OpenAI(base_url=cfg.base_url, api_key=cfg.api_key, timeout=cfg.request_timeout)
+            client_holder = OpenAI(
+                base_url=cfg.base_url, api_key=cfg.api_key, timeout=cfg.request_timeout
+            )
         return client_holder
 
     if model_arg:
@@ -249,11 +256,13 @@ def main() -> int:
 
     OVERRIDES.mkdir(parents=True, exist_ok=True)
     docs: dict[str, _Doc] = {}
-    longest: dict[str, tuple[int, str]] = {}  # terme normalisé -> (longueur de déf., type) la plus longue
+    longest: dict[
+        str, tuple[int, str]
+    ] = {}  # terme normalisé -> (longueur de déf., type) la plus longue
     skipped = llm_calls = 0
     for sid in source_ids:
         path = OVERRIDES / f"{sid}.yaml"
-        if sid in PROTECTED or _is_hand_curated(path):
+        if _is_hand_curated(path):
             print(f"  {sid:16} relu à la main — conservé")
             skipped += 1
             continue
@@ -262,7 +271,12 @@ def main() -> int:
             print(f"  {sid:16} pas de HTML EN en cache — ignoré")
             continue
         try:
-            terms = harvest_glossary(en.read_text(encoding="utf-8"), source_id=sid, celex=en.name.split("_", 1)[0], level=1)
+            terms = harvest_glossary(
+                en.read_text(encoding="utf-8"),
+                source_id=sid,
+                celex=en.name.split("_", 1)[0],
+                level=1,
+            )
         except Exception as exc:  # acte sans article de définitions, HTML inattendu
             print(f"  {sid:16} {type(exc).__name__}: {exc} — ignoré")
             continue
@@ -314,10 +328,14 @@ def main() -> int:
         f"{llm_calls} appel(s) LLM, {unresolved} terme(s) indécis (→ concept)."
     )
     if harmonize:
-        print(f"Harmonisation inter-textes : {changes} type(s) alignés ; "
-              f"{tie_resolved} égalité(s) tranchée(s) par la définition substantielle (la plus longue).")
+        print(
+            f"Harmonisation inter-textes : {changes} type(s) alignés ; "
+            f"{tie_resolved} égalité(s) tranchée(s) par la définition substantielle (la plus longue)."
+        )
     else:
-        print("Harmonisation non appliquée (run ciblé) — relance sans argument pour ré-harmoniser le corpus.")
+        print(
+            "Harmonisation non appliquée (run ciblé) — relance sans argument pour ré-harmoniser le corpus."
+        )
     print(f"Cache : {CACHE}  (supprimer ou --no-cache pour reclasser)")
     return 0
 

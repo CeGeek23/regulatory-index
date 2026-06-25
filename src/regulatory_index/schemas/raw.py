@@ -50,9 +50,5 @@ class UnitExtraction(BaseModel):
     extraction_meta: ExtractionMeta
     errors: list[str] = Field(default_factory=list)
 
-    @property
-    def is_empty(self) -> bool:
-        return len(self.obligations) == 0
-
     def to_record_dict(self) -> dict[str, Any]:
         return self.model_dump(mode="json")
