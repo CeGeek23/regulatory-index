@@ -9,8 +9,8 @@ POC d'un index réglementaire structuré pour AIFMD (Level 1 + Level 2 + ESMA Le
 - **Extraction** : [LangExtract](https://github.com/google/langextract) avec source grounding natif
 - **LLM backend** : **LM Studio** — serveur local OpenAI-compatible (GPU Metal/MLX) piloté via le provider OpenAI de LangExtract ; modèle au choix (**`qwen2.5-7b-instruct`** par défaut — meilleur rappel au benchmark, à charger en contexte **32k** ; `google/gemma-4-e4b` = alternative plus rapide/robuste ; swap via `--model-id`), **sortie structurée** (JSON schema) activée
 - **Matérialisation** : pandas (DataFrames en mémoire, pas de base persistante)
-- **Graphe** : NetworkX + GraphML + HTML interactif (pyvis)
-- **Export** : xlsxwriter (Excel multi-onglets), CSV UTF-8, HTML interactif (pyvis), rapport Markdown — GraphML (Gephi/yEd) disponible en option, non produit par défaut
+- **Graphe** : NetworkX + HTML interactif (pyvis)
+- **Export** : xlsxwriter (Excel multi-onglets), CSV UTF-8, HTML interactif (pyvis), rapport Markdown
 
 Contraintes méthodologiques :
 - **Pas de clé API LLM cloud** — tout tourne en local
@@ -145,8 +145,7 @@ data/
   obligations/         Extractions JSONL (1 fichier par unit, idempotent)
                        + _failed.jsonl si échec (réinitialisé à chaque run)
   exports/             sorties classées par type :
-    glossary/            *_definitions.yaml, glossary_*.csv/.md, glossary_L1_minimal/actors,
-                         review_ties.md + review_pruning.md (aides de relecture)
+    glossary/            *_definitions.yaml, glossary_*.csv/.md, glossary_L1_minimal/actors
     sommaire/            sommaire_*.json (tables des matières)
     obligations/         aifmd_index.xlsx, obligations.csv, relations.csv,
                          aifmd_relations.html, quality_report.md
@@ -166,7 +165,7 @@ src/regulatory_index/   (chaque paquet expose son API publique via __init__.py)
   materialize/         builder (RawObligation -> Obligation) + core (index pandas,
                        relations cross-level, vues) — JSON extractions -> index
   export/              excel_writer (xlsxwriter multi-sheet), glossary_writer,
-                       csv_writer, graphml_writer, html_graph_writer (pyvis)
+                       csv_writer, html_graph_writer (pyvis)
   eval/                metrics.py (grounding, latence P50/P95, distributions, vocab gaps → quality_report.md)
   cli.py               Typer CLI : vocab / acquire / extract / link /
                        export / pipeline / sommaire / glossary
@@ -189,7 +188,7 @@ tests/                 pytest (schemas, vocab, sources_registry,
 2. **Extraction LangExtract** — 1 appel LM Studio (API OpenAI-compatible) par unité, guidé par un prompt structuré (description + few-shots) avec vocab contrôlé injecté en texte. **Sortie structurée** (`use_schema_constraints=True` → JSON schema) : le **format** est garanti (1 valeur par champ, jamais liste/null) **sans figer le vocab en enum** — la découverte de termes hors-vocab reste possible. Persistance idempotente sur disque (`{source_id}/{unit_id}.json`). Échec d'une unité → log dans `_failed.jsonl` (réinitialisé au début de chaque run), on continue.
 3. **Materialization** — `RawObligation` → `Obligation` avec id stable `{SCOPE}-{THEME_CODE}-{NNNN}` (déterministe par sort key). Source résolue depuis `sources_registry.yaml`. Les champs à vocabulaire contrôlé sont canonicalisés (pivot EN par défaut) via `Vocabulary.resolve` ; les termes non résolus alimentent le rapport « vocab gaps ».
 4. **Linkage cross-level** — `cited_references` → `target_source_id` par alias matching (substring case-insensitive, alias les plus longs gagnent). Quand la citation nomme un article (`Article 15(3)`…), on rattache l'obligation aux **obligations cibles** extraites de cet article dans le document cité (linkage article-level, parsing par tokenisation, sans regex) ; sinon on retombe sur le nœud document `{source}#source`. Relation typée d'après `(level_src, issuer_src, level_tgt, title_src)` : `clarifies` / `strengthens` / `operationalizes` / `interprets` / `references`.
-5. **Materialization + Export** — `materialize.py` charge les JSON, construit Obligations/Relations et trois DataFrames pandas (obligations / relations / units) + agrégations, le tout en mémoire → Excel formaté (7 onglets) + CSV (UTF-8, `;`) + HTML interactif (pyvis, ouvrable dans n'importe quel navigateur) + Markdown quality report. (GraphML pour Gephi/yEd disponible en option via `graphml_writer`, non produit par défaut.)
+5. **Materialization + Export** — `materialize.py` charge les JSON, construit Obligations/Relations et trois DataFrames pandas (obligations / relations / units) + agrégations, le tout en mémoire → Excel formaté (7 onglets) + CSV (UTF-8, `;`) + HTML interactif (pyvis, ouvrable dans n'importe quel navigateur) + Markdown quality report.
 
 ## Phases
 
@@ -199,7 +198,7 @@ tests/                 pytest (schemas, vocab, sources_registry,
 | S2 | Pipeline extraction MVP (LangExtract + LM Studio) | ✅ |
 | S3 | Acquisition corpus réel (EUR-Lex L1 + L2, FR/EN) | ✅ |
 | S4 | Linkage cross-level (citation_extractor + graph_builder) | ✅ |
-| S5 | Matérialisation pandas + export Excel/CSV/GraphML + HTML + quality report | ✅ |
+| S5 | Matérialisation pandas + export Excel/CSV + HTML + quality report | ✅ |
 | S6 | Linkage article-level ✅ · itération expert + vocab + bigger LLM | ⏳ |
 
 ## Résultats sur le petit corpus réel

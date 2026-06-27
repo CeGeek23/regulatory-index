@@ -60,7 +60,9 @@ def extract(
         "data/obligations"
     ),
     model_id: Annotated[str, typer.Option()] = "qwen2.5-7b-instruct",
-    base_url: Annotated[str, typer.Option(help="OpenAI-compatible server (LM Studio).")] = "http://localhost:1234/v1",
+    base_url: Annotated[
+        str, typer.Option(help="OpenAI-compatible server (LM Studio).")
+    ] = "http://localhost:1234/v1",
     api_key: Annotated[str, typer.Option(help="Factice pour un serveur local.")] = "lm-studio",
     extraction_passes: Annotated[int, typer.Option()] = 1,
     temperature: Annotated[float, typer.Option()] = 0.0,
@@ -77,7 +79,9 @@ def extract(
         request_timeout=request_timeout,
     )
     counts = run(load_units_jsonl(units), out_dir=out_dir, config=config, force=force)
-    typer.echo(json.dumps({"counts": counts, "finished_at": datetime.now(UTC).isoformat()}, indent=2))
+    typer.echo(
+        json.dumps({"counts": counts, "finished_at": datetime.now(UTC).isoformat()}, indent=2)
+    )
 
 
 @app.command()
@@ -109,11 +113,7 @@ def export(
     excel_name: Annotated[str, typer.Option()] = "aifmd_index.xlsx",
     csv_delimiter: Annotated[str, typer.Option()] = ";",
 ) -> None:
-    """Matérialise l'index puis exporte Excel + CSV + graphe HTML + rapport qualité.
-
-    GraphML (Gephi/yEd) n'est pas produit par défaut ; le writer
-    `export.graphml_writer.write_graphml` reste dispo pour l'analyse de graphe.
-    """
+    """Matérialise l'index puis exporte Excel + CSV + graphe HTML + rapport qualité."""
     dest = out_dir / "obligations"  # exports d'obligations regroupés
     dest.mkdir(parents=True, exist_ok=True)
 
@@ -227,10 +227,15 @@ def glossary(
     source_id: Annotated[str, typer.Argument(help="Source id présent dans sources_registry.yaml")],
     raw_dir: Annotated[Path, typer.Option()] = Path("data/raw"),
     out_dir: Annotated[Path, typer.Option()] = Path("data/exports"),
-    act_label: Annotated[str, typer.Option(help="Préfixe de legal_basis (défaut : avant '_').")] = "",
-    definitions_article: Annotated[str, typer.Option(help="Forcer le n° d'article (sinon auto).")] = "",
+    act_label: Annotated[
+        str, typer.Option(help="Préfixe de legal_basis (défaut : avant '_').")
+    ] = "",
+    definitions_article: Annotated[
+        str, typer.Option(help="Forcer le n° d'article (sinon auto).")
+    ] = "",
     consolidated: Annotated[
-        bool, typer.Option(help="Utiliser la dernière version consolidée (à jour) via l'API Cellar.")
+        bool,
+        typer.Option(help="Utiliser la dernière version consolidée (à jour) via l'API Cellar."),
     ] = False,
 ) -> None:
     """Construit le glossaire des termes définis d'un acte (EN+FR) depuis son HTML EUR-Lex.
@@ -244,7 +249,9 @@ def glossary(
     if consolidated:
         base_celex = entry.celex if entry else _celex_from_cache(raw_dir, source_id)
         if not base_celex:
-            raise typer.BadParameter(f"CELEX de base inconnu pour {source_id} (ni registry ni cache)")
+            raise typer.BadParameter(
+                f"CELEX de base inconnu pour {source_id} (ni registry ni cache)"
+            )
         celex = latest_consolidated_celex(base_celex)
         if celex is None:
             raise typer.BadParameter(f"aucune version consolidée trouvée pour {source_id}")

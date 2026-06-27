@@ -1,5 +1,5 @@
 # Types de relations inter-niveaux entre obligations.
-# Utilisés pour typer les arêtes du graphe réglementaire (NetworkX/GraphML).
+# Utilisés pour typer les arêtes du graphe réglementaire (NetworkX).
 
 - id: clarifies
   canonical_en: clarifies

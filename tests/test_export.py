@@ -4,10 +4,9 @@ from typing import Literal
 
 from regulatory_index.export.csv_writer import write_csv
 from regulatory_index.export.excel_writer import write_workbook
-from regulatory_index.export.graphml_writer import write_graphml
 from regulatory_index.ingestion.unit_loader import NormativeUnit
 from regulatory_index.linking.citation_extractor import resolve_all
-from regulatory_index.linking.graph_builder import build_graph, build_relations
+from regulatory_index.linking.graph_builder import build_relations
 from regulatory_index.materialize import (
     MaterializedIndex,
     by_theme,
@@ -57,10 +56,12 @@ def _make_unit() -> NormativeUnit:
 
 
 def test_full_export_pipeline(tmp_path: Path) -> None:
-    obligations = [_make_obligation("AIFMD-RISK-0001"), _make_obligation("AIFMD-GOV-0001", "Governance")]
+    obligations = [
+        _make_obligation("AIFMD-RISK-0001"),
+        _make_obligation("AIFMD-GOV-0001", "Governance"),
+    ]
     resolved, unresolved = resolve_all(obligations)
     relations = build_relations(obligations, resolved)
-    graph, _ = build_graph(obligations, relations)
     units = [_make_unit()]
 
     materialized = MaterializedIndex(
@@ -86,9 +87,6 @@ def test_full_export_pipeline(tmp_path: Path) -> None:
     assert (tmp_path / "obligations.csv").exists()
     assert csv_counts["obligations"] == 2
 
-    graphml_path = write_graphml(graph, tmp_path / "out.graphml")
-    assert graphml_path.exists() and graphml_path.stat().st_size > 0
-
 
 def test_excel_export_with_mixed_optional_fields(tmp_path: Path) -> None:
     # Régression : un champ optionnel (condition) rempli sur une ligne, None sur l'autre.
@@ -97,9 +95,13 @@ def test_excel_export_with_mixed_optional_fields(tmp_path: Path) -> None:
     o2 = _make_obligation("AIFMD-RISK-0002")  # condition = None
     obligations = [o1, o2]
     materialized = MaterializedIndex(
-        obligations=obligations, relations=[], resolved_citations=[], unresolved_citations=[],
+        obligations=obligations,
+        relations=[],
+        resolved_citations=[],
+        unresolved_citations=[],
         obligations_df=obligations_to_df(obligations),
-        relations_df=relations_to_df([]), units_df=units_to_df([]),
+        relations_df=relations_to_df([]),
+        units_df=units_to_df([]),
     )
     out = tmp_path / "mixed.xlsx"
     counts = write_workbook(materialized, out)  # ne doit PAS lever
