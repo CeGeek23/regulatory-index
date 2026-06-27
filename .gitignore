@@ -28,3 +28,8 @@ data/classification_cache.json
 # Livrables locaux (générés, à envoyer — non versionnés)
 jalon_cedric/
 jalon_cedric.zip
+
+# Dumps SQL (base de données volumineuse — traitée hors versionnement)
+*.sql
+*.sql.gz
+lalande_corpus_*.gz
