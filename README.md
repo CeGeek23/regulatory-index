@@ -13,6 +13,7 @@ POC d'un index réglementaire structuré pour AIFMD (Level 1 + Level 2 + ESMA Le
 - **Export** : xlsxwriter (Excel multi-onglets), CSV UTF-8, HTML interactif (pyvis), rapport Markdown
 
 Contraintes méthodologiques :
+
 - **Pas de clé API LLM cloud** — tout tourne en local
 - **Pas de PDF** — on attaque les sources via HTML / API structurés uniquement
 - **Pas de regex** nulle part dans le code (extraction, linking, **et validation des schémas**) — tokenisation `str` / traversée DOM uniquement
@@ -65,6 +66,7 @@ uv run regindex pipeline data/unites/corpus.jsonl
 ```
 
 Vérification rapide (ou simplement `just check`) :
+
 ```bash
 just check                       # lint + types + tests (74 tests)
 # équivalents directs :
@@ -120,7 +122,7 @@ Réplication (vérifiée) : `regindex glossary AIFMD_L2` produit le glossaire du
 
 ## Structure du projet
 
-```
+```text
 config/
   vocabularies/        YAML de vocab contrôlé (actors, actions, objects, themes,
                        conditions, acronyms, relation_types) + theme codes
@@ -184,7 +186,7 @@ tests/                 pytest (schemas, vocab, sources_registry,
 ## Phases
 
 | Sem. | Livrable | État |
-|---|---|---|
+| --- | --- | --- |
 | S1 | Setup uv + LLM local + schémas Pydantic + vocab v0 | ✅ |
 | S2 | Pipeline extraction MVP (LangExtract + LM Studio) | ✅ |
 | S3 | Acquisition corpus réel (EUR-Lex L1 + L2, FR/EN) | ✅ |
