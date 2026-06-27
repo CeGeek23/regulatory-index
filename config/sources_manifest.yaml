@@ -10,10 +10,8 @@
 - source_id: AIFMD_L1
   celex: "32011L0061"
   language: EN
-  # 6-7-8 = chapitre II « Agrément » (bloc-pilote demandé par le client).
-  # 15-16 = gestion des risques / liquidité ; 22-23 = chapitre Transparence.
-  # Art 4 (Définitions) alimente le glossaire, pas l'extraction d'obligations.
-  filter_articles: ["6", "7", "8", "15", "16", "22", "23"]
+  # Tout AIFMD niveau 1 : aucun filtre d'articles → obligations sur l'ensemble du texte.
+  # (Art 4 « Définitions » sera parcouru aussi mais ne produit pas d'obligation.)
 
 - source_id: AIFMD_L2
   celex: "32013R0231"

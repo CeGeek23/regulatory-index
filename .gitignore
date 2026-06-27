@@ -26,4 +26,5 @@ data/exports/
 data/classification_cache.json
 
 # Livrables locaux (générés, à envoyer — non versionnés)
-livraison_cedric/
+jalon_cedric/
+jalon_cedric.zip

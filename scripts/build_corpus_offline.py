@@ -22,9 +22,13 @@ RAW_DIR = Path("data/textes_sources")
 OUT = Path("data/unites/corpus.jsonl")
 
 
-def _largest_cached_html(source_id: str, celex: str, language: str) -> Path | None:
-    """Le plus gros HTML en cache pour cette source = le vrai document (vs pages d'erreur/WAF)."""
-    pattern = str(RAW_DIR / source_id / f"{celex}_{language.upper()}_*.html")
+def _largest_cached_html(source_id: str, language: str) -> Path | None:
+    """Le plus gros HTML EN/FR en cache pour cette source (indépendant du CELEX : base ou consolidé).
+
+    Le plus gros fichier = le vrai document (vs pages d'erreur/WAF). On cherche par langue, pas
+    par CELEX, car le cache peut contenir la version consolidée (CELEX daté) plutôt que la base.
+    """
+    pattern = str(RAW_DIR / source_id / f"*_{language.upper()}_*.html")
     files = sorted(glob.glob(pattern), key=lambda f: Path(f).stat().st_size, reverse=True)
     return Path(files[0]) if files else None
 
@@ -33,7 +37,7 @@ def main() -> int:
     registry = load_sources_registry()
     units: list[NormativeUnit] = []
     for entry in load_manifest():
-        html_path = _largest_cached_html(entry.source_id, entry.celex, entry.language)
+        html_path = _largest_cached_html(entry.source_id, entry.language)
         if html_path is None:
             print(
                 f"  /!\\ {entry.source_id} {entry.language}: aucun HTML en cache dans data/textes_sources/{entry.source_id}/"
