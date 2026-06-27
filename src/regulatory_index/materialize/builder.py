@@ -102,7 +102,6 @@ def build_obligations(extractions: Iterable[UnitExtraction]) -> list[Obligation]
     (voir `collect_vocab_gaps`).
     """
 
-    prefix = "AIFMD"
     canonical_language = "EN"
 
     # Clé de tri = tuple RÉEL (offsets comparés comme des entiers : 2 avant 10, pas l'inverse) avec
@@ -124,7 +123,7 @@ def build_obligations(extractions: Iterable[UnitExtraction]) -> list[Obligation]
 
     items.sort(key=lambda t: t[0])
 
-    counter: dict[str, int] = {}
+    counter: dict[tuple[str, str], int] = {}
     # Déduplication déterministe : un seul enregistrement par
     # (unité, actor, action, object) CANONIQUES. C'est l'invariant « une obligation par
     # triplet » du prompt, désormais garanti côté code quel que soit le modèle — il
@@ -142,9 +141,14 @@ def build_obligations(extractions: Iterable[UnitExtraction]) -> list[Obligation]
         if dedup_key in seen:
             continue
         seen.add(dedup_key)
+        # Préfixe d'id dérivé de l'acte (généralisé pour le multi-texte L1+L2) : la partie
+        # de source_id avant '_' (AIFMD_L1 -> AIFMD, UCITS -> UCITS, <celex> -> <celex>).
+        # Compteur par (acte, code de thème) -> numérotation stable et indépendante par acte.
+        scope = unit.source_id.split("_", 1)[0].upper() or unit.source_id.upper()
         code = _theme_code_for(raw.theme)
-        counter[code] = counter.get(code, 0) + 1
-        oid = f"{prefix}-{code}-{counter[code]:04d}"
+        ckey = (scope, code)
+        counter[ckey] = counter.get(ckey, 0) + 1
+        oid = f"{scope}-{code}-{counter[ckey]:04d}"
         source = _make_source(unit, raw.alignment_status)
         out.append(
             Obligation(

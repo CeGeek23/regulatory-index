@@ -189,3 +189,17 @@ def test_off_vocab_value_kept_verbatim_and_reported() -> None:
     assert obligations[0].obligation_id.startswith("AIFMD-MISC-")
     gaps = collect_vocab_gaps(extractions)
     assert ("Quantum Compliance", 1) in gaps["theme"]
+
+
+def test_obligation_id_prefix_derives_from_act() -> None:
+    # Règle générale (multi-texte L1+L2) : le préfixe d'id vient de l'acte (source_id
+    # avant '_'), pas d'une constante. Deux actes distincts -> deux préfixes, chacun
+    # numéroté indépendamment (les deux démarrent à 0001).
+    obligations = build_obligations(
+        [
+            _ue("u1", "AIFMD_L1", [_raw("Governance")]),
+            _ue("u2", "UCITS", [_raw("Governance")]),
+        ]
+    )
+    ids = sorted(o.obligation_id for o in obligations)
+    assert ids == ["AIFMD-GOV-0001", "UCITS-GOV-0001"]
