@@ -217,10 +217,10 @@ C'est exactement à quoi servent les **articles de définition** : ils fixent, p
 | Construire la carte ci-dessus | `scripts/build_l1_glossary.py` (scan du cache) | `data/exports/glossary/` |
 | Alimenter le vocabulaire (idempotent, dédup normalisée) | `scripts/vocab_sync.py` | `config/vocabularies/*.yaml` |
 
-Le **périmètre** (la liste des ~40 textes et leur CELEX) est défini une seule fois dans
-`L1_PERIMETER` ([scripts/build_l1_glossary.py](../scripts/build_l1_glossary.py)). Ajouter un texte =
-ajouter une ligne → la chaîne entière se rejoue. C'est ce qui rend la méthode **réplicable sur toute
-une base d'actes**.
+Le **périmètre** = les actes présents dans `data/textes_sources/`, parcourus par
+[scripts/build_l1_glossary.py](../scripts/build_l1_glossary.py). Ajouter un texte = déposer son
+HTML EUR-Lex dans le cache → la chaîne entière se rejoue. C'est ce qui rend la méthode **réplicable
+sur toute une base d'actes**.
 
 ---
 
@@ -234,9 +234,9 @@ une base d'actes**.
   du terme et de sa définition est, elle, fidèle au texte.
 - **Bilingue** : les **42/42 textes** sont récupérés en EN + FR (une part des acteurs du vocabulaire
   porte déjà un libellé FR officiel distinct ; le reste partage EN/FR ou attend la relecture).
-- **Versions consolidées** : la carte est bâtie sur les CELEX **consolidés** (droit le plus à jour),
-  résolus automatiquement via les métadonnées RDF ; seuls les textes sans consolidé officiel publié
-  restent sur le CELEX d'origine.
+- **Versions consolidées** : la carte est bâtie sur les CELEX **consolidés** (droit le plus à jour)
+  présents dans le cache ; seuls les textes sans consolidé officiel publié restent sur le CELEX
+  d'origine.
 - **Renvois abrogés** : certaines définitions renvoient à des textes abrogés (MiFID I, ancienne
   directive bancaire…) — la table de re-pointage existe mais n'est pas appliquée partout.
 - **L3/L4 absents** : doctrine AMF/ACPR (et les faux-amis FR↔UE) pas encore intégrés.

@@ -18,7 +18,7 @@ Statut actuel : **~40 textes du niveau 1 services financiers moissonnés en EN +
 `docs/approche_glossaire.md`). Classification **acteur / produit / activité** (typologie du client)
 **générée de façon reproductible** (modèle local LM Studio, décodage déterministe) **puis harmonisée
 entre textes**, et systématiquement **marquée « à relire »** (validation métier).
-Génération de bout en bout : `uv run python scripts/build_l1_glossary.py` (auto-fetch via Cellar).
+Génération de bout en bout : `uv run python scripts/build_l1_glossary.py` (depuis le cache HTML, hors-ligne).
 
 ## 2. Le point « textes les plus à jour »
 
@@ -53,15 +53,15 @@ vigueur (colonne de droite). C'est exactement le travail de réconciliation « l
 
 ## 3. Périmètre des textes de niveau 1
 
-Périmètre retenu = **tout le niveau 1 services financiers (~40 textes)**, énuméré dans
-`L1_PERIMETER` (`scripts/build_l1_glossary.py`) : fonds, marchés, banque/résolution, assurance,
+Périmètre retenu = **tout le niveau 1 services financiers (~40 textes)** = les actes présents
+dans `data/textes_sources/`, que `scripts/build_l1_glossary.py` parcourt : fonds, marchés, banque/résolution, assurance,
 paiements, durabilité, crypto/numérique, financement participatif, retraite, LCB-FT. (« Niveau 1
 UE » au sens littéral engloberait aussi le droit non-financier — agriculture, environnement… —
 hors de notre scope.)
 
 La table ci-dessous détaille le **noyau gestion d'actifs** (les textes que les définitions d'AIFMD
 visent directement) ; les autres (MAR, Prospectus, CSDR, Short Selling, Benchmarks, Securitisation,
-CRA, Solvency II, IDD, DORA, MiCA, PSD2…) sont **aussi moissonnés** — voir `L1_PERIMETER`.
+CRA, Solvency II, IDD, DORA, MiCA, PSD2…) sont **aussi moissonnés** (tous les actes du cache `data/textes_sources/`).
 
 | Texte | CELEX | Art. définitions | Remarque |
 |---|---|---|---|
@@ -83,7 +83,7 @@ CRA, Solvency II, IDD, DORA, MiCA, PSD2…) sont **aussi moissonnés** — voir 
 | Distribution transfrontalière (Dir.) | 32019L1160 | — | jumeau directive du Règl. 2019/1156 |
 
 **Statut** : le périmètre a été **élargi à tout le niveau 1 services financiers (~40 textes)** —
-la liste exhaustive moissonnée est dans `scripts/build_l1_glossary.py` (`L1_PERIMETER`) : fonds,
+la liste exhaustive moissonnée = les actes en cache dans `data/textes_sources/` : fonds,
 marchés, banque/résolution, assurance, paiements, durabilité, crypto/numérique, etc. **Seul cas
 non moissonné** : la directive distribution transfrontalière **2019/1160** — directive *modificative*
 sans article de définitions propre (rien à extraire).
@@ -96,4 +96,4 @@ sans article de définitions propre (rien à extraire).
   ne contient plus de logique d'acquisition réseau.
 - **Reste à faire** : confirmer en relecture métier la classification **acteur / produit / activité**
   (générée + harmonisée, « à relire ») — en priorité les définitions **par renvoi**, plus délicates ;
-  traiter les faux-amis L3 (AMF/ACPR, sans fetcher à ce jour).
+  traiter les faux-amis L3 (AMF/ACPR, hors périmètre actuel).
