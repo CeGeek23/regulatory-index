@@ -24,3 +24,6 @@ data/unites/
 data/extractions/
 data/exports/
 data/classification_cache.json
+
+# Livrables locaux (générés, à envoyer — non versionnés)
+livraison_cedric/
