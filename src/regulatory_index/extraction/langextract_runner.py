@@ -1,9 +1,9 @@
 """Runner idempotent : soumet les unités normatives à LangExtract via un backend OpenAI-compatible (LM Studio) et persiste les sorties.
 
 Pour chaque unité :
-- Si `data/obligations/{source_id}/{unit_id}.json` existe déjà, on saute (réexécutions idempotentes).
+- Si `data/extractions/{source_id}/{unit_id}.json` existe déjà, on saute (réexécutions idempotentes).
 - Sinon, on appelle LangExtract, on normalise le résultat en UnitExtraction, on persiste le JSON.
-- Les échecs sont journalisés dans `data/obligations/_failed.jsonl` (une ligne par échec) et
+- Les échecs sont journalisés dans `data/extractions/_failed.jsonl` (une ligne par échec) et
   n'interrompent PAS l'exécution : l'unité suivante est traitée.
 
 Pas de regex, pas de chaîne de repli : un appel LangExtract par unité, une écriture disque par résultat.

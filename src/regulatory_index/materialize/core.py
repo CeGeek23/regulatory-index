@@ -1,6 +1,6 @@
 """Matérialise les extractions persistées en DataFrames pandas en mémoire.
 
-La source de vérité est les fichiers JSON dans `data/obligations/` (un par
+La source de vérité est les fichiers JSON dans `data/extractions/` (un par
 NormativeUnit). À l'export, on les charge, on construit les Obligations, on
 exécute le lieur de citations, et on transforme le tout en trois DataFrames
 pandas consommés directement par les writers (Excel / CSV).

@@ -53,13 +53,9 @@ sommaire SOURCE="AIFMD_L1":
 glossary SOURCE="AIFMD_L1":
     {{cli}} glossary {{SOURCE}}
 
-# Glossaire CONSOLIDÉ niveau 1 : tous les actes (auto-fetch Cellar) -> liste minimale + acteurs
+# Glossaire CONSOLIDÉ niveau 1 : tous les actes en cache -> liste minimale + acteurs
 glossary-l1:
     {{uvr}} python scripts/build_l1_glossary.py
-
-# Idem, sans réseau (cache data/raw/ uniquement)
-glossary-l1-cache:
-    {{uvr}} python scripts/build_l1_glossary.py --no-fetch
 
 # Classe acteur/concept tous les overrides via LM Studio (reproductible : temp=0, seed=0, cache)
 classify-overrides *ACTS:
@@ -75,16 +71,12 @@ vocab-sync:
 
 # === Pipeline obligations (LM Studio requis) ==============================
 
-# Acquiert le corpus déclaré dans config/sources_manifest.yaml
-acquire:
-    {{cli}} acquire
-
-# Reconstruit le corpus depuis le HTML déjà en cache (hors-ligne)
+# Reconstruit le corpus depuis le HTML en cache (hors-ligne)
 corpus-offline:
     {{uvr}} python scripts/build_corpus_offline.py
 
 # Extrait les obligations (LangExtract via LM Studio)
-extract UNITS="data/units/corpus.jsonl" MODEL="qwen2.5-7b-instruct":
+extract UNITS="data/unites/corpus.jsonl" MODEL="qwen2.5-7b-instruct":
     {{cli}} extract {{UNITS}} --model-id {{MODEL}}
 
 # Matérialise obligations + relations (affiche les compteurs)
@@ -96,7 +88,7 @@ export:
     {{cli}} export
 
 # De bout en bout : extract -> materialize -> export
-pipeline UNITS="data/units/corpus.jsonl":
+pipeline UNITS="data/unites/corpus.jsonl":
     {{cli}} pipeline {{UNITS}}
 
 # === LM Studio / dev ======================================================

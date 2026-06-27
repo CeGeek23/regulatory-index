@@ -17,8 +17,6 @@ from .export.glossary_writer import write_glossary
 from .export.html_graph_writer import write_html_graph
 from .extraction.langextract_runner import RunnerConfig, run
 from .glossary import build_toc, harvest_glossary
-from .ingestion.acquire import MANIFEST_PATH, acquire_all
-from .ingestion.eurlex_fetcher import fetch_html, latest_consolidated_celex
 from .ingestion.unit_loader import load_units_jsonl
 from .linking.graph_builder import build_graph
 from .materialize import load_unit_extractions_from_dir, materialize
@@ -41,23 +39,10 @@ def vocab() -> None:
 
 
 @app.command()
-def acquire(
-    manifest: Annotated[Path, typer.Option(exists=True)] = MANIFEST_PATH,
-    raw_dir: Annotated[Path, typer.Option()] = Path("data/raw"),
-    out: Annotated[Path, typer.Option(help="Output JSONL of NormativeUnits.")] = Path(
-        "data/units/corpus.jsonl"
-    ),
-) -> None:
-    """Récupère le corpus déclaré dans sources_manifest.yaml et émet un JSONL d'unités."""
-    counts = acquire_all(manifest_path=manifest, raw_dir=raw_dir, units_out=out)
-    typer.echo(json.dumps({**counts, "out": str(out)}, indent=2))
-
-
-@app.command()
 def extract(
     units: Annotated[Path, typer.Argument(exists=True, help="JSONL file of normative units.")],
     out_dir: Annotated[Path, typer.Option(help="Where to persist extractions.")] = Path(
-        "data/obligations"
+        "data/extractions"
     ),
     model_id: Annotated[str, typer.Option()] = "qwen2.5-7b-instruct",
     base_url: Annotated[
@@ -86,7 +71,7 @@ def extract(
 
 @app.command()
 def link(
-    obligations_dir: Annotated[Path, typer.Option(exists=True)] = Path("data/obligations"),
+    obligations_dir: Annotated[Path, typer.Option(exists=True)] = Path("data/extractions"),
 ) -> None:
     """Matérialise obligations + relations depuis les extractions et affiche les comptes.
 
@@ -108,7 +93,7 @@ def link(
 
 @app.command()
 def export(
-    obligations_dir: Annotated[Path, typer.Option(exists=True)] = Path("data/obligations"),
+    obligations_dir: Annotated[Path, typer.Option(exists=True)] = Path("data/extractions"),
     out_dir: Annotated[Path, typer.Option()] = Path("data/exports"),
     excel_name: Annotated[str, typer.Option()] = "aifmd_index.xlsx",
     csv_delimiter: Annotated[str, typer.Option()] = ";",
@@ -158,7 +143,7 @@ def export(
 @app.command()
 def pipeline(
     units: Annotated[Path, typer.Argument(exists=True, help="JSONL of normative units.")],
-    obligations_dir: Annotated[Path, typer.Option()] = Path("data/obligations"),
+    obligations_dir: Annotated[Path, typer.Option()] = Path("data/extractions"),
     out_dir: Annotated[Path, typer.Option()] = Path("data/exports"),
     model_id: Annotated[str, typer.Option()] = "qwen2.5-7b-instruct",
     force: Annotated[bool, typer.Option(help="Re-extract even if outputs exist.")] = False,
@@ -173,7 +158,7 @@ def pipeline(
 def _largest_cached_html(raw_dir: Path, source_id: str, language: str) -> Path | None:
     """Plus gros HTML en cache pour (source, langue) ; indépendant du CELEX (un dossier = un acte).
 
-    Permet d'utiliser `sommaire`/`glossary` sur n'importe quel acte présent dans data/raw/,
+    Permet d'utiliser `sommaire`/`glossary` sur n'importe quel acte présent dans data/textes_sources/,
     qu'il soit déclaré ou non dans sources_registry.yaml.
     """
     candidates = sorted(
@@ -184,17 +169,11 @@ def _largest_cached_html(raw_dir: Path, source_id: str, language: str) -> Path |
     return candidates[0] if candidates else None
 
 
-def _celex_from_cache(raw_dir: Path, source_id: str) -> str | None:
-    """Déduit le CELEX de base depuis le nom du HTML EN en cache (data/raw/<id>/<CELEX>_EN_*.html)."""
-    html = _largest_cached_html(raw_dir, source_id, "EN")
-    return html.name.split("_", 1)[0] if html is not None else None
-
-
 @app.command()
 def sommaire(
     source_id: Annotated[str, typer.Argument(help="Source id présent dans sources_registry.yaml")],
     language: Annotated[str, typer.Option(help="EN ou FR")] = "EN",
-    raw_dir: Annotated[Path, typer.Option()] = Path("data/raw"),
+    raw_dir: Annotated[Path, typer.Option()] = Path("data/textes_sources"),
     out_dir: Annotated[Path, typer.Option()] = Path("data/exports"),
 ) -> None:
     """Extrait le sommaire d'un acte (chapitres/sections/articles) et repère ses définitions."""
@@ -225,7 +204,7 @@ def sommaire(
 @app.command()
 def glossary(
     source_id: Annotated[str, typer.Argument(help="Source id présent dans sources_registry.yaml")],
-    raw_dir: Annotated[Path, typer.Option()] = Path("data/raw"),
+    raw_dir: Annotated[Path, typer.Option()] = Path("data/textes_sources"),
     out_dir: Annotated[Path, typer.Option()] = Path("data/exports"),
     act_label: Annotated[
         str, typer.Option(help="Préfixe de legal_basis (défaut : avant '_').")
@@ -233,40 +212,24 @@ def glossary(
     definitions_article: Annotated[
         str, typer.Option(help="Forcer le n° d'article (sinon auto).")
     ] = "",
-    consolidated: Annotated[
-        bool,
-        typer.Option(help="Utiliser la dernière version consolidée (à jour) via l'API Cellar."),
-    ] = False,
 ) -> None:
     """Construit le glossaire des termes définis d'un acte (EN+FR) depuis son HTML EUR-Lex.
 
-    Marche pour tout acte présent dans data/raw/ (pas besoin qu'il soit dans le registry) ;
+    Marche pour tout acte présent dans data/textes_sources/ (pas besoin qu'il soit dans le registry) ;
     le CELEX est repris du registry s'il y figure, sinon déduit du nom du HTML en cache.
     """
     entry = load_sources_registry().get(source_id)
     level = entry.level if entry else 1
     title = entry.title if entry else source_id
-    if consolidated:
-        base_celex = entry.celex if entry else _celex_from_cache(raw_dir, source_id)
-        if not base_celex:
-            raise typer.BadParameter(
-                f"CELEX de base inconnu pour {source_id} (ni registry ni cache)"
-            )
-        celex = latest_consolidated_celex(base_celex)
-        if celex is None:
-            raise typer.BadParameter(f"aucune version consolidée trouvée pour {source_id}")
-        typer.echo(f"# version consolidée : {celex}", err=True)
-        html_en_text, html_fr_text = fetch_html(celex, "EN"), ""
-    else:
-        html_en = _largest_cached_html(raw_dir, source_id, "EN")
-        html_fr = _largest_cached_html(raw_dir, source_id, "FR")
-        if html_en is None:
-            raise typer.BadParameter(f"HTML EN requis en cache pour {source_id} dans {raw_dir}")
-        if html_fr is None:
-            typer.echo(f"# note: pas de HTML FR pour {source_id} — glossaire EN seul", err=True)
-        celex = entry.celex if entry else html_en.name.split("_", 1)[0]
-        html_en_text = html_en.read_text(encoding="utf-8")
-        html_fr_text = html_fr.read_text(encoding="utf-8") if html_fr is not None else ""
+    html_en = _largest_cached_html(raw_dir, source_id, "EN")
+    html_fr = _largest_cached_html(raw_dir, source_id, "FR")
+    if html_en is None:
+        raise typer.BadParameter(f"HTML EN requis en cache pour {source_id} dans {raw_dir}")
+    if html_fr is None:
+        typer.echo(f"# note: pas de HTML FR pour {source_id} — glossaire EN seul", err=True)
+    celex = entry.celex if entry else html_en.name.split("_", 1)[0]
+    html_en_text = html_en.read_text(encoding="utf-8")
+    html_fr_text = html_fr.read_text(encoding="utf-8") if html_fr is not None else ""
     terms = harvest_glossary(
         html_en_text,
         html_fr_text,

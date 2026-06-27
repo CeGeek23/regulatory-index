@@ -3,7 +3,7 @@
 via le modèle LM Studio local (API OpenAI-compatible).
 
 Chaîne :
-    data/raw/<ID>/*.html  --harvest_glossary-->  termes (fidèles au texte, déterministe)
+    data/textes_sources/<ID>/*.html  --harvest_glossary-->  termes (fidèles au texte, déterministe)
                           --LLM LM Studio-------> type ∈ {acteur,produit,activite}  (typologie client)
                           --harmonisation-------> un terme = un même type partout (vote majoritaire)
                           --write_text----------> config/glossary/overrides/<ID>.yaml
@@ -49,7 +49,7 @@ from openai import OpenAI
 from regulatory_index.extraction.langextract_runner import RunnerConfig
 from regulatory_index.glossary import DefinedTerm, harvest_glossary
 
-RAW = Path("data/raw")
+RAW = Path("data/textes_sources")
 OVERRIDES = Path("config/glossary/overrides")
 CACHE = Path("data/classification_cache.json")
 ALLOWED = ("acteur", "produit", "activite")  # typologie STRICTE du client (articles de définition)
@@ -220,7 +220,7 @@ def main() -> int:
         i = argv.index("--model")
         model_arg = argv[i + 1]
         del argv[i : i + 2]
-    targets = argv  # source_ids restants ; vide = tout le cache data/raw (+ harmonisation)
+    targets = argv  # source_ids restants ; vide = tout le cache data/textes_sources (+ harmonisation)
 
     cfg = RunnerConfig()
     client_holder: OpenAI | None = None

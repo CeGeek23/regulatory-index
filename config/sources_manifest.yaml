@@ -1,30 +1,26 @@
-# Petit corpus réel pour S3 — sources officielles uniquement, sans PDF, sans texte synthétique.
-# Chaque entrée indique au pipeline d'acquisition quel document récupérer et quels
-# articles conserver (filter_articles est une liste de numéros d'article sous forme de chaînes).
+# Manifeste du corpus EUR-Lex — quels textes et quels articles conserver.
+# Pilote la (re)construction hors-ligne du corpus (scripts/build_corpus_offline.py)
+# à partir du HTML déjà en cache dans data/textes_sources/.
 #
 # Schéma :
 #   source_id : doit correspondre à une entrée de sources_registry.yaml
-#   fetcher : module fetcher à utiliser (eurlex | amf | legifrance)
+#   celex / language : identifient le HTML en cache à parser
 #   filter_articles : liste optionnelle de numéros d'article à conserver (sinon : tous)
 
 - source_id: AIFMD_L1
-  fetcher: eurlex
   celex: "32011L0061"
   language: EN
-  # 6-7-8 = chapitre II « Agrément » (bloc-pilote demandé par le client, "commençons par le début").
-  # 15-16 = gestion des risques / liquidité ; 22-23 = chapitre Transparence (POC initial).
-  # Art 4 (Définitions) n'est PAS ici : il alimente le glossaire (scripts/harvest_definitions.py), pas l'extraction d'obligations.
-  # Art 21 (Dépositaire, 19K caractères) ignoré : trop long pour un petit modèle local sans chunking.
+  # 6-7-8 = chapitre II « Agrément » (bloc-pilote demandé par le client).
+  # 15-16 = gestion des risques / liquidité ; 22-23 = chapitre Transparence.
+  # Art 4 (Définitions) alimente le glossaire, pas l'extraction d'obligations.
   filter_articles: ["6", "7", "8", "15", "16", "22", "23"]
 
 - source_id: AIFMD_L2
-  fetcher: eurlex
   celex: "32013R0231"
   language: EN
   filter_articles: ["38", "39", "40", "44", "47"]
 
 - source_id: AIFMD_L1
-  fetcher: eurlex
   celex: "32011L0061"
   language: FR
-  filter_articles: ["6", "7", "8", "15"]   # 6-7-8 : bloc Agrément en FR (pour la comparaison métier/IA du client)
+  filter_articles: ["6", "7", "8", "15"]

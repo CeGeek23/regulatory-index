@@ -1,18 +1,15 @@
 """Glossaire CONSOLIDÉ de niveau 1 : article de définitions de CHAQUE acte présent dans
-data/raw/, puis liste de tous les termes, liste MINIMALE (dédupliquée), acteurs isolés.
+data/textes_sources/, puis liste de tous les termes, liste MINIMALE (dédupliquée), acteurs isolés.
 
 Répond à la demande client :
   - articles de définition de l'intégralité des textes de niveau 1 disponibles ;
   - liste de tous les termes + liste minimale (un concept = une entrée) ;
   - isolation de tous les acteurs.
 
-    uv run python scripts/build_l1_glossary.py            # auto-fetch du périmètre L1
-    uv run python scripts/build_l1_glossary.py --no-fetch  # n'utilise que le cache data/raw/
+    uv run python scripts/build_l1_glossary.py   # depuis le cache HTML data/textes_sources/, SANS réseau
 
-Le HTML EN manquant du périmètre L1 (cf. L1_PERIMETER) est récupéré automatiquement via
-l'API Cellar (cf. eurlex_fetcher). L'article de définitions de chaque texte est détecté
-automatiquement (sous-titre « Definitions/Définitions », ou à défaut la phrase d'amorce
-« the following definitions… »).
+L'article de définitions de chaque texte est détecté automatiquement (sous-titre
+« Definitions/Définitions », ou à défaut la phrase d'amorce « the following definitions… »).
 
 Règle d'acteur (déterministe, sans heuristique) : le `type` de l'override relu fait foi
 (acteur ssi actor/investor/supervisor) ; UNIQUEMENT pour un terme NON typé, on tente une
@@ -23,67 +20,16 @@ est listé « untyped » (candidat à compléter — boucle « vocab gaps »).
 from __future__ import annotations
 
 import csv
-import sys
 from pathlib import Path
 
 from regulatory_index.glossary import DefinedTerm, harvest_glossary
-from regulatory_index.ingestion.eurlex_fetcher import fetch_to_disk
 from regulatory_index.refdata.vocab import load_vocabulary
 
-RAW = Path("data/raw")
+RAW = Path("data/textes_sources")
 OUT = Path("data/exports/glossary")
-ACTOR_TYPES = {"acteur"}  # typologie client : seul « acteur » est un acteur (produit/activité = objets)
-
-# Périmètre niveau 1 (source_id -> CELEX de base). Récupéré via l'API Cellar (cf.
-# eurlex_fetcher) pour que `uv run python scripts/build_l1_glossary.py` soit reproductible
-# depuis zéro. NB : CELEX de base (texte d'origine) ; les versions consolidées « à jour »
-# ont un CELEX daté distinct (cf. docs/level1_perimeter.md).
-L1_PERIMETER = {
-    # Fonds / gestion d'actifs
-    "AIFMD_L1": "32011L0061", "AIFMD_L2": "32013R0231", "UCITS": "32009L0065",
-    "ELTIF": "32015R0760", "MMFR": "32017R1131", "EUVECA": "32013R0345",
-    "EUSEF": "32013R0346", "CBDF_REG": "32019R1156", "CBDF_DIR": "32019L1160",
-    # Marchés
-    "MIFID2": "32014L0065", "MIFIR": "32014R0600", "MAR": "32014R0596",
-    "MAD2": "32014L0057", "PROSPECTUS": "32017R1129", "CSDR": "32014R0909",
-    "SHORT_SELLING": "32012R0236", "BENCHMARKS": "32016R1011",
-    "SECURITISATION": "32017R2402", "SFTR": "32015R2365", "EMIR": "32012R0648",
-    "TRANSPARENCY": "32004L0109", "CRA": "32009R1060",
-    # Banque / prudentiel
-    "CRR": "32013R0575", "CRD4": "32013L0036", "BRRD": "32014L0059",
-    "SRMR": "32014R0806", "DGSD": "32014L0049",
-    # Assurance
-    "SOLVENCY2": "32009L0138", "IDD": "32016L0097",
-    # Paiements
-    "PSD2": "32015L2366", "EMONEY2": "32009L0110",
-    # Durabilité
-    "SFDR": "32019R2088", "TAXONOMY": "32020R0852",
-    # Numérique / crypto
-    "MICA": "32023R1114", "DORA": "32022R2554",
-    # Financement participatif / retraite / LBC-FT / comptable / AES
-    "ECSP": "32020R1503", "PEPP": "32019R1238", "IORP2": "32016L2341",
-    "ACCOUNTING": "32013L0034", "AMLD": "32015L0849", "PRIIPS": "32014R1286",
-    "ESMA_REG": "32010R1095",
-}
-
-
-def _ensure_cached() -> None:
-    """Récupère le HTML EN **et FR** manquant de chaque texte du périmètre via Cellar (idempotent).
-
-    Best-effort : une langue déjà en cache est sautée ; un échec réseau est signalé et
-    n'interrompt pas (on tourne alors sur ce qui est en cache). Désactivable via --no-fetch.
-    Le bilingue est ainsi acquis de façon reproductible (et non plus EN seul).
-    """
-    for source_id, celex in L1_PERIMETER.items():
-        folder = RAW / source_id
-        for lang in ("EN", "FR"):
-            if list(folder.glob(f"*_{lang}_*.html")):
-                continue
-            try:
-                path = fetch_to_disk(celex, lang, folder)
-                print(f"  fetch {source_id} {lang}: {path.name}")
-            except Exception as exc:  # réseau indisponible / WAF / CELEX inconnu
-                print(f"  fetch {source_id} {lang}: échec ({type(exc).__name__}) — ignoré")
+ACTOR_TYPES = {
+    "acteur"
+}  # typologie client : seul « acteur » est un acteur (produit/activité = objets)
 
 
 def _largest(folder: Path, lang: str) -> Path | None:
@@ -107,15 +53,17 @@ def main() -> int:
         # Le type explicite (override relu) fait foi ; le vocab ne sert qu'aux termes non typés.
         if t.type:
             return "actor" if t.type in ACTOR_TYPES else "concept"
-        if actors_vocab.resolve(t.term_en) is not None or actors_vocab.resolve(t.term_fr) is not None:
+        if (
+            actors_vocab.resolve(t.term_en) is not None
+            or actors_vocab.resolve(t.term_fr) is not None
+        ):
             return "actor"
-        if objects_vocab.resolve(t.term_en) is not None or objects_vocab.resolve(t.term_fr) is not None:
+        if (
+            objects_vocab.resolve(t.term_en) is not None
+            or objects_vocab.resolve(t.term_fr) is not None
+        ):
             return "concept"
         return "untyped"
-
-    if "--no-fetch" not in sys.argv:
-        print("Récupération du périmètre L1 manquant (API Cellar) — --no-fetch pour sauter :")
-        _ensure_cached()
 
     all_terms: list[DefinedTerm] = []
     if not RAW.exists():
@@ -143,7 +91,7 @@ def main() -> int:
         all_terms.extend(terms)
 
     if not all_terms:
-        print("Aucun terme — vérifie que data/raw/<ID>/ contient du HTML EUR-Lex EN.")
+        print("Aucun terme — vérifie que data/textes_sources/<ID>/ contient du HTML EUR-Lex EN.")
         return 1
 
     # Liste minimale : un terme distinct (par term_en normalisé) = une entrée, multi-sources.
@@ -164,7 +112,9 @@ def main() -> int:
         assert isinstance(sources, list)
         sources.append(t.legal_basis)
 
-    rows = sorted(minimal.values(), key=lambda r: (r["status"] != "actor", str(r["term_en"]).lower()))
+    rows = sorted(
+        minimal.values(), key=lambda r: (r["status"] != "actor", str(r["term_en"]).lower())
+    )
     actors = [r for r in rows if r["status"] == "actor"]
     untyped = [r for r in rows if r["status"] == "untyped"]
 

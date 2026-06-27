@@ -2,7 +2,7 @@
 
 *Document de référence à rouvrir pour se rappeler **ce que couvre le projet**, **comment c'est
 organisé**, et **où le code agit**. Tous les chiffres viennent des données réelles du projet
-(HTML EUR-Lex en cache dans `data/raw/`, moisson via `scripts/build_l1_glossary.py`).*
+(HTML EUR-Lex en cache dans `data/textes_sources/`, moisson via `scripts/build_l1_glossary.py`).*
 
 ---
 
@@ -209,12 +209,12 @@ C'est exactement à quoi servent les **articles de définition** : ils fixent, p
 
 | Étape de la chaîne (§2) | Code | Sortie |
 |---|---|---|
-| Récupérer un texte (par CELEX) | `ingestion/eurlex_fetcher.py` (API Cellar) | HTML EN/FR dans `data/raw/<ID>/` |
+| Texte source (point de départ) | HTML EUR-Lex en cache | `data/textes_sources/<ID>/` |
 | Lire la structure (sommaire) | `glossary/toc.py` | sommaire chapitres/articles |
 | Moissonner l'article de définitions | `glossary/definitions.py` | termes (EN/FR, base légale) |
 | Classer acteur/produit/activité (reproductible) | `scripts/classify_overrides.py` (LM Studio, temp 0/seed fixe, cache) + harmonisation (déf. de référence) | `config/glossary/overrides/*.yaml` |
 | Isoler acteurs / produits / activités | override + `refdata/vocab.py` | acteur · produit · activité · *à classer* |
-| Construire la carte ci-dessus | `scripts/build_l1_glossary.py` (`L1_PERIMETER`) | `data/exports/glossary/` |
+| Construire la carte ci-dessus | `scripts/build_l1_glossary.py` (scan du cache) | `data/exports/glossary/` |
 | Alimenter le vocabulaire (idempotent, dédup normalisée) | `scripts/vocab_sync.py` | `config/vocabularies/*.yaml` |
 
 Le **périmètre** (la liste des ~40 textes et leur CELEX) est défini une seule fois dans

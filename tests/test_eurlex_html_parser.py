@@ -1,17 +1,8 @@
-"""Tests du parseur HTML EUR-Lex. Les appels réseau sont mockés / non sollicités."""
+"""Tests du parseur HTML EUR-Lex. Aucun réseau : on parse du HTML fourni en dur."""
 
 from __future__ import annotations
 
-from regulatory_index.ingestion.eurlex_fetcher import cellar_url, language_code
 from regulatory_index.ingestion.eurlex_html_parser import parse_articles
-
-
-def test_cellar_url_and_language() -> None:
-    assert cellar_url("32011L0061") == "http://publications.europa.eu/resource/celex/32011L0061"
-    assert "publications.europa.eu" in cellar_url("32011L0061")
-    assert language_code("EN") == "eng"
-    assert language_code("fr") == "fra"
-
 
 _SAMPLE_HTML = """
 <html><body><div class="eli-container">

@@ -28,7 +28,7 @@ from regulatory_index.extraction.langextract_runner import RunnerConfig, extract
 from regulatory_index.ingestion.unit_loader import NormativeUnit, load_units_jsonl
 from regulatory_index.refdata.vocab import load_vocabulary
 
-CORPUS = Path("data/units/corpus.jsonl")
+CORPUS = Path("data/unites/corpus.jsonl")
 REPORT = Path("data/exports/obligations/model_benchmark.md")
 BENCH_RAW = Path(
     "data/exports/obligations/_bench_raw.json"

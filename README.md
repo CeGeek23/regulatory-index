@@ -5,7 +5,7 @@ POC d'un index réglementaire structuré pour AIFMD (Level 1 + Level 2 + ESMA Le
 ## Stack
 
 - **Package manager** : `uv`
-- **Acquisition** : `httpx` + `BeautifulSoup` (DOM, pas de regex, pas de PDF) — fetchers EUR-Lex, AMF, Légifrance
+- **Parsing** : `BeautifulSoup` (DOM, pas de regex, pas de PDF) — le HTML EUR-Lex **en cache** est parsé en unités normatives (`ingestion/eurlex_html_parser.py`)
 - **Extraction** : [LangExtract](https://github.com/google/langextract) avec source grounding natif
 - **LLM backend** : **LM Studio** — serveur local OpenAI-compatible (GPU Metal/MLX) piloté via le provider OpenAI de LangExtract ; modèle au choix (**`qwen2.5-7b-instruct`** par défaut — meilleur rappel au benchmark, à charger en contexte **32k** ; `google/gemma-4-e4b` = alternative plus rapide/robuste ; swap via `--model-id`), **sortie structurée** (JSON schema) activée
 - **Matérialisation** : pandas (DataFrames en mémoire, pas de base persistante)
@@ -43,19 +43,16 @@ uv sync
 
 ## Pipeline end-to-end
 
+Le dépôt part du **HTML EUR-Lex déjà en cache** dans `data/textes_sources/` — il n'y a plus
+d'acquisition réseau. Tout tourne hors-ligne sur ce cache.
+
 ```bash
-# 1. Acquérir le corpus officiel depuis EUR-Lex (HTML, no PDF)
-uv run regindex acquire
-# → télécharge les CELEX listés dans config/sources_manifest.yaml
-#   et produit data/units/corpus.jsonl
-#
-# Variante HORS-LIGNE (pour les essais, ou si EUR-Lex bloque les requêtes
-# automatiques via son WAF) : reconstruit le corpus depuis le HTML déjà en
-# cache dans data/raw/, sans réseau :
-#   uv run python scripts/build_corpus_offline.py
+# 1. (Re)construire le corpus en unités normatives depuis le HTML en cache, sans réseau
+uv run python scripts/build_corpus_offline.py
+# → produit data/unites/corpus.jsonl (1 ligne = 1 article ; articles filtrés par le manifest)
 
 # 2. Extraire les obligations (LangExtract + LM Studio local, idempotent)
-uv run regindex extract data/units/corpus.jsonl
+uv run regindex extract data/unites/corpus.jsonl
 
 # 3. Construire les obligations finales + relations (matérialisation en mémoire + compteurs)
 uv run regindex link
@@ -63,13 +60,13 @@ uv run regindex link
 # 4. Exporter Excel + CSV + HTML interactif + quality_report.md
 uv run regindex export
 
-# Tout-en-un (acquire → extract → link → export)
-uv run regindex pipeline data/units/corpus.jsonl
+# Tout-en-un (extract → link → export)
+uv run regindex pipeline data/unites/corpus.jsonl
 ```
 
 Vérification rapide (ou simplement `just check`) :
 ```bash
-just check                       # lint + types + tests (72 tests)
+just check                       # lint + types + tests (74 tests)
 # équivalents directs :
 uv run --no-sync ruff check src/ tests/ scripts/
 uv run --no-sync mypy src/ tests/ scripts/
@@ -86,14 +83,9 @@ uv run --no-sync python -m pytest -q
 
 ## Sources prises en charge
 
-| Type | Fetcher | Format | Exemples |
-|---|---|---|---|
-| **EU Level 1 / 2** | `eurlex` | HTML structuré (ELI/OJ) | Directive 2011/61/EU, Délégué 231/2013 |
-| **AMF doctrine** | `amf` | HTML structuré | Positions, recommandations, instructions |
-| **Code monétaire et financier** | `legifrance` | HTML structuré | Articles L. 214-* (transposition AIFMD) |
-| **ESMA Guidelines / Q&A** | non implémenté | (PDF, hors scope cette itération) | |
+Le corpus est constitué de **HTML EUR-Lex (EU Level 1 / 2)** structuré (ELI/OJ) — p. ex. Directive 2011/61/EU et Règlement délégué 231/2013 — **déjà téléchargé** dans `data/textes_sources/`. Le dépôt n'embarque plus de logique d'acquisition réseau : il travaille directement sur ce cache (PDF, doctrine AMF et Légifrance hors périmètre).
 
-Le manifest (`config/sources_manifest.yaml`) liste les documents à acquérir. Le registry (`config/sources_registry.yaml`) référence les métadonnées de chaque source (CELEX, level, issuer, aliases pour la résolution de citations).
+Le manifest (`config/sources_manifest.yaml`) déclare, par texte, le CELEX, la langue et les articles à conserver. Le registry (`config/sources_registry.yaml`) référence les métadonnées de chaque source (CELEX, level, issuer, aliases pour la résolution de citations).
 
 ## Glossaire & sommaire (à partir du contenu d'un acte)
 
@@ -124,7 +116,7 @@ terms = harvest_glossary(html_en, html_fr, source_id="AIFMD_L1", celex="32011L00
 
 Réplication (vérifiée) : `regindex glossary AIFMD_L2` produit le glossaire du Règl. délégué 231/2013 (définitions à l'**article 1**, points **numérotés**) via le même code, son enrichissement venant de `config/glossary/overrides/AIFMD_L2.yaml`. Le périmètre niveau 1 et le piège « renvois vers des textes abrogés » sont documentés dans `docs/level1_perimeter.md`. La **cartographie des ~40 textes par domaine métier** (niveaux Lamfalussy, volumétrie réelle termes/acteurs par texte) est dans `docs/niveau1_cartographie.md`. Pour une **présentation métier** (non technique, qui relie le travail à la logique réglementaire) : `docs/presentation.md`, avec une **trame de prise de parole** (~5 min + prépa Q&A) dans `docs/trame_presentation.md`.
 
-> ℹ️ Dans le manifest livré, seules les sources **EUR-Lex** sont câblées pour un run end-to-end. Les fetchers **AMF** et **Légifrance** sont implémentés et couverts par des tests unitaires, mais pas encore référencés dans `sources_manifest.yaml`. **ESMA** n'a pas de fetcher (PDF) : ses entrées dans le registry servent uniquement de **cibles de citation** (aliases) pour le linkage cross-level.
+> ℹ️ Le corpus livré est **EUR-Lex** uniquement. Les entrées **ESMA** du registry n'ont pas de texte associé (publié en PDF, hors périmètre) : elles servent uniquement de **cibles de citation** (aliases) pour le linkage cross-level.
 
 ## Structure du projet
 
@@ -134,15 +126,15 @@ config/
                        conditions, acronyms, relation_types) + theme codes
   glossary/            overrides/ (classification acteur/produit/activité par acte : tout
                        généré + harmonisé, reproductible — règle générale, sans liste)
-  sources_manifest.yaml   Documents officiels à acquérir
+  sources_manifest.yaml   Corpus déclaré (CELEX, langue, articles à conserver)
   sources_registry.yaml   Registry des sources + aliases pour citation matching
 
 prompts/               Templates Jinja LangExtract (EN/FR) + few-shots gold annotés
 
 data/
-  raw/                 HTML officiels téléchargés (par fetcher)
-  units/               JSONL d'unités normatives (1 ligne = 1 article)
-  obligations/         Extractions JSONL (1 fichier par unit, idempotent)
+  textes_sources/      les VRAIS TEXTES : HTML EUR-Lex en cache (1 dossier par acte)
+  unites/              JSONL d'unités normatives (1 ligne = 1 article)
+  extractions/         résultats LangExtract : 1 JSON par unité (idempotent)
                        + _failed.jsonl si échec (réinitialisé à chaque run)
   exports/             sorties classées par type :
     glossary/            *_definitions.yaml, glossary_*.csv/.md, glossary_L1_minimal/actors
@@ -155,8 +147,8 @@ src/regulatory_index/   (chaque paquet expose son API publique via __init__.py)
                        CrossLevelRelation, RawObligation / UnitExtraction
   refdata/             chargeurs des données de config : vocab (vocabulaires
                        contrôlés) + sources_registry (registre + alias de citation)
-  ingestion/           acquire (orchestrator) + 3 fetchers : eurlex / amf /
-                       legifrance + eurlex_html_parser + unit_loader
+  ingestion/           manifest (corpus déclaré) + eurlex_html_parser
+                       (HTML en cache -> NormativeUnit) + unit_loader
   glossary/            models (DefinedTerm, TableOfContents) + toc (sommaire) +
                        definitions (termes définis) — part du HTML, déterministe, sans regex
   extraction/          schema_builder, examples_loader, langextract_runner
@@ -167,8 +159,8 @@ src/regulatory_index/   (chaque paquet expose son API publique via __init__.py)
   export/              excel_writer (xlsxwriter multi-sheet), glossary_writer,
                        csv_writer, html_graph_writer (pyvis)
   eval/                metrics.py (grounding, latence P50/P95, distributions, vocab gaps → quality_report.md)
-  cli.py               Typer CLI : vocab / acquire / extract / link /
-                       export / pipeline / sommaire / glossary
+  cli.py               Typer CLI : vocab / extract / link / export /
+                       pipeline / sommaire / glossary
 
 scripts/               build_l1_glossary, classify_overrides, vocab_sync,
                        check_overrides, build_corpus_offline, benchmark_models,
@@ -177,14 +169,13 @@ scripts/               build_l1_glossary, classify_overrides, vocab_sync,
 tests/                 pytest (schemas, vocab, sources_registry,
                        examples_loader, schema_builder, unit_loader,
                        langextract_runner with mocked LLM, obligation_builder,
-                       linking, export, eval_metrics, failed_log,
-                       ingestion_eurlex, ingestion_acquire (+ other_fetchers),
-                       ingestion_amf, ingestion_legifrance, html_graph_writer)
+                       linking, export, eval_metrics, failed_log, manifest,
+                       eurlex_html_parser, html_graph_writer)
 ```
 
 ## Architecture du pipeline (5 étapes, sans regex, sans fallback)
 
-1. **Acquisition** — fetcher (`eurlex` / `amf` / `legifrance`) télécharge le HTML officiel ; parser DOM extrait un `NormativeUnit` par article.
+1. **Corpus** — le HTML EUR-Lex en cache (`data/textes_sources/`) est parsé par `eurlex_html_parser` (traversée DOM) en un `NormativeUnit` par article (`scripts/build_corpus_offline.py`).
 2. **Extraction LangExtract** — 1 appel LM Studio (API OpenAI-compatible) par unité, guidé par un prompt structuré (description + few-shots) avec vocab contrôlé injecté en texte. **Sortie structurée** (`use_schema_constraints=True` → JSON schema) : le **format** est garanti (1 valeur par champ, jamais liste/null) **sans figer le vocab en enum** — la découverte de termes hors-vocab reste possible. Persistance idempotente sur disque (`{source_id}/{unit_id}.json`). Échec d'une unité → log dans `_failed.jsonl` (réinitialisé au début de chaque run), on continue.
 3. **Materialization** — `RawObligation` → `Obligation` avec id stable `{SCOPE}-{THEME_CODE}-{NNNN}` (déterministe par sort key). Source résolue depuis `sources_registry.yaml`. Les champs à vocabulaire contrôlé sont canonicalisés (pivot EN par défaut) via `Vocabulary.resolve` ; les termes non résolus alimentent le rapport « vocab gaps ».
 4. **Linkage cross-level** — `cited_references` → `target_source_id` par alias matching (substring case-insensitive, alias les plus longs gagnent). Quand la citation nomme un article (`Article 15(3)`…), on rattache l'obligation aux **obligations cibles** extraites de cet article dans le document cité (linkage article-level, parsing par tokenisation, sans regex) ; sinon on retombe sur le nœud document `{source}#source`. Relation typée d'après `(level_src, issuer_src, level_tgt, title_src)` : `clarifies` / `strengthens` / `operationalizes` / `interprets` / `references`.
@@ -205,7 +196,7 @@ tests/                 pytest (schemas, vocab, sources_registry,
 
 8 unités acquises (AIFMD Directive Art. 15-16 EN+FR, Délégué 231/2013 Art. 38-40, 44, 47 EN) → **58 obligations** extraites (100% grounded), **3 relations cross-level `operationalizes`** captées (L2 → L1).
 
-> ⚠️ Chiffres **illustratifs** d'un ancien run local one-off (petit LLM local, non déterministe) — non committés et non reproductibles à l'identique. `data/` est gitignoré : régénère le rapport via `uv run regindex pipeline data/units/corpus.jsonl` puis `uv run regindex export` (→ `data/exports/obligations/quality_report.md`).
+> ⚠️ Chiffres **illustratifs** d'un ancien run local one-off (petit LLM local, non déterministe) — non committés et non reproductibles à l'identique. `data/` est gitignoré : régénère le rapport via `uv run regindex pipeline data/unites/corpus.jsonl` puis `uv run regindex export` (→ `data/exports/obligations/quality_report.md`).
 
 ## Limitations connues
 

@@ -17,7 +17,7 @@ from pathlib import Path
 from regulatory_index.glossary import DefinedTerm, harvest_glossary
 from regulatory_index.ingestion.eurlex_html_parser import parse_articles
 
-RAW = Path("data/raw")
+RAW = Path("data/textes_sources")
 OVERRIDES = Path("config/glossary/overrides")
 OUT = Path("data/exports/presentation/glossaire_ancre.html")
 

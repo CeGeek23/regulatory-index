@@ -90,13 +90,10 @@ sans article de définitions propre (rien à extraire).
 
 ## 4. Récupération des textes & ce qui reste
 
-- **Récupération automatique** : le HTML est tiré de l'**API Cellar** de l'Office des publications
-  (`eurlex_fetcher`), qui contourne le WAF anti-bot d'EUR-Lex (le rendu `legal-content` renvoie
-  HTTP 202). `scripts/build_l1_glossary.py` récupère le périmètre L1 manquant tout seul.
-- **Versions consolidées** : `eurlex_fetcher.latest_consolidated_celex` résout le CELEX consolidé
-  le plus récent via les métadonnées RDF (ex. AIFMD → `02011L0061-20260416`, incluant AIFMD II).
-  Le glossaire est désormais bâti sur ces versions **consolidées** ; seuls les textes pour lesquels
-  l'UE ne publie **pas** de consolidé officiel restent sur le texte d'origine.
+- **Textes en cache (hors-ligne)** : le corpus HTML EUR-Lex — versions **consolidées** du
+  périmètre L1 (ex. AIFMD → `02011L0061-20260416`, incluant AIFMD II) — est déjà présent dans
+  `data/textes_sources/`. Toute la chaîne (glossaire, corpus, extraction) tourne sur ce cache ; le dépôt
+  ne contient plus de logique d'acquisition réseau.
 - **Reste à faire** : confirmer en relecture métier la classification **acteur / produit / activité**
   (générée + harmonisée, « à relire ») — en priorité les définitions **par renvoi**, plus délicates ;
   traiter les faux-amis L3 (AMF/ACPR, sans fetcher à ce jour).

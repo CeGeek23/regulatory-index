@@ -1,10 +1,8 @@
-"""Construit data/units/corpus.jsonl depuis le HTML déjà en cache (data/raw/), SANS réseau.
+"""Construit data/unites/corpus.jsonl depuis le HTML en cache (data/textes_sources/), SANS réseau.
 
-Rejoue le manifest (config/sources_manifest.yaml) mais, pour chaque source, lit le plus
-gros HTML déjà téléchargé dans data/raw/{source_id}/ au lieu de re-fetcher. Pratique pour
-itérer sur les essais d'extraction hors-ligne, et indispensable quand EUR-Lex bloque les
-requêtes automatiques (challenge WAF). Le cache doit exister (un `regindex acquire`
-réussi au préalable, ou des fichiers HTML déposés à la main dans data/raw/).
+Rejoue le manifest (config/sources_manifest.yaml) : pour chaque source, lit le plus gros
+HTML présent dans data/textes_sources/{source_id}/ et le parse en unités normatives. Le cache doit
+exister (fichiers HTML EUR-Lex déposés dans data/textes_sources/).
 
 Usage : uv run python scripts/build_corpus_offline.py
 """
@@ -15,13 +13,13 @@ import glob
 import sys
 from pathlib import Path
 
-from regulatory_index.ingestion.acquire import load_manifest
 from regulatory_index.ingestion.eurlex_html_parser import parse_articles
+from regulatory_index.ingestion.manifest import load_manifest
 from regulatory_index.ingestion.unit_loader import NormativeUnit, write_units_jsonl
 from regulatory_index.refdata.sources_registry import load_sources_registry
 
-RAW_DIR = Path("data/raw")
-OUT = Path("data/units/corpus.jsonl")
+RAW_DIR = Path("data/textes_sources")
+OUT = Path("data/unites/corpus.jsonl")
 
 
 def _largest_cached_html(source_id: str, celex: str, language: str) -> Path | None:
@@ -35,12 +33,11 @@ def main() -> int:
     registry = load_sources_registry()
     units: list[NormativeUnit] = []
     for entry in load_manifest():
-        if entry.fetcher != "eurlex" or not entry.celex:
-            print(f"  skip {entry.source_id} (fetcher '{entry.fetcher}' non géré hors-ligne)")
-            continue
         html_path = _largest_cached_html(entry.source_id, entry.celex, entry.language)
         if html_path is None:
-            print(f"  /!\\ {entry.source_id} {entry.language}: aucun HTML en cache — lance `regindex acquire` une fois")
+            print(
+                f"  /!\\ {entry.source_id} {entry.language}: aucun HTML en cache dans data/textes_sources/{entry.source_id}/"
+            )
             continue
         reg = registry[entry.source_id]
         keep = set(entry.filter_articles) if entry.filter_articles else None

@@ -20,7 +20,7 @@ import yaml
 from regulatory_index.glossary import harvest_glossary
 
 OVERRIDES_DIR = Path("config/glossary/overrides")
-RAW_DIR = Path("data/raw")
+RAW_DIR = Path("data/textes_sources")
 
 
 def _largest_en_html(source_id: str) -> Path | None:

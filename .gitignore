@@ -19,9 +19,8 @@ wheels/
 
 # Project data
 .env
-data/raw/
-data/units/
-data/obligations/
-data/relations/
+data/textes_sources/
+data/unites/
+data/extractions/
 data/exports/
 data/classification_cache.json
