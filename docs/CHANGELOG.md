@@ -33,3 +33,4 @@
 - **2026-07-04 04:41** · `bedbeea` (dump-extraction) — chore: ignore data/_archive/ (snapshots de rollback locaux) _[1 file changed, 1 insertion(+)]_
 - **2026-07-04 04:46** · `7e94e02` (dump-extraction) — refactor: DB = source unique du corpus, retrait du cluster hors-ligne _[8 files changed, 23 insertions(+), 169 deletions(-)]_
 - **2026-07-04 04:57** · `40df941` (dump-extraction) — feat(db_corpus): découpage au seuil des articles longs (fix Art. 21 & co) _[3 files changed, 109 insertions(+), 23 deletions(-)]_
+- **2026-07-04 09:53** · `f9ba1e5` (dump-extraction) — feat(db): schéma relationnel normalisé provisoire (regindex) + mapping _[4 files changed, 103 insertions(+)]_

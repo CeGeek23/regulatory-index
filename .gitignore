@@ -34,3 +34,4 @@ jalon_cedric.zip
 *.sql
 *.sql.gz
 lalande_corpus_*.gz
+!db/schema.sql          # schéma versionné (DDL du projet, pas un dump)
