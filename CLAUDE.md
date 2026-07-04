@@ -11,3 +11,16 @@ Concrètement, dans ce dépôt :
 - **Proscrire les patchs spécifiques** : pas d'index de lignes codés en dur, pas de listes blanches/noires par article, pas de `if article == 6`. Le projet a déjà supprimé `prune.yaml`/`tie_breaks.yaml` au profit de règles générales — rester dans cet esprit.
 - **Toute règle générale est testée** sur un cas minimal et abstrait (voir `tests/test_obligation_builder.py`), pas sur un article précis.
 - Un correctif ponctuel sur un livrable (ex. un CSV d'export) est tolérable **comme rustine temporaire**, mais le vrai correctif vit dans le code/pipeline général et est signalé comme tel.
+
+## Journal d'avancement (traçabilité pour les présentations)
+
+Pour que Cédric prépare ses points client sans reconstituer ce qui a été fait :
+
+- **Trace automatique** : le hook git `post-commit` (installé via `just install-hooks`,
+  source dans `scripts/hooks/`) ajoute une ligne par commit dans `docs/CHANGELOG.md`.
+- **Synthèse lisible** : `docs/JOURNAL.md` (« Fait / Décisions / Reste à faire ») est tenu
+  à jour via la skill `/journal`.
+- **À faire par l'assistant** : après tout travail substantiel (ou avant un point client),
+  proposer de lancer `/journal`. Tout traitement **partiel** (article sauté, texte non
+  couvert, étape inachevée) doit apparaître explicitement en « Reste à faire », jamais
+  passé sous silence — cohérent avec l'exigence d'exhaustivité du client.

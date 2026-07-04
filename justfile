@@ -106,6 +106,14 @@ benchmark +MODELS:
 smoke:
     {{uvr}} python scripts/run_smoke_e2e.py
 
+# === Journal / documentation =============================================
+
+# Installe les hooks git locaux (journal auto des commits -> docs/CHANGELOG.md)
+install-hooks:
+    cp scripts/hooks/post-commit .git/hooks/post-commit
+    chmod +x .git/hooks/post-commit
+    @echo "Hook post-commit installé -> chaque commit alimente docs/CHANGELOG.md"
+
 # === Divers ===============================================================
 
 # Supprime les fichiers parasites (.DS_Store, __pycache__)

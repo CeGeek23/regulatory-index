@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# post-commit — journal automatique des commits.
+# Ajoute une ligne à docs/CHANGELOG.md à chaque commit.
+# Source unique versionnée : scripts/hooks/post-commit ; installé via `just install-hooks`.
+# Ne bloque ni n'échoue jamais (sort toujours 0), comme le hook ruff-format.
+set -uo pipefail
+
+repo="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+log="$repo/docs/CHANGELOG.md"
+
+hash="$(git log -1 --format=%h 2>/dev/null)" || exit 0
+subject="$(git log -1 --format=%s 2>/dev/null)"
+when="$(git log -1 --format=%cd --date=format:'%Y-%m-%d %H:%M' 2>/dev/null)"
+branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+stat="$(git show --stat --format='' "$hash" 2>/dev/null | tail -1 | sed 's/^[[:space:]]*//')"
+
+mkdir -p "$repo/docs"
+if [ ! -f "$log" ]; then
+  {
+    printf '# Journal des commits (automatique)\n\n'
+    printf '> Une ligne par commit, ajoutée automatiquement par le hook git `post-commit`.\n'
+    printf '> Trace brute et exhaustive. Pour la synthèse lisible, voir `JOURNAL.md`.\n\n'
+  } > "$log"
+fi
+printf -- '- **%s** · `%s` (%s) — %s _[%s]_\n' "$when" "$hash" "$branch" "$subject" "$stat" >> "$log"
+exit 0
