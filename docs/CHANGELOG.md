@@ -31,3 +31,4 @@
 - **2026-07-04 04:06** · `aadbb54` (dump-extraction) — feat(journal): journal d'avancement (hook post-commit + skill /journal) _[6 files changed, 163 insertions(+)]_
 - **2026-07-04 04:14** · `c9de574` (dump-extraction) — docs(journal): première entrée d'avancement (rattrapage 21/06→04/07) _[3 files changed, 40 insertions(+), 8 deletions(-)]_
 - **2026-07-04 04:41** · `bedbeea` (dump-extraction) — chore: ignore data/_archive/ (snapshots de rollback locaux) _[1 file changed, 1 insertion(+)]_
+- **2026-07-04 04:46** · `7e94e02` (dump-extraction) — refactor: DB = source unique du corpus, retrait du cluster hors-ligne _[8 files changed, 23 insertions(+), 169 deletions(-)]_
