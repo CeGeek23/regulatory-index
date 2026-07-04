@@ -20,17 +20,39 @@ _Ce qui n'est pas (encore) fait — à garder à jour pour ne rien oublier en pr
 ## Points d'avancement
 
 <!-- Nouvelles entrées en haut. -->
-<!-- Dernier commit journalisé : (aucun) -->
+<!-- Dernier commit journalisé : aadbb54 -->
 
-### 2026-07-04 — Mise en place du journal d'avancement
+### 2026-07-04 — Initialisation du journal (rattrapage 21/06 → 04/07)
+
+_Entrée de rattrapage : synthèse des 15 derniers commits._
+
 **Fait**
-- Ajout d'un système de journalisation à deux niveaux : `docs/JOURNAL.md` (synthèse
-  lisible) + `docs/CHANGELOG.md` (trace auto des commits via hook git `post-commit`).
-- Ajout de la skill `/journal` pour tenir ce fichier à jour.
+
+- **Glossaire & extraction niveau 1** : glossaire L1 consolidé multi-actes avec typologie
+  acteur / produit / activité, graphe de renvois inter-textes (extraction fidèle), règles
+  d'extraction **générales** (acteur substantiel, verbe ancré, clause permissive) +
+  déduplication déterministe. Corpus AIFMD L1 reconstruit hors-ligne, complet.
+- **Bascule vers une source unique = le dump PostgreSQL** : suppression de toute
+  l'acquisition réseau (fetchers EUR-Lex / AMF / Légifrance) au profit d'un pont
+  **DB → corpus** (lecteur du dump PostgreSQL → `NormativeUnit`). `obligation_id` désormais
+  préfixé par l'acte → généralise le multi-texte (L1 + L2).
+- **Outillage & doc** : dossiers `.claude/hooks` et `.claude/skills`, gros nettoyage de code
+  mort / config spéculative, corrections doc, et mise en place du **journal d'avancement**
+  (hook `post-commit` + skill `/journal`).
 
 **Décisions / notes**
-- Objectif : préparer les points client sans reconstituer a posteriori ce qui a été fait.
-- Tout traitement partiel doit apparaître explicitement en « Reste à faire ».
+
+- Choix structurant : abandon de l'acquisition réseau ; le corpus se reconstruit depuis le
+  cache HTML + le **dump PostgreSQL** (source unique, reproductible hors-ligne). Aligné avec
+  la direction voulue par le client (base Postgres normalisée).
+- Extraction pilotée par des **règles générales** (aucun patch par article), testées sur des
+  cas abstraits (`tests/test_obligation_builder.py`).
 
 **Reste à faire / en attente**
-- Voir le backlog ci-dessus (démarre au retour du fichier modèle du client).
+
+- **Fichier modèle Excel du client** (14 onglets, `00_mode d'emploi`) à récupérer — bloquant.
+- Schéma **PostgreSQL normalisé** des 14 tables (tables + clés) + mapping sur le pipeline.
+- **Complétude article par article** ; trou connu : **AIFMD Article 21 (dépositaire)** non
+  extrait (trop long pour le modèle local) → à traiter par découpage / modèle plus grand.
+- **Agents** d'automatisation, un par étape de l'« Ordre d'exécution ».
+- Faire tourner le pipeline sur les textes **EN et FR**.

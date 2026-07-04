@@ -28,3 +28,4 @@
 - **2026-06-27 15:02** · `7de3e81` — gitignore : exclut les dumps SQL (lalande_corpus_*.gz) du versionnement
 - **2026-06-27 15:40** · `f730f94` — feat(dump): pont DB PostgreSQL → corpus (lecteur du dump → NormativeUnit)
 - **2026-06-27 15:42** · `c74f5b9` — feat: préfixe d'obligation_id dérivé de l'acte (généralise le multi-texte L1+L2)
+- **2026-07-04 04:06** · `aadbb54` (dump-extraction) — feat(journal): journal d'avancement (hook post-commit + skill /journal) _[6 files changed, 163 insertions(+)]_

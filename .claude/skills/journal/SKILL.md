@@ -26,13 +26,22 @@ d'avancement sans avoir à reconstituer ce qu'il a fait.
 
    ```
    ### AAAA-MM-JJ — <titre court>
+
    **Fait**
+
    - <réalisations regroupées par thème>
+
    **Décisions / notes**
+
    - <choix notables, le cas échéant>
+
    **Reste à faire / en attente**
+
    - <ce qui est partiel, sauté, ou à poursuivre — explicite>
    ```
+
+   (Laisser une ligne vide entre chaque intitulé en gras et sa liste — évite les
+   avertissements markdownlint MD032.)
 
    Règle importante (exigence d'exhaustivité du client) : tout traitement **partiel**
    — article sauté, texte non couvert, étape inachevée — va **explicitement** dans
