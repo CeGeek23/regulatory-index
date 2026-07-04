@@ -24,6 +24,7 @@ data/unites/
 data/extractions/
 data/exports/
 data/classification_cache.json
+data/_archive/
 
 # Livrables locaux (générés, à envoyer — non versionnés)
 jalon_cedric/
