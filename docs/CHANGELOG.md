@@ -29,3 +29,5 @@
 - **2026-06-27 15:40** · `f730f94` — feat(dump): pont DB PostgreSQL → corpus (lecteur du dump → NormativeUnit)
 - **2026-06-27 15:42** · `c74f5b9` — feat: préfixe d'obligation_id dérivé de l'acte (généralise le multi-texte L1+L2)
 - **2026-07-04 04:06** · `aadbb54` (dump-extraction) — feat(journal): journal d'avancement (hook post-commit + skill /journal) _[6 files changed, 163 insertions(+)]_
+- **2026-07-04 04:14** · `c9de574` (dump-extraction) — docs(journal): première entrée d'avancement (rattrapage 21/06→04/07) _[3 files changed, 40 insertions(+), 8 deletions(-)]_
+- **2026-07-04 04:41** · `bedbeea` (dump-extraction) — chore: ignore data/_archive/ (snapshots de rollback locaux) _[1 file changed, 1 insertion(+)]_

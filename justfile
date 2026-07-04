@@ -71,9 +71,10 @@ vocab-sync:
 
 # === Pipeline obligations (LM Studio requis) ==============================
 
-# Reconstruit le corpus depuis le HTML en cache (hors-ligne)
-corpus-offline:
-    {{uvr}} python scripts/build_corpus_offline.py
+# Reconstruit le corpus depuis la base PostgreSQL du dump (source unique)
+# ex. `just corpus-db 32011L0061` (un acte) ou `just corpus-db --lang fr`
+corpus-db *ARGS:
+    {{uvr}} python scripts/build_corpus_from_db.py {{ARGS}}
 
 # Extrait les obligations (LangExtract via LM Studio)
 extract UNITS="data/unites/corpus.jsonl" MODEL="qwen2.5-7b-instruct":

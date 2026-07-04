@@ -92,8 +92,9 @@ sans article de définitions propre (rien à extraire).
 
 - **Textes en cache (hors-ligne)** : le corpus HTML EUR-Lex — versions **consolidées** du
   périmètre L1 (ex. AIFMD → `02011L0061-20260416`, incluant AIFMD II) — est déjà présent dans
-  `data/textes_sources/`. Toute la chaîne (glossaire, corpus, extraction) tourne sur ce cache ; le dépôt
-  ne contient plus de logique d'acquisition réseau.
+  `data/textes_sources/`. Le **glossaire** tourne sur ce cache HTML ; le **corpus d'obligations**
+  vient désormais de la **base PostgreSQL du dump** (source unique). Le dépôt ne contient plus de
+  logique d'acquisition réseau.
 - **Reste à faire** : confirmer en relecture métier la classification **acteur / produit / activité**
   (générée + harmonisée, « à relire ») — en priorité les définitions **par renvoi**, plus délicates ;
   traiter les faux-amis L3 (AMF/ACPR, hors périmètre actuel).

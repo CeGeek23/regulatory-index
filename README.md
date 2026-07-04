@@ -44,13 +44,14 @@ uv sync
 
 ## Pipeline end-to-end
 
-Le dépôt part du **HTML EUR-Lex déjà en cache** dans `data/textes_sources/` — il n'y a plus
-d'acquisition réseau. Tout tourne hors-ligne sur ce cache.
+Le **corpus d'obligations** est (re)construit depuis la **base PostgreSQL du dump** (source unique ;
+conteneur Docker local `lalande-pg`, lu par `db_corpus.py` via les tables `subdivisions`/`chunks`).
+Le **glossaire**, lui, part du **HTML EUR-Lex en cache** (`data/textes_sources/`). Aucune acquisition réseau.
 
 ```bash
-# 1. (Re)construire le corpus en unités normatives depuis le HTML en cache, sans réseau
-uv run python scripts/build_corpus_offline.py
-# → produit data/unites/corpus.jsonl (1 ligne = 1 article ; articles filtrés par le manifest)
+# 1. (Re)construire le corpus en unités normatives depuis la base PostgreSQL du dump
+just corpus-db                    # ou : uv run python scripts/build_corpus_from_db.py
+# → produit data/unites/corpus.jsonl (1 ligne = 1 article ; source = tables subdivisions/chunks)
 
 # 2. Extraire les obligations (LangExtract + LM Studio local, idempotent)
 uv run regindex extract data/unites/corpus.jsonl
@@ -85,9 +86,9 @@ uv run --no-sync python -m pytest -q
 
 ## Sources prises en charge
 
-Le corpus est constitué de **HTML EUR-Lex (EU Level 1 / 2)** structuré (ELI/OJ) — p. ex. Directive 2011/61/EU et Règlement délégué 231/2013 — **déjà téléchargé** dans `data/textes_sources/`. Le dépôt n'embarque plus de logique d'acquisition réseau : il travaille directement sur ce cache (PDF, doctrine AMF et Légifrance hors périmètre).
+Les textes sont **EUR-Lex (EU Level 1 / 2)** — p. ex. Directive 2011/61/EU et Règlement délégué 231/2013. Le **corpus d'obligations** vient de la **base PostgreSQL du dump** (`db_corpus.py`, tables `subdivisions`/`chunks`) ; le **glossaire** part du **HTML en cache** dans `data/textes_sources/`. Le dépôt n'embarque plus d'acquisition réseau (PDF, doctrine AMF et Légifrance hors périmètre).
 
-Le manifest (`config/sources_manifest.yaml`) déclare, par texte, le CELEX, la langue et les articles à conserver. Le registry (`config/sources_registry.yaml`) référence les métadonnées de chaque source (CELEX, level, issuer, aliases pour la résolution de citations).
+Le registry (`config/sources_registry.yaml`) définit le périmètre : il référence les métadonnées de chaque source (CELEX, level, issuer, aliases pour la résolution de citations) et sert de liste des CELEX à (re)construire depuis la base.
 
 ## Glossaire & sommaire (à partir du contenu d'un acte)
 
@@ -128,8 +129,7 @@ config/
                        conditions, acronyms, relation_types) + theme codes
   glossary/            overrides/ (classification acteur/produit/activité par acte : tout
                        généré + harmonisé, reproductible — règle générale, sans liste)
-  sources_manifest.yaml   Corpus déclaré (CELEX, langue, articles à conserver)
-  sources_registry.yaml   Registry des sources + aliases pour citation matching
+  sources_registry.yaml   Registry des sources (CELEX, level, issuer) + aliases citation ; périmètre du corpus
 
 prompts/               Templates Jinja LangExtract (EN/FR) + few-shots gold annotés
 
@@ -149,8 +149,8 @@ src/regulatory_index/   (chaque paquet expose son API publique via __init__.py)
                        CrossLevelRelation, RawObligation / UnitExtraction
   refdata/             chargeurs des données de config : vocab (vocabulaires
                        contrôlés) + sources_registry (registre + alias de citation)
-  ingestion/           manifest (corpus déclaré) + eurlex_html_parser
-                       (HTML en cache -> NormativeUnit) + unit_loader
+  ingestion/           db_corpus (dump PostgreSQL -> NormativeUnit, source du corpus)
+                       + eurlex_html_parser (HTML en cache -> articles, glossaire) + unit_loader
   glossary/            models (DefinedTerm, TableOfContents) + toc (sommaire) +
                        definitions (termes définis) — part du HTML, déterministe, sans regex
   extraction/          schema_builder, examples_loader, langextract_runner
@@ -165,19 +165,19 @@ src/regulatory_index/   (chaque paquet expose son API publique via __init__.py)
                        pipeline / sommaire / glossary
 
 scripts/               build_l1_glossary, classify_overrides, vocab_sync,
-                       check_overrides, build_corpus_offline, benchmark_models,
+                       check_overrides, build_corpus_from_db, benchmark_models,
                        run_smoke_e2e
 
 tests/                 pytest (schemas, vocab, sources_registry,
                        examples_loader, schema_builder, unit_loader,
                        langextract_runner with mocked LLM, obligation_builder,
-                       linking, export, eval_metrics, failed_log, manifest,
+                       linking, export, eval_metrics, failed_log,
                        eurlex_html_parser, html_graph_writer)
 ```
 
 ## Architecture du pipeline (5 étapes, sans regex, sans fallback)
 
-1. **Corpus** — le HTML EUR-Lex en cache (`data/textes_sources/`) est parsé par `eurlex_html_parser` (traversée DOM) en un `NormativeUnit` par article (`scripts/build_corpus_offline.py`).
+1. **Corpus** — les articles + leur texte (tables `subdivisions`/`chunks`) sont lus depuis la **base PostgreSQL du dump** par `db_corpus.py` en un `NormativeUnit` par article (`scripts/build_corpus_from_db.py`). *(Le glossaire, lui, part du HTML en cache via `eurlex_html_parser`.)*
 2. **Extraction LangExtract** — 1 appel LM Studio (API OpenAI-compatible) par unité, guidé par un prompt structuré (description + few-shots) avec vocab contrôlé injecté en texte. **Sortie structurée** (`use_schema_constraints=True` → JSON schema) : le **format** est garanti (1 valeur par champ, jamais liste/null) **sans figer le vocab en enum** — la découverte de termes hors-vocab reste possible. Persistance idempotente sur disque (`{source_id}/{unit_id}.json`). Échec d'une unité → log dans `_failed.jsonl` (réinitialisé au début de chaque run), on continue.
 3. **Materialization** — `RawObligation` → `Obligation` avec id stable `{SCOPE}-{THEME_CODE}-{NNNN}` (déterministe par sort key). Source résolue depuis `sources_registry.yaml`. Les champs à vocabulaire contrôlé sont canonicalisés (pivot EN par défaut) via `Vocabulary.resolve` ; les termes non résolus alimentent le rapport « vocab gaps ».
 4. **Linkage cross-level** — `cited_references` → `target_source_id` par alias matching (substring case-insensitive, alias les plus longs gagnent). Quand la citation nomme un article (`Article 15(3)`…), on rattache l'obligation aux **obligations cibles** extraites de cet article dans le document cité (linkage article-level, parsing par tokenisation, sans regex) ; sinon on retombe sur le nœud document `{source}#source`. Relation typée d'après `(level_src, issuer_src, level_tgt, title_src)` : `clarifies` / `strengthens` / `operationalizes` / `interprets` / `references`.
