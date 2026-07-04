@@ -107,6 +107,13 @@ benchmark +MODELS:
 smoke:
     {{uvr}} python scripts/run_smoke_e2e.py
 
+# === Base PostgreSQL / schéma ============================================
+
+# (Ré)applique le schéma relationnel PROVISOIRE dans le schéma `regindex` de la base
+# (ne touche pas aux tables source du dump). Voir docs/schema_relationnel.md.
+schema-apply:
+    {{uvr}} python scripts/apply_schema.py
+
 # === Journal / documentation =============================================
 
 # Installe les hooks git locaux (journal auto des commits -> docs/CHANGELOG.md)
