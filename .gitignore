@@ -34,4 +34,5 @@ jalon_cedric.zip
 *.sql
 *.sql.gz
 lalande_corpus_*.gz
-!db/schema.sql          # schéma versionné (DDL du projet, pas un dump)
+# Exception : le schéma DDL du projet est versionné (ce n'est pas un dump)
+!db/schema.sql
