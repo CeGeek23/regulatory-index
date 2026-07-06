@@ -13,14 +13,20 @@ import typer
 
 from .db import (
     DbStatus,
+    DictionaryStatus,
     QueryResult,
     apply_schema,
     collect_status,
+    dictionary_status,
     ingest_regulation,
     ingest_source_units,
+    inject_candidates,
     read_only_query,
+    seed_dictionary,
+    seed_plan,
 )
 from .db.connection import connect
+from .db.dictionary import load_dictionary_seed
 from .eval.metrics import compute, write_report
 from .export.csv_writer import write_csv
 from .export.excel_writer import write_workbook
@@ -347,6 +353,91 @@ def db_query(
         return
     typer.echo(_render_table(result.columns, result.rows))
     typer.echo(f"\n{result.row_count} ligne(s)")
+
+
+# === Dictionnaire d'amorçage (seed) + candidats à relire ===================
+
+dict_app = typer.Typer(no_args_is_help=True, help="Dictionnaire d'amorçage (seed) + candidats.")
+app.add_typer(dict_app, name="dict")
+
+
+@dict_app.command("seed")
+def dict_seed(
+    dry_run: Annotated[
+        bool, typer.Option("--dry-run", help="Affiche le plan (lignes/table) sans écrire.")
+    ] = False,
+) -> None:
+    """Upsert le seed minimal ACTIF depuis `config/dictionary_seed.yaml` (l'Excel n'est pas lu).
+
+    Alimente `dictionary_entry` (les 5 familles) + `actor`/`action`/`regulatory_object`.
+    Idempotent (re-run = `unchanged`), autoritaire sans clobber des colonnes d'enrichissement.
+    """
+    if dry_run:
+        typer.echo(json.dumps({"plan": seed_plan(load_dictionary_seed())}, indent=2))
+        return
+    result = seed_dictionary()
+    typer.echo(
+        json.dumps(
+            {
+                "seeded": {
+                    table: {"created": c.created, "updated": c.updated, "unchanged": c.unchanged}
+                    for table, c in (
+                        ("dictionary_entry", result.dictionary_entry),
+                        ("actor", result.actor),
+                        ("action", result.action),
+                        ("regulatory_object", result.regulatory_object),
+                    )
+                }
+            },
+            indent=2,
+        )
+    )
+
+
+@dict_app.command("candidates")
+def dict_candidates() -> None:
+    """Injecte les candidats INACTIFS (vocabulaires + 303 acteurs du glossaire), dédup vs seed.
+
+    `is_active=false`, provenance tracée ; `DO NOTHING` sur conflit (ne réécrit jamais une
+    entrée déjà relue par un humain). Requiert le seed préalable (`regindex dict seed`).
+    """
+    result = inject_candidates()
+    typer.echo(
+        json.dumps(
+            {
+                "inserted": {
+                    "actor": result.actor_inserted,
+                    "action": result.action_inserted,
+                    "regulatory_object": result.object_inserted,
+                },
+                "skipped_as_seed": result.skipped_as_seed,
+                "skipped_duplicate": result.skipped_duplicate,
+            },
+            indent=2,
+        )
+    )
+
+
+def _echo_dict_status(status: DictionaryStatus) -> None:
+    typer.echo("## dictionary_entry (par famille)")
+    typer.echo(
+        _render_table(
+            ["dictionary_type", "entries"], [(e.dictionary_type, e.entries) for e in status.entries]
+        )
+    )
+    typer.echo("\n## Entités (actif = seed validé · candidat = à relire, inactif)")
+    typer.echo(
+        _render_table(
+            ["table", "actif", "candidat"],
+            [(t.table, t.active, t.candidate) for t in status.tables],
+        )
+    )
+
+
+@dict_app.command("status")
+def dict_status() -> None:
+    """Comptes du dictionnaire : `dictionary_entry` par famille + actif/candidat par entité."""
+    _echo_dict_status(dictionary_status())
 
 
 def _registry_celexes_in_acts() -> list[str]:

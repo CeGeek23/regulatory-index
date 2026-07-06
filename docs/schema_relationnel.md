@@ -181,6 +181,75 @@ liste par article, aucune regex, aucun fallback :
 Volumétrie mesurée (dernière version EN) : AIFMD `32011L0061` → 1 `regulation` +
 1463 `source_unit` ; DR231 `32013R0231` → 1 + 1034.
 
+## Dictionnaire 04/05/06 + 15 — seed versionné vs candidats à relire (étapes 5-6)
+
+Le référentiel contrôlé s'amorce en **deux temps nettement séparés** (mode d'emploi client,
+bloc 2/5). Le classeur Excel **ne devient jamais la source de vérité** : l'onglet 15 a été
+converti **une fois** en [`config/dictionary_seed.yaml`](../config/dictionary_seed.yaml)
+(fichier versionné, relisible, provenance en en-tête) ; le code d'ingestion lit ce YAML,
+**jamais le `.xlsx`** au runtime.
+
+### `regindex dict seed` — le seed minimal, ACTIF
+
+Upsert le dictionnaire **minimal** (20 acteurs, 30 actions, 30 objets, 10 types de statements,
+10 thèmes) depuis le YAML. Cible et mapping :
+
+| Bloc onglet 15 | → `dictionary_entry` (type) | → table entité |
+|---|---|---|
+| acteurs | `actor` (category=`actor_type`, parent_code) | `actor` |
+| actions | `action` (canonical_name=`canonical_verb`, category=`action_category`, description) | `action` |
+| objets | `object` (category=`object_category`, parent_code) | `regulatory_object` |
+| types de statements | `statement_type` (category NULL) | *(aucune : la CHECK de `statement.statement_type` porte la contrainte ; forme minuscule attendue, `STT-OBLIGATION`→`obligation`)* |
+| thèmes | `theme` (category=`default_subtheme`, description) | *(aucune table thème au v2 ; `statement.theme_id` référence souplement les codes `THM-*`)* |
+
+- **Tout est ACTIF** (`is_active=true`) : c'est le référentiel validé.
+- **Ordre / FK** : `dictionary_entry` d'abord (aucune FK), puis les 3 entités. Les
+  hiérarchies auto-référencées (`ACT-CUSTODIAN→ACT-DEPOSITARY`, `ACT-*-INVESTOR→ACT-INVESTOR`,
+  `ACT-SENIOR-MANAGEMENT→ACT-MANAGEMENT-BODY`, `OBJ-RISK-MGMT-POLICY→OBJ-RISK-MGMT-SYSTEM`)
+  sont insérées **parents avant enfants** (tri topologique général, pas 1 niveau codé en dur).
+- **Idempotent + autoritaire** : upsert `DO UPDATE` des seules colonnes que le seed possède ;
+  il **ne clobbe jamais** les colonnes d'enrichissement aval (`definition_text`,
+  `definition_statement_id`, `source_regulation_id`…). Re-run ⇒ tout en `unchanged`.
+- **Dry-run** : `regindex dict seed --dry-run` affiche le plan (lignes/table) sans écrire.
+
+### `regindex dict candidates` — l'enrichissement, en CANDIDATS INACTIFS
+
+Injecte l'enrichissement — `config/vocabularies/{actors,actions,objects}.yaml` (319/49/626) +
+les **303 acteurs** du glossaire consolidé (`glossary_L1_actors.csv`) — comme **candidats à
+relire** :
+
+- **`is_active=false`** : « à relire, inactif d'office ». Le schéma le permet sans nouvelle
+  colonne (`actor`/`action`/`regulatory_object` portent déjà `is_active`).
+- **Provenance tracée** dans `definition_text` (acteur) / `description` (action, objet), p. ex.
+  `[CANDIDATE — pending human review | source: config/vocabularies/actors.yaml | id=… |
+  canonical_fr: … | aliases: … | legal_basis: …]`. `canonical_name`=`canonical_en`/`term_en`,
+  `display_name`/`display_label`=`canonical_fr`/`term_fr`. `source_regulation_id` reste `NULL`
+  (FK vers `regulation` ; les textes cités par les sources ne sont pas tous chargés).
+- **Codes candidats namespacés** (`ACT-VOC-*`, `ACTN-VOC-*`, `OBJ-VOC-*`, `ACT-GLO-*`) — jamais
+  de collision de PK avec les codes du seed (`ACT-*`, `ACTN-*`, `OBJ-*`).
+- **Déduplication contre le seed** (sans regex) : un candidat dont le nom canonique **normalisé**
+  (casse, espaces, tirets/traits d'union unifiés — même contrat que `vocab_sync._norm`) égale une
+  entrée du seed de même type est **SKIPPÉ** (`skipped_as_seed`) ; un doublon intra-lot (vocab
+  puis glossaire) est écarté aussi (`skipped_duplicate`, premier gagne).
+- **Idempotent + non destructif** : `INSERT … ON CONFLICT DO NOTHING`. Un candidat déjà relu par
+  un humain (**`is_active` passé à `true` + préfixe `[CANDIDATE …]` nettoyé** = la validation
+  humaine) **n'est jamais réécrit** par un re-run.
+- **Thèmes candidats hors base** : `themes.yaml` (16) n'a pas de table entité au v2 et le seed
+  pose déjà 10 thèmes dans `dictionary_entry` — les thèmes candidats restent en revue **hors
+  schéma** (choix documenté, évite une migration).
+
+### La règle de revue humaine
+
+`dictionary_entry` **n'a pas** de `is_active` : par construction, tout ce qui y vit est
+**actif/validé** (rôle de référentiel d'amorçage) — donc **aucun candidat n'y entre**. Les
+candidats vivent **uniquement** dans `actor`/`action`/`regulatory_object` avec `is_active=false`.
+Promouvoir un candidat = **`UPDATE is_active=true` + nettoyage du préfixe de provenance** (geste
+humain explicite). `regindex dict status` compte `dictionary_entry` par famille + **actif
+(seed validé) vs candidat (à relire)** par entité.
+
+Ordre du pipeline : `ingest` (01/02) → `dict seed` (04/05/06 + 15, actif) →
+`dict candidates` (enrichissement inactif) → *[loader statements 03+ à venir]*.
+
 ## Prochaine étape
 
 - Loader statements `regindex db-load` : pipeline d'extraction actuel → tables 03+

@@ -39,3 +39,4 @@
 - **2026-07-06 17:32** · `783b450` (claude/irr-schema-v2) — feat(db): schéma IRR v2 fidèle au modèle client + interface regindex db _[12 files changed, 1003 insertions(+), 196 deletions(-)]_
 - **2026-07-06 17:32** · `9b9d73e` (claude/irr-schema-v2) — docs(journal): point 2026-07-06 — schéma IRR v2 + interface regindex db _[2 files changed, 39 insertions(+), 2 deletions(-)]_
 - **2026-07-06 20:26** · `966a5cf` (claude/irr-schema-v2) — feat(ingest): étapes 1-4 du mode d'emploi — regulation + source_unit depuis la DB Lalande _[8 files changed, 1222 insertions(+), 10 deletions(-)]_
+- **2026-07-06 20:26** · `03d721d` (claude/irr-schema-v2) — docs(journal): point 2026-07-06 soir — ingestion étapes 1-4 depuis la DB Lalande _[2 files changed, 32 insertions(+)]_

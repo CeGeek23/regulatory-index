@@ -1,0 +1,420 @@
+# =============================================================================
+#  Dictionnaire d'amorçage IRR v2 — seed du référentiel contrôlé (regindex 15)
+# -----------------------------------------------------------------------------
+#  Provenance  : modele_relationnel_raglogic_irr_v2.xlsx — onglet 15_dictionnaire
+#  Version      : classeur v2 (« Dictionnaire minimal v1 »)
+#  Converti le  : 2026-07-07 (conversion de données one-shot, l'Excel n'est plus lu)
+#
+#  Ce fichier est la SOURCE DE VÉRITÉ VERSIONNÉE du seed : `regindex dict seed`
+#  le lit (jamais le .xlsx au runtime). Contenu VOLONTAIREMENT MINIMAL (mode
+#  d'emploi client, bloc 2/5) : 20 acteurs, 30 actions, 30 objets, 10 types de
+#  statements, 10 thèmes. Tout est ACTIF d'office (référentiel validé).
+#
+#  L'enrichissement (vocabulaires config/vocabularies/*.yaml, 303 acteurs du
+#  glossaire consolidé) n'entre PAS ici : il est injecté séparément en CANDIDATS
+#  inactifs à relire par `regindex dict candidates` (jamais actif d'office).
+#
+#  Mapping vers regindex (cf. docs/schema_relationnel.md § « Dictionnaire 04/05/06 + 15 ») :
+#   - actors        -> dictionary_entry(type=actor)  + actor
+#   - actions       -> dictionary_entry(type=action) + action
+#   - objects       -> dictionary_entry(type=object) + regulatory_object
+#   - statement_types -> dictionary_entry(type=statement_type) UNIQUEMENT
+#                        (la contrainte runtime est la CHECK de statement.statement_type ;
+#                         la forme minuscule y est attendue : STT-OBLIGATION -> 'obligation')
+#   - themes        -> dictionary_entry(type=theme) UNIQUEMENT (pas de table thème au v2)
+# =============================================================================
+
+actors:
+  - code: ACT-AIFM
+    canonical_name: AIFM
+    actor_type: Regulated Entity
+    parent_code: null
+  - code: ACT-AIF
+    canonical_name: AIF
+    actor_type: Fund / Product
+    parent_code: null
+  - code: ACT-UCITS-MGMT-CO
+    canonical_name: UCITS Management Company
+    actor_type: Regulated Entity
+    parent_code: null
+  - code: ACT-INVESTMENT-FIRM
+    canonical_name: Investment Firm
+    actor_type: Regulated Entity
+    parent_code: null
+  - code: ACT-CREDIT-INSTITUTION
+    canonical_name: Credit Institution
+    actor_type: Regulated Entity
+    parent_code: null
+  - code: ACT-DEPOSITARY
+    canonical_name: Depositary
+    actor_type: Service Provider / Gatekeeper
+    parent_code: null
+  - code: ACT-CUSTODIAN
+    canonical_name: Custodian
+    actor_type: Service Provider
+    parent_code: ACT-DEPOSITARY
+  - code: ACT-PRIME-BROKER
+    canonical_name: Prime Broker
+    actor_type: Service Provider
+    parent_code: null
+  - code: ACT-INVESTOR
+    canonical_name: Investor
+    actor_type: Client / Investor
+    parent_code: null
+  - code: ACT-PROFESSIONAL-INVESTOR
+    canonical_name: Professional Investor
+    actor_type: Client / Investor
+    parent_code: ACT-INVESTOR
+  - code: ACT-RETAIL-INVESTOR
+    canonical_name: Retail Investor
+    actor_type: Client / Investor
+    parent_code: ACT-INVESTOR
+  - code: ACT-COMPETENT-AUTHORITY
+    canonical_name: Competent Authority
+    actor_type: Authority
+    parent_code: null
+  - code: ACT-ESMA
+    canonical_name: ESMA
+    actor_type: EU Authority
+    parent_code: null
+  - code: ACT-EBA
+    canonical_name: EBA
+    actor_type: EU Authority
+    parent_code: null
+  - code: ACT-EIOPA
+    canonical_name: EIOPA
+    actor_type: EU Authority
+    parent_code: null
+  - code: ACT-EU-COMMISSION
+    canonical_name: European Commission
+    actor_type: EU Institution
+    parent_code: null
+  - code: ACT-MANAGEMENT-BODY
+    canonical_name: Management Body
+    actor_type: Governance Body
+    parent_code: null
+  - code: ACT-SENIOR-MANAGEMENT
+    canonical_name: Senior Management
+    actor_type: Governance Body
+    parent_code: ACT-MANAGEMENT-BODY
+  - code: ACT-RISK-FUNCTION
+    canonical_name: Risk Management Function
+    actor_type: Internal Function
+    parent_code: null
+  - code: ACT-COMPLIANCE-FUNCTION
+    canonical_name: Compliance Function
+    actor_type: Internal Function
+    parent_code: null
+
+actions:
+  - code: ACTN-ESTABLISH
+    canonical_verb: Establish
+    action_category: Governance / Set-up
+    description: Create or set up a policy, procedure, system or framework
+  - code: ACTN-MAINTAIN
+    canonical_verb: Maintain
+    action_category: Governance / Maintenance
+    description: Keep in force, up to date or operational
+  - code: ACTN-IMPLEMENT
+    canonical_verb: Implement
+    action_category: Implementation
+    description: Put a requirement into operational effect
+  - code: ACTN-USE
+    canonical_verb: Use
+    action_category: Operational Requirement
+    description: Use or deploy a method, system or resource
+  - code: ACTN-IDENTIFY
+    canonical_verb: Identify
+    action_category: Assessment
+    description: Detect or determine relevant items, events or risks
+  - code: ACTN-MEASURE
+    canonical_verb: Measure
+    action_category: Assessment
+    description: Quantify or assess using metrics
+  - code: ACTN-MANAGE
+    canonical_verb: Manage
+    action_category: Operational Management
+    description: Control or administer a risk, process or obligation
+  - code: ACTN-MONITOR
+    canonical_verb: Monitor
+    action_category: Ongoing Oversight
+    description: Observe or supervise on an ongoing basis
+  - code: ACTN-ASSESS
+    canonical_verb: Assess
+    action_category: Assessment
+    description: Evaluate or appraise against criteria
+  - code: ACTN-REVIEW
+    canonical_verb: Review
+    action_category: Control
+    description: Reassess periodically or upon trigger
+  - code: ACTN-DOCUMENT
+    canonical_verb: Document
+    action_category: Documentation
+    description: Formalise in written form
+  - code: ACTN-RECORD
+    canonical_verb: Record
+    action_category: Recordkeeping
+    description: Create a record of an event, decision or transaction
+  - code: ACTN-RETAIN
+    canonical_verb: Retain
+    action_category: Recordkeeping
+    description: Keep records or documentation for a period
+  - code: ACTN-REPORT
+    canonical_verb: Report
+    action_category: Reporting
+    description: Transmit structured information to an authority or recipient
+  - code: ACTN-NOTIFY
+    canonical_verb: Notify
+    action_category: Notification
+    description: Inform a specified recipient of an event or fact
+  - code: ACTN-DISCLOSE
+    canonical_verb: Disclose
+    action_category: Disclosure
+    description: Make information available to investors or the public
+  - code: ACTN-PUBLISH
+    canonical_verb: Publish
+    action_category: Publication
+    description: Make information publicly available
+  - code: ACTN-PROVIDE
+    canonical_verb: Provide
+    action_category: Provision
+    description: Supply information, documents or services
+  - code: ACTN-VERIFY
+    canonical_verb: Verify
+    action_category: Control
+    description: Check correctness, existence or compliance
+  - code: ACTN-ENSURE
+    canonical_verb: Ensure
+    action_category: Outcome Obligation
+    description: Achieve or guarantee that a requirement is met
+  - code: ACTN-PREVENT
+    canonical_verb: Prevent
+    action_category: Prevention
+    description: Avoid the occurrence of a prohibited event or risk
+  - code: ACTN-APPROVE
+    canonical_verb: Approve
+    action_category: Governance Decision
+    description: Formally validate or authorise
+  - code: ACTN-CALCULATE
+    canonical_verb: Calculate
+    action_category: Calculation
+    description: Compute a value, ratio or threshold
+  - code: ACTN-VALUE
+    canonical_verb: Value
+    action_category: Valuation
+    description: Determine the value of an asset, fund or instrument
+  - code: ACTN-DELEGATE
+    canonical_verb: Delegate
+    action_category: Delegation
+    description: Transfer a function or task to another entity
+  - code: ACTN-APPOINT
+    canonical_verb: Appoint
+    action_category: Designation
+    description: Designate a person or entity for a role
+  - code: ACTN-INFORM
+    canonical_verb: Inform
+    action_category: Information
+    description: Communicate information to a recipient
+  - code: ACTN-COOPERATE
+    canonical_verb: Cooperate
+    action_category: Cooperation
+    description: Work with an authority or third party
+  - code: ACTN-REMEDIATE
+    canonical_verb: Remediate
+    action_category: Remediation
+    description: Correct deficiencies or breaches
+  - code: ACTN-UPDATE
+    canonical_verb: Update
+    action_category: Maintenance
+    description: Modify to reflect changes or current status
+
+objects:
+  - code: OBJ-RISK-MGMT-SYSTEM
+    canonical_name: Risk Management System
+    object_category: Governance / Risk
+    parent_code: null
+  - code: OBJ-RISK-MGMT-POLICY
+    canonical_name: Risk Management Policy
+    object_category: Governance / Risk
+    parent_code: OBJ-RISK-MGMT-SYSTEM
+  - code: OBJ-INVESTMENT-STRATEGY
+    canonical_name: Investment Strategy
+    object_category: Fund / Investment
+    parent_code: null
+  - code: OBJ-AIF
+    canonical_name: AIF
+    object_category: Fund / Product
+    parent_code: null
+  - code: OBJ-INVESTOR-DISCLOSURE
+    canonical_name: Investor Disclosure
+    object_category: Disclosure
+    parent_code: null
+  - code: OBJ-ANNUAL-REPORT
+    canonical_name: Annual Report
+    object_category: Reporting
+    parent_code: null
+  - code: OBJ-PROSPECTUS
+    canonical_name: Prospectus
+    object_category: Disclosure
+    parent_code: null
+  - code: OBJ-KID
+    canonical_name: Key Information Document
+    object_category: Disclosure
+    parent_code: null
+  - code: OBJ-NAV
+    canonical_name: NAV
+    object_category: Valuation
+    parent_code: null
+  - code: OBJ-VALUATION-PROCEDURE
+    canonical_name: Valuation Procedure
+    object_category: Valuation
+    parent_code: null
+  - code: OBJ-LIQUIDITY-MGMT-SYSTEM
+    canonical_name: Liquidity Management System
+    object_category: Liquidity
+    parent_code: null
+  - code: OBJ-LEVERAGE
+    canonical_name: Leverage
+    object_category: Risk / Exposure
+    parent_code: null
+  - code: OBJ-OWN-FUNDS
+    canonical_name: Own Funds
+    object_category: Prudential
+    parent_code: null
+  - code: OBJ-REMUNERATION-POLICY
+    canonical_name: Remuneration Policy
+    object_category: Governance
+    parent_code: null
+  - code: OBJ-CONFLICTS-POLICY
+    canonical_name: Conflicts of Interest Policy
+    object_category: Conduct / Governance
+    parent_code: null
+  - code: OBJ-DELEGATION-ARRANGEMENT
+    canonical_name: Delegation Arrangement
+    object_category: Delegation / Outsourcing
+    parent_code: null
+  - code: OBJ-DEPOSITARY-AGREEMENT
+    canonical_name: Depositary Agreement
+    object_category: Depositary / Custody
+    parent_code: null
+  - code: OBJ-CUSTODY-ASSETS
+    canonical_name: Custody Assets
+    object_category: Depositary / Custody
+    parent_code: null
+  - code: OBJ-RECORDKEEPING-SYSTEM
+    canonical_name: Recordkeeping System
+    object_category: Recordkeeping
+    parent_code: null
+  - code: OBJ-COMPLAINT-PROCEDURE
+    canonical_name: Complaint Handling Procedure
+    object_category: Conduct
+    parent_code: null
+  - code: OBJ-BEST-EXECUTION-POLICY
+    canonical_name: Best Execution Policy
+    object_category: Conduct
+    parent_code: null
+  - code: OBJ-ORDER-HANDLING-PROCEDURE
+    canonical_name: Order Handling Procedure
+    object_category: Conduct / Operations
+    parent_code: null
+  - code: OBJ-COMPLIANCE-POLICY
+    canonical_name: Compliance Policy
+    object_category: Compliance
+    parent_code: null
+  - code: OBJ-INTERNAL-CONTROL-FRAMEWORK
+    canonical_name: Internal Control Framework
+    object_category: Control
+    parent_code: null
+  - code: OBJ-BCP
+    canonical_name: Business Continuity Plan
+    object_category: Operational Resilience
+    parent_code: null
+  - code: OBJ-ICT-SYSTEM
+    canonical_name: ICT System
+    object_category: ICT / DORA
+    parent_code: null
+  - code: OBJ-OUTSOURCING-ARRANGEMENT
+    canonical_name: Outsourcing Arrangement
+    object_category: Delegation / Outsourcing
+    parent_code: null
+  - code: OBJ-AML-KYC-FILE
+    canonical_name: AML/KYC File
+    object_category: AML/CFT
+    parent_code: null
+  - code: OBJ-REGULATORY-REPORT
+    canonical_name: Regulatory Report
+    object_category: Reporting
+    parent_code: null
+  - code: OBJ-MARKETING-COMMUNICATION
+    canonical_name: Marketing Communication
+    object_category: Marketing / Conduct
+    parent_code: null
+
+# Feed dictionary_entry(type=statement_type) UNIQUEMENT. La forme minuscule de
+# `statement_type` (lower(canonical_name)) est la valeur attendue par la CHECK de
+# regindex.statement.statement_type — orthographe britannique 'authorisation' incluse.
+statement_types:
+  - code: STT-OBLIGATION
+    statement_type: Obligation
+  - code: STT-PROHIBITION
+    statement_type: Prohibition
+  - code: STT-DEFINITION
+    statement_type: Definition
+  - code: STT-CONDITION
+    statement_type: Condition
+  - code: STT-EXCEPTION
+    statement_type: Exception
+  - code: STT-POWER
+    statement_type: Power
+  - code: STT-RIGHT
+    statement_type: Right
+  - code: STT-AUTHORISATION
+    statement_type: Authorisation
+  - code: STT-SCOPE
+    statement_type: Scope
+  - code: STT-REFERENCE
+    statement_type: Reference
+
+# Feed dictionary_entry(type=theme) UNIQUEMENT (pas de table thème au v2 ;
+# statement.theme_id référence souplement ces codes THM-*).
+themes:
+  - code: THM-GOV
+    theme_name: Governance
+    default_subtheme: Organisation
+    description: Governance, organisational arrangements and management body responsibilities
+  - code: THM-RISK
+    theme_name: Risk Management
+    default_subtheme: Risk framework
+    description: Risk identification, measurement, management and monitoring
+  - code: THM-LIQ
+    theme_name: Liquidity
+    default_subtheme: Liquidity management
+    description: Liquidity systems, stress tests and redemption management
+  - code: THM-VAL
+    theme_name: Valuation
+    default_subtheme: Asset valuation
+    description: Valuation rules, NAV calculation and independence
+  - code: THM-DEPO
+    theme_name: Depositary & Custody
+    default_subtheme: Depositary duties
+    description: Depositary appointment, custody, oversight and liability
+  - code: THM-DELEG
+    theme_name: Delegation & Outsourcing
+    default_subtheme: Delegation
+    description: Delegation, outsourcing, due diligence and oversight of third parties
+  - code: THM-REPORT
+    theme_name: Transparency & Reporting
+    default_subtheme: Regulatory reporting
+    description: Investor disclosure, authority reporting and public reporting
+  - code: THM-CONDUCT
+    theme_name: Conduct of Business
+    default_subtheme: Investor protection
+    description: Conduct rules, fair treatment, marketing and order handling
+  - code: THM-CONTROL
+    theme_name: Compliance & Internal Control
+    default_subtheme: Control framework
+    description: Compliance arrangements, internal control and auditability
+  - code: THM-AML
+    theme_name: AML/CFT
+    default_subtheme: KYC
+    description: AML/CFT, KYC, sanctions and enhanced due diligence

@@ -56,6 +56,27 @@ just ingest 32011L0061            # un acte  (ou : uv run regindex ingest 32011L
 just ingest-all                   # tous les CELEX du registre présents en base
 ```
 
+### Dictionnaire d'amorçage : seed versionné + candidats à relire
+
+Le référentiel contrôlé (tables 04/05/06 + `dictionary_entry`) s'amorce depuis un **YAML
+versionné** — l'onglet 15 du classeur converti **une fois** en
+[`config/dictionary_seed.yaml`](config/dictionary_seed.yaml) (l'Excel n'est **jamais** lu au
+runtime). Deux temps séparés (mode d'emploi client) : le **seed minimal est ACTIF**,
+l'enrichissement entre en **CANDIDATS INACTIFS à relire**. Détails et mapping :
+[docs/schema_relationnel.md](docs/schema_relationnel.md) § « Dictionnaire 04/05/06 + 15 ».
+
+```bash
+just dict-seed-plan               # dry-run : plan (lignes/table), sans écrire
+just dict-seed                    # upsert le seed minimal ACTIF (idempotent)
+just dict-candidates              # injecte vocab + 303 acteurs glossaire en candidats INACTIFS (dédup vs seed)
+just dict-status                  # comptes : dictionary_entry par famille + actif/candidat par entité
+```
+
+**Ordre du pipeline** : `ingest` (01/02) → `dict seed` (04/05/06 + 15, actif) →
+`dict candidates` (enrichissement inactif) → *[loader statements 03+ à venir]*. La promotion
+d'un candidat est un **geste humain** (`UPDATE is_active=true` + nettoyage du préfixe de
+provenance) ; un re-run de `dict candidates` ne réécrit jamais une entrée déjà relue.
+
 L'ingestion est **idempotente** (re-run = mêmes ids ; upsert qui ne réécrit que le texte modifié,
 hash recalculé) et **sans regex / sans fallback** : découpe des articles en `source_unit` par règles
 structurelles générales (phrases pour les paragraphes, 1 unité par point/subpoint), ids stables

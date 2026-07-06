@@ -132,6 +132,26 @@ db-status:
 db-query SQL:
     {{cli}} db query {{quote(SQL)}}
 
+# === Dictionnaire d'amorçage (seed + candidats) ==========================
+# Seed versionné (config/dictionary_seed.yaml, onglet 15 converti une fois) puis enrichissement
+# en candidats INACTIFS à relire. Voir docs/schema_relationnel.md § « Dictionnaire 04/05/06 + 15 ».
+
+# Dry-run du seed : plan (lignes/table) sans rien écrire
+dict-seed-plan:
+    {{cli}} dict seed --dry-run
+
+# Upsert le seed minimal ACTIF (dictionary_entry + actor/action/regulatory_object), idempotent
+dict-seed:
+    {{cli}} dict seed
+
+# Injecte vocab + 303 acteurs du glossaire en CANDIDATS inactifs (dédup vs seed, DO NOTHING)
+dict-candidates:
+    {{cli}} dict candidates
+
+# Comptes du dictionnaire : dictionary_entry par famille + actif/candidat par entité
+dict-status:
+    {{cli}} dict status
+
 # === Journal / documentation =============================================
 
 # Installe les hooks git locaux (journal auto des commits -> docs/CHANGELOG.md)

@@ -9,6 +9,17 @@ from __future__ import annotations
 
 from .apply import apply_schema
 from .connection import connect, read_only_connection, resolve_dsn
+from .dictionary import (
+    CandidateResult,
+    DictionarySeed,
+    DictionaryStatus,
+    SeedResult,
+    dictionary_status,
+    inject_candidates,
+    load_dictionary_seed,
+    seed_dictionary,
+    seed_plan,
+)
 from .ingest import (
     RegulationRow,
     SourceUnitRow,
@@ -26,20 +37,29 @@ from .status import (
 )
 
 __all__ = [
+    "CandidateResult",
     "CoverageCount",
     "DbStatus",
+    "DictionarySeed",
+    "DictionaryStatus",
     "ExtractionRun",
     "QueryResult",
     "RegulationRow",
+    "SeedResult",
     "SourceUnitRow",
     "TableCount",
     "UpsertCounts",
     "apply_schema",
     "collect_status",
     "connect",
+    "dictionary_status",
     "ingest_regulation",
     "ingest_source_units",
+    "inject_candidates",
+    "load_dictionary_seed",
     "read_only_connection",
     "read_only_query",
     "resolve_dsn",
+    "seed_dictionary",
+    "seed_plan",
 ]
