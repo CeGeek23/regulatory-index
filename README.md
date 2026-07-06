@@ -42,11 +42,34 @@ lms load qwen2.5-7b-instruct --context-length 32768 --yes   # 32k : qwen produit
 uv sync
 ```
 
-## Pipeline end-to-end
+## Corpus : la base Lalande est la source unique
 
-Le **corpus d'obligations** est (re)construit depuis la **base PostgreSQL du dump** (source unique ;
-conteneur Docker local `lalande-pg`, lu par `db_corpus.py` via les tables `subdivisions`/`chunks`).
-Le **glossaire**, lui, part du **HTML EUR-Lex en cache** (`data/textes_sources/`). Aucune acquisition réseau.
+**Décision (2026-07-06)** : la **base de documents Lalande** (conteneur `lalande-pg`, port 5433,
+DSN via `regulatory_index.ingestion.db_corpus.resolve_dsn` ; tables `public.acts`/`versions`/
+`subdivisions`) est désormais la **SOURCE UNIQUE du corpus**. L'ingestion alimente directement les
+tables golden `regindex` (`regulation` / `source_unit` / `coverage_audit`) — voir
+[docs/schema_relationnel.md](docs/schema_relationnel.md) § « Ingestion 01/02 ».
+
+```bash
+# Ingestion déterministe base Lalande -> regindex (regulation + source_units + coverage)
+just ingest 32011L0061            # un acte  (ou : uv run regindex ingest 32011L0061)
+just ingest-all                   # tous les CELEX du registre présents en base
+```
+
+L'ingestion est **idempotente** (re-run = mêmes ids ; upsert qui ne réécrit que le texte modifié,
+hash recalculé) et **sans regex / sans fallback** : découpe des articles en `source_unit` par règles
+structurelles générales (phrases pour les paragraphes, 1 unité par point/subpoint), ids stables
+`SU-<CELEX>-ART<n>[-P<n>][-PT<label>][-SPT<label>]-S<nn>`.
+
+> **Legacy** : le chemin HTML `data/textes_sources/` n'est plus la source du corpus. Il ne sert
+> plus que de **repli temporaire pour le glossaire** (`sommaire`/`glossary`), dont le port sur la
+> base Lalande est **à venir**.
+
+## Pipeline obligations (LLM, sur l'ancien corpus JSONL — legacy)
+
+L'ancien pipeline d'obligations reste disponible : il (re)construit un `corpus.jsonl` depuis la base
+(`db_corpus.py`, 1 unité par article) puis extrait via LangExtract. Conservé pour l'extraction IA
+tant que la chaîne `regindex` → statements n'est pas branchée.
 
 ```bash
 # 1. (Re)construire le corpus en unités normatives depuis la base PostgreSQL du dump
@@ -69,7 +92,7 @@ uv run regindex pipeline data/unites/corpus.jsonl
 Vérification rapide (ou simplement `just check`) :
 
 ```bash
-just check                       # lint + types + tests (74 tests)
+just check                       # lint + types + tests (100 tests)
 # équivalents directs :
 uv run --no-sync ruff check src/ tests/ scripts/
 uv run --no-sync mypy src/ tests/ scripts/
@@ -86,7 +109,7 @@ uv run --no-sync python -m pytest -q
 
 ## Sources prises en charge
 
-Les textes sont **EUR-Lex (EU Level 1 / 2)** — p. ex. Directive 2011/61/EU et Règlement délégué 231/2013. Le **corpus d'obligations** vient de la **base PostgreSQL du dump** (`db_corpus.py`, tables `subdivisions`/`chunks`) ; le **glossaire** part du **HTML en cache** dans `data/textes_sources/`. Le dépôt n'embarque plus d'acquisition réseau (PDF, doctrine AMF et Légifrance hors périmètre).
+Les textes sont **EUR-Lex (EU Level 1 / 2)** — p. ex. Directive 2011/61/EU et Règlement délégué 231/2013. Le **corpus golden `regindex`** vient de la **base Lalande** (source unique ; `ingest`, tables `acts`/`versions`/`subdivisions`) ; le **glossaire** part encore du **HTML en cache** dans `data/textes_sources/` (legacy, port Lalande à venir). Le dépôt n'embarque plus d'acquisition réseau (PDF, doctrine AMF et Légifrance hors périmètre).
 
 Le registry (`config/sources_registry.yaml`) définit le périmètre : il référence les métadonnées de chaque source (CELEX, level, issuer, aliases pour la résolution de citations) et sert de liste des CELEX à (re)construire depuis la base.
 

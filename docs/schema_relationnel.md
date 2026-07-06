@@ -134,8 +134,56 @@ axes n'ont pas de table dédiée au v2).
   golden. La donnée réglementaire ne vit qu'une fois, dans PostgreSQL ; RAG et
   graphe en sont des projections régénérables.
 
+## Ingestion 01/02 — base Lalande → `regulation` + `source_unit`
+
+`regindex ingest <CELEX>` (module `regulatory_index.db.ingest`) alimente les tables
+01/02 depuis la base corpus Lalande (`public.acts`/`versions`/`subdivisions`). Source
+**unique** du corpus. Règles **structurelles générales** — aucun `if celex==…`, aucune
+liste par article, aucune regex, aucun fallback :
+
+- **Version retenue** : la plus récente pour la langue (`ORDER BY version_date DESC
+  NULLS LAST, version_number DESC`) — choix éprouvé de `db_corpus.py`. L'ordre document
+  est `ORDER BY hierarchy_path` (== `sequence_order`, garanti intra-version seulement).
+- **`regulation`** (01) : 1 ligne par acte. `official_title`/`short_name`/`eurlex_url`/
+  `language` ← `acts` ; `consolidation_date` ← `versions.version_date` ; `legal_level`
+  ← registre (`L1`/`L2`/`L3`/`national`), **NULL** si le CELEX est absent du registre
+  (il s'ingère quand même) ; `legal_instrument_type` ← `acts.act_type`.
+- **`source_unit`** (02) : dérivé de l'arbre des `subdivisions` d'un **article**.
+  - *paragraphe* (enfant **direct** d'article) → découpé en **phrases** (`S01`, `S02`…).
+  - *point* / *subpoint* → **1 unité** (`sentence_number='1'`) : fragment juridique
+    citable non découpé, même s'il contient une frontière de phrase interne.
+  - **exclus** : notes de bas de page (paragraphe dont le parent est
+    paragraph/point/subpoint), en-têtes chapter/section/article, racine `title` (depth 0),
+    `preamble`, **annexes** (différées : pas de coordonnée annexe en base).
+  - `paragraph_number` = **ordinal de bloc** du paragraphe enfant direct (ordre document,
+    notes exclues) — pas forcément le n° officiel cité (déviation documentée).
+  - `point_number`/`subpoint_number` = **label inline** verbatim (contenu entre le `(`
+    initial et le premier `)`, extraction str sans regex). Le subpoint hérite du label de
+    son point ancêtre (chaîne `parent_id`, robuste à l'aplatissement DR231).
+  - `chapter_number`/`section_number`/`title_number` = `number` de l'ancêtre correspondant.
+  - `structural_path` = titres **lisibles** des ancêtres (chapter/section/article) +
+    `paragraph N` + `point (x)` — **jamais** les jetons `hierarchy_path`.
+  - `source_text_exact` = `subdivisions.content` verbatim ; `source_text_hash` = SHA-256 hex.
+- **Découpe en phrases** (`split_sentences`, sans regex) : frontière = `.`/`!`/`?` +
+  ≥1 blanc + première lettre non-blanche **MAJUSCULE** ; `;`/`:` (séparateurs de listes)
+  ne coupent jamais ; dates (`17.11.2009`) et `p. 1.` neutralisées par la forme du texte.
+- **Id stable** `SU-<CELEX>-ART<n>[-P<n>][-PT<label>][-SPT<label>]-S<nn>` : 100 %
+  coordonnées structurelles (le tiret d'`ART69-A` vs `ART69A` est **préservé** — deux
+  articles distincts). **Jamais** dérivé de `subdivisions.id` ni de `hierarchy_path`
+  (non stables inter-version).
+- **`coverage_audit`** : 1 ligne `status='not_covered'` par `source_unit` (invariant
+  d'exhaustivité), posée à l'ingestion.
+- **Idempotence** : re-run ⇒ mêmes ids. `source_unit` en upsert `ON CONFLICT
+  (source_unit_id) DO UPDATE … WHERE hash différent` (ne réécrit que sur dérive de texte) ;
+  `coverage_audit` en `INSERT … WHERE NOT EXISTS` (jamais de doublon ni d'écrasement d'une
+  revue humaine).
+
+Volumétrie mesurée (dernière version EN) : AIFMD `32011L0061` → 1 `regulation` +
+1463 `source_unit` ; DR231 `32013R0231` → 1 + 1034.
+
 ## Prochaine étape
 
-- Loader `regindex db-load` : pipeline actuel → tables `regindex` (résolution
-  des dictionnaires `actor`/`action`/`regulatory_object`, dédup, FK, calcul
-  `source_text_hash`, génération des lignes `coverage_audit`).
+- Loader statements `regindex db-load` : pipeline d'extraction actuel → tables 03+
+  (`statement` + liaisons `actor`/`action`/`regulatory_object`, `condition`/`exception`,
+  résolution des dictionnaires, FK) et mise à jour de `coverage_audit`
+  (`covered`/`partially_covered`). L'ingestion 01/02 (`regindex ingest`) est faite.

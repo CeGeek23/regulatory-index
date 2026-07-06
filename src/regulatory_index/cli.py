@@ -11,7 +11,16 @@ from typing import Annotated
 import psycopg
 import typer
 
-from .db import DbStatus, QueryResult, apply_schema, collect_status, read_only_query
+from .db import (
+    DbStatus,
+    QueryResult,
+    apply_schema,
+    collect_status,
+    ingest_regulation,
+    ingest_source_units,
+    read_only_query,
+)
+from .db.connection import connect
 from .eval.metrics import compute, write_report
 from .export.csv_writer import write_csv
 from .export.excel_writer import write_workbook
@@ -19,6 +28,7 @@ from .export.glossary_writer import write_glossary
 from .export.html_graph_writer import write_html_graph
 from .extraction.langextract_runner import RunnerConfig, run
 from .glossary import build_toc, harvest_glossary
+from .ingestion.db_corpus import registry_celexes
 from .ingestion.unit_loader import load_units_jsonl
 from .linking.graph_builder import build_graph
 from .materialize import load_unit_extractions_from_dir, materialize
@@ -337,6 +347,68 @@ def db_query(
         return
     typer.echo(_render_table(result.columns, result.rows))
     typer.echo(f"\n{result.row_count} ligne(s)")
+
+
+def _registry_celexes_in_acts() -> list[str]:
+    """CELEX du registre effectivement présents dans `public.acts` (langue EN)."""
+    celexes = registry_celexes()
+    if not celexes:
+        return []
+    with connect() as conn, conn.cursor() as cur:
+        cur.execute(
+            "SELECT DISTINCT celex FROM acts WHERE celex = ANY(%s) AND language::text = 'en'",
+            (celexes,),
+        )
+        present = {str(r[0]) for r in cur.fetchall()}
+    return [c for c in celexes if c in present]
+
+
+def _ingest_one(celex: str) -> dict[str, object]:
+    reg = ingest_regulation(celex)
+    units = ingest_source_units(celex)
+    return {
+        "celex": celex,
+        "regulation_id": reg.regulation_id,
+        "regulation": {
+            "created": reg.regulation.created,
+            "updated": reg.regulation.updated,
+            "unchanged": reg.regulation.unchanged,
+        },
+        "source_units": {
+            "created": units.source_units.created,
+            "updated": units.source_units.updated,
+            "unchanged": units.source_units.unchanged,
+            "total": units.source_units.total,
+        },
+        "coverage_created": units.coverage_created,
+    }
+
+
+@app.command()
+def ingest(
+    celex: Annotated[str, typer.Argument(help="CELEX à ingérer (ignoré si --all-registry).")] = "",
+    all_registry: Annotated[
+        bool,
+        typer.Option("--all-registry", help="Ingère tous les CELEX du registre présents en base."),
+    ] = False,
+) -> None:
+    """Alimente `regindex` depuis la base corpus Lalande (regulation + source_units + coverage).
+
+    Idempotent : re-run = mêmes ids, upsert qui ne réécrit que le texte modifié. La `regindex`
+    est la source unique du corpus (le pipeline HTML `data/textes_sources` est legacy).
+    """
+    if all_registry:
+        targets = _registry_celexes_in_acts()
+    elif celex:
+        targets = [celex]
+    else:
+        raise typer.BadParameter("fournir un CELEX ou --all-registry")
+    if not targets:
+        typer.echo("(aucun CELEX à ingérer)")
+        return
+
+    results = [_ingest_one(c) for c in targets]
+    typer.echo(json.dumps({"ingested": results}, indent=2))
 
 
 if __name__ == "__main__":

@@ -37,3 +37,4 @@
 - **2026-07-04 09:54** · `2538482` (dump-extraction) — fix(git): versionne db/schema.sql (exception à l'ignore *.sql des dumps) _[2 files changed, 2 insertions(+)]_
 - **2026-07-04 09:54** · `82ce6b8` (dump-extraction) — fix(git): versionne réellement db/schema.sql (négation sur sa propre ligne) _[3 files changed, 160 insertions(+), 1 deletion(-)]_
 - **2026-07-06 17:32** · `783b450` (claude/irr-schema-v2) — feat(db): schéma IRR v2 fidèle au modèle client + interface regindex db _[12 files changed, 1003 insertions(+), 196 deletions(-)]_
+- **2026-07-06 17:32** · `9b9d73e` (claude/irr-schema-v2) — docs(journal): point 2026-07-06 — schéma IRR v2 + interface regindex db _[2 files changed, 39 insertions(+), 2 deletions(-)]_

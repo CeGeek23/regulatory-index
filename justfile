@@ -114,6 +114,15 @@ smoke:
 schema-apply:
     {{uvr}} python scripts/apply_schema.py
 
+# Alimente regindex depuis la base corpus Lalande (regulation + source_units + coverage)
+# ex. `just ingest 32011L0061` (un acte) ou `just ingest-all` (tout le registre présent)
+ingest CELEX:
+    {{cli}} ingest {{CELEX}}
+
+# Ingère tous les CELEX du registre présents dans la base corpus Lalande
+ingest-all:
+    {{cli}} ingest --all-registry
+
 # État de la base regindex : volumétrie par table + couverture + extraction
 db-status:
     {{cli}} db status
