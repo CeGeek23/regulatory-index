@@ -21,6 +21,37 @@ _Ce qui n'est pas (encore) fait — à garder à jour pour ne rien oublier en pr
 
 <!-- Nouvelles entrées en haut. -->
 
+### 2026-07-07 — Étapes 5-6 : dictionnaires (seed client + candidats en revue)
+
+**Fait**
+- **Seed du dictionnaire client versionné** : onglet 15 du classeur converti une fois
+  en `config/dictionary_seed.yaml` (20 acteurs / 30 actions / 30 objets / 10 types de
+  statements / 10 thèmes), vérifié champ à champ contre le `.xlsx`, hiérarchies
+  parent→enfant incluses.
+- `regindex dict seed|candidates|status` (+ `--dry-run`) : le seed est **autoritaire**
+  (upsert sur ses colonnes) et alimente `15_dictionary_entry` + les entités
+  `actor`/`action`/`regulatory_object` actives. Idempotent prouvé en réel
+  (re-run : 0 créé / 0 modifié / 100 inchangés).
+- **Candidats en revue humaine** : vocabulaire + glossaire injectés **inactifs**
+  (`is_active=false`, marqués `[CANDIDATE — pending human review]`) via `DO NOTHING`
+  — une décision humaine n'est jamais réécrite. 1 297 candidats bruts → 963 gardés
+  (52 déjà couverts par le seed, 282 doublons intra-lot). État base : actor 333
+  (20 actifs + 313 candidats), action 59 (30+29), regulatory_object 651 (30+621).
+- Preuves de non-pollution : `source_unit` et `coverage_audit` strictement identiques
+  avant/après (md5) ; CHECK des 10 types de statements validé + contrôle négatif ;
+  ruff + mypy + **115 tests** verts.
+
+**Décisions**
+- Fail-loud à la frontière : glossaire introuvable ⇒ `FileNotFoundError` explicite
+  (un fallback silencieux omettait 303 acteurs sur un clone frais — corrigé en vérif).
+- Vocab gagne sur glossaire à code égal (1er arrivé) ; pas de garbage-collection des
+  entrées seed retirées du YAML (le seed ne fait que croître au v2).
+
+**Reste à faire**
+- **Revue humaine des 963 candidats** (activer/fusionner/rejeter — bloque la richesse
+  du dictionnaire, pas les étapes suivantes) ; étapes 7-12 (extraction → statements,
+  PydanticAI contraint par les dictionnaires, ciblant le SLM vLLM).
+
 ### 2026-07-06 (soir) — Étapes 1-4 : ingestion depuis la DB Lalande (source unique)
 
 **Fait**

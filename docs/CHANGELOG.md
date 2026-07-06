@@ -40,3 +40,4 @@
 - **2026-07-06 17:32** · `9b9d73e` (claude/irr-schema-v2) — docs(journal): point 2026-07-06 — schéma IRR v2 + interface regindex db _[2 files changed, 39 insertions(+), 2 deletions(-)]_
 - **2026-07-06 20:26** · `966a5cf` (claude/irr-schema-v2) — feat(ingest): étapes 1-4 du mode d'emploi — regulation + source_unit depuis la DB Lalande _[8 files changed, 1222 insertions(+), 10 deletions(-)]_
 - **2026-07-06 20:26** · `03d721d` (claude/irr-schema-v2) — docs(journal): point 2026-07-06 soir — ingestion étapes 1-4 depuis la DB Lalande _[2 files changed, 32 insertions(+)]_
+- **2026-07-07 01:10** · `62d59b2` (claude/irr-schema-v2) — feat(dict): étapes 5-6 — seed du dictionnaire client + candidats vocab/glossaire en revue _[9 files changed, 1486 insertions(+)]_
