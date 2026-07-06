@@ -35,3 +35,5 @@
 - **2026-07-04 04:57** · `40df941` (dump-extraction) — feat(db_corpus): découpage au seuil des articles longs (fix Art. 21 & co) _[3 files changed, 109 insertions(+), 23 deletions(-)]_
 - **2026-07-04 09:53** · `f9ba1e5` (dump-extraction) — feat(db): schéma relationnel normalisé provisoire (regindex) + mapping _[4 files changed, 103 insertions(+)]_
 - **2026-07-04 09:54** · `2538482` (dump-extraction) — fix(git): versionne db/schema.sql (exception à l'ignore *.sql des dumps) _[2 files changed, 2 insertions(+)]_
+- **2026-07-04 09:54** · `82ce6b8` (dump-extraction) — fix(git): versionne réellement db/schema.sql (négation sur sa propre ligne) _[3 files changed, 160 insertions(+), 1 deletion(-)]_
+- **2026-07-06 17:32** · `783b450` (claude/irr-schema-v2) — feat(db): schéma IRR v2 fidèle au modèle client + interface regindex db _[12 files changed, 1003 insertions(+), 196 deletions(-)]_
