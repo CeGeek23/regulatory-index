@@ -8,8 +8,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated
 
+import psycopg
 import typer
 
+from .db import DbStatus, QueryResult, apply_schema, collect_status, read_only_query
 from .eval.metrics import compute, write_report
 from .export.csv_writer import write_csv
 from .export.excel_writer import write_workbook
@@ -251,6 +253,90 @@ def glossary(
         ),
     )
     typer.echo(json.dumps({"terms": len(terms), "actors": n_actors, **paths}, indent=2))
+
+
+# === Base regindex (schéma golden IRR v2) ==================================
+
+db_app = typer.Typer(no_args_is_help=True, help="Base golden regindex (IRR v2).")
+app.add_typer(db_app, name="db")
+
+
+def _render_table(headers: list[str], rows: list[tuple[object, ...]]) -> str:
+    """Table texte alignée (colonnes ajustées au plus large). Vide si aucune ligne."""
+    cells = [[("" if v is None else str(v)) for v in row] for row in rows]
+    widths = [
+        max(len(headers[i]), *(len(r[i]) for r in cells)) if cells else len(headers[i])
+        for i in range(len(headers))
+    ]
+    line = "  ".join(h.ljust(widths[i]) for i, h in enumerate(headers))
+    sep = "  ".join("-" * widths[i] for i in range(len(headers)))
+    body = ["  ".join(cell.ljust(widths[i]) for i, cell in enumerate(row)) for row in cells]
+    return "\n".join([line, sep, *body])
+
+
+def _echo_status(status: DbStatus) -> None:
+    typer.echo(f"# schéma « {status.schema_name} » — {status.total_rows} lignes au total\n")
+    typer.echo("## Volumétrie par table")
+    typer.echo(_render_table(["table", "lignes"], [(t.table, t.rows) for t in status.tables]))
+    typer.echo("\n## Couverture (coverage_audit)")
+    if status.coverage:
+        typer.echo(
+            _render_table(
+                ["statut", "source_units"],
+                [(c.coverage_status, c.units) for c in status.coverage],
+            )
+        )
+    else:
+        typer.echo("(aucune ligne de couverture)")
+    typer.echo("\n## Extraction (par modèle)")
+    if status.extraction_runs:
+        typer.echo(
+            _render_table(
+                ["modèle", "statements", "dernier"],
+                [
+                    (r.extraction_model, r.statements, r.last_created_at)
+                    for r in status.extraction_runs
+                ],
+            )
+        )
+    else:
+        typer.echo("(aucun statement extrait)")
+
+
+@db_app.command("apply")
+def db_apply() -> None:
+    """Applique `db/schema.sql` au schéma `regindex` (recrée le schéma, idempotent)."""
+    n = apply_schema()
+    typer.echo(f"OK — schéma regindex appliqué ({n} tables) depuis db/schema.sql")
+
+
+@db_app.command("status")
+def db_status() -> None:
+    """Affiche l'état de `regindex` : volumétrie, couverture, activité d'extraction."""
+    _echo_status(collect_status())
+
+
+@db_app.command("query")
+def db_query(
+    sql: Annotated[str, typer.Argument(help="Requête SELECT (lecture seule, serveur READ ONLY).")],
+) -> None:
+    """Exécute une requête en LECTURE SEULE sur `regindex`.
+
+    La transaction est `READ ONLY` côté PostgreSQL : tout write est refusé par le
+    serveur (`ReadOnlySqlTransaction`), pas par une inspection de la requête.
+    """
+    try:
+        result: QueryResult = read_only_query(sql)
+    except psycopg.errors.ReadOnlySqlTransaction:
+        typer.echo(
+            "refusé : la connexion est en lecture seule (INSERT/UPDATE/DELETE/DDL)", err=True
+        )
+        raise typer.Exit(code=1) from None
+    if not result.columns:
+        typer.echo("(aucune colonne renvoyée)")
+        return
+    typer.echo(_render_table(result.columns, result.rows))
+    typer.echo(f"\n{result.row_count} ligne(s)")
 
 
 if __name__ == "__main__":

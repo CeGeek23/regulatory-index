@@ -109,10 +109,19 @@ smoke:
 
 # === Base PostgreSQL / schéma ============================================
 
-# (Ré)applique le schéma relationnel PROVISOIRE dans le schéma `regindex` de la base
+# (Ré)applique le schéma relationnel IRR v2 dans le schéma `regindex` de la base
 # (ne touche pas aux tables source du dump). Voir docs/schema_relationnel.md.
 schema-apply:
     {{uvr}} python scripts/apply_schema.py
+
+# État de la base regindex : volumétrie par table + couverture + extraction
+db-status:
+    {{cli}} db status
+
+# Requête SQL ad hoc en LECTURE SEULE (serveur READ ONLY)
+# ex. `just db-query "SELECT * FROM regindex.regulation"`
+db-query SQL:
+    {{cli}} db query {{quote(SQL)}}
 
 # === Journal / documentation =============================================
 
