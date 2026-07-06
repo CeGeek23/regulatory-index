@@ -21,6 +21,37 @@ _Ce qui n'est pas (encore) fait — à garder à jour pour ne rien oublier en pr
 
 <!-- Nouvelles entrées en haut. -->
 
+### 2026-07-06 (soir) — Étapes 1-4 : ingestion depuis la DB Lalande (source unique)
+
+**Fait**
+- **Décision** : la base de documents Lalande (dump `lalande-pg`) est désormais la
+  **source unique** du corpus — le chemin HTML `data/textes_sources` passe en legacy
+  pour le corpus (le glossaire y reste jusqu'à son port).
+- `regindex ingest <CELEX>` / `--all-registry` : alimente `01_regulation` +
+  `02_source_unit` + l'invariant `14_coverage_audit` (1 ligne `not_covered`/unité).
+  Ingéré en réel : **AIFMD L1 + Règlement délégué 231/2013 = 2 497 source_units**.
+- Règles établies sur les données réelles : ids stables 100 % structurels
+  (`SU-{CELEX}-ART{n}-P{p}[-PT{x}]-S{nn}` — `hierarchy_path` prouvé non stable entre
+  versions, jamais utilisé ; `69a` ≠ `69-a` préservés), découpe en phrases
+  déterministe sans regex (344 frontières auditées, 0 faux positif), points = unité
+  juridique citable entière, `is_normative` structurel (footnotes exclues par règle
+  générale).
+- Preuves : idempotence aux ids près (re-run 0 créé/0 modifié, diff d'ids vide),
+  réalignement automatique sur dérive de texte, fidélité caractère-exact (Art. 21 :
+  23 461 == 23 461 chars), ruff + mypy + **100 tests** verts.
+
+**Décisions**
+- `paragraph_number` = **ordinal de bloc** en ordre document (le numéro officiel de
+  paragraphe est irrécupérable dans la source : `number` NULL sur 100 % des
+  paragraphes) — déviation documentée dans `docs/schema_relationnel.md`.
+- Annexes différées (pas de coordonnée annexe dans le modèle client — à trancher).
+
+**Reste à faire**
+- Purge/gestion des unités périmées lors d'une future consolidation qui renumérote
+  (lié au versioning) ; port du glossaire vers la DB ; étapes 5-6 (dictionnaires)
+  puis 7-12 (extraction → statements, candidat PydanticAI contraint).
+
+
 ### 2026-07-06 — Schéma IRR v2 (modèle client) + interface `regindex db`
 
 **Fait**
